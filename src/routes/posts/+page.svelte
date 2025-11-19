@@ -14,6 +14,7 @@
 			</a>
 		</Card.Header>
 		<Card.Content>
+			<h1 class="my-2.5 mb-6 text-2xl">Post Header</h1>
 			<section>
 				<div class="w-full rounded-xs border p-3">
 					<img src={imag} alt="" />
