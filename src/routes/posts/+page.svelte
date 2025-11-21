@@ -5,19 +5,19 @@
 	import { MessageCircleMore } from '@lucide/svelte';
 </script>
 
-<article class="m-2">
+<article class="m-2 max-w-2xl my-5 mx-auto">
 	<Card.Root>
 		<Card.Header>
-			<a href="" class="flex flex-row items-center gap-4">
-				<img src={imag} alt="" class="h-[2rem] w-[2rem] rounded-full" />
+			<a href="/users/id" class="flex flex-row items-center gap-4">
+				<img src={imag} alt="" class="h-8 w-8 rounded-full" />
 				<p>Users name</p>
 			</a>
 		</Card.Header>
 		<Card.Content>
 			<h1 class="my-2.5 mb-6 text-2xl">Post Header</h1>
 			<section>
-				<div class="w-full rounded-xs border p-3">
-					<img src={imag} alt="" />
+				<div class="rounded-xs border p-3 lg:w-[500px] lg:h-[500px] overflow-hidden">
+					<img src={imag} alt="" class="w-full h-full object-contain" />
 				</div>
 			</section>
 			<section>
@@ -34,43 +34,10 @@
 		</Card.Content>
 		<Card.Footer>
 			<div class="flex w-full cursor-pointer flex-row items-center gap-2">
-				<div class="flex flex-1 justify-center rounded-lg bg-cyan-100 p-2">
+				<div class="flex w-2.5 flex-1 justify-center rounded-lg p-2 hover:bg-gray-200 duration-300 ease-in-out">
 					<ThumbsUp class="" />
 				</div>
-				<div class="flex flex-1 justify-center rounded-lg bg-cyan-100 p-2">
-					<MessageCircleMore />
-				</div>
-			</div>
-		</Card.Footer>
-	</Card.Root>
-</article>
-
-<article class="m-2">
-	<Card.Root>
-		<Card.Header>
-			<a href="" class="flex flex-row items-center gap-4">
-				<img src={imag} alt="imag" class="h-[2rem] w-[2rem] rounded-full" />
-				<p>Users name</p>
-			</a>
-		</Card.Header>
-		<Card.Content>
-			<section>
-				<div class="w-full rounded-xs border p-3">
-					<img src={imag} alt="iag" />
-				</div>
-			</section>
-			<section>
-				<div class="mt-4">
-					<p>This is a test descripttio auto: Fl</p>
-				</div>
-			</section>
-		</Card.Content>
-		<Card.Footer>
-			<div class="flex w-full flex-row items-center">
-				<div class="flex flex-1 bg-cyan-100 p-2">
-					<ThumbsUp class="" />
-				</div>
-				<div class="flex flex-1 justify-center bg-cyan-100">
+				<div class="flex flex-1 justify-center rounded-lg p-2 hover:bg-gray-200 duration-300 ease-in-out ">
 					<MessageCircleMore />
 				</div>
 			</div>

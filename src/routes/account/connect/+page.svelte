@@ -10,14 +10,25 @@
 	let register = false;
 </script>
 
-<section class="my-50 flex items-center justify-center">
-	<Card.Root class="m-5 w-full max-w-lg">
-		<Card.Header>
-			<Card.Title class="text-2xl">Log into your account</Card.Title>
-		</Card.Header>
-		<Card.Content>
-			<form>
-				<div class="flex flex-col gap-6">
+{#if register}
+	<section class="my-50 flex items-center justify-center">
+		<Card.Root class="m-5 w-full max-w-lg">
+			<Card.Header>
+				<div class="relative">
+					<Button
+						variant="destructive"
+						class="absolute right-0 w-[10ch] p-1.5"
+						onclick={() => (register = false)}>Cancel</Button
+					>
+				</div>
+				<Card.Title class="text-2xl">Register to Facepaw</Card.Title>
+			</Card.Header>
+			<Card.Content>
+				<form action="">
+					<div class="grid gap-2">
+						<Label for="name">Full Name</Label>
+						<Input id="name" type="text" placeholder="John Wick" required />
+					</div>
 					<div class="grid gap-2">
 						<Label for="email">Email</Label>
 						<Input id="email" type="email" placeholder="m@example.com" required />
@@ -31,25 +42,58 @@
 						</div>
 						<Input id="password" type="password" required />
 					</div>
-				</div>
-			</form>
-			<div class="mt-3 flex flex-col">
-				<Button class="w-full">Log in</Button>
-			</div>
-		</Card.Content>
-		<Card.Footer class="flex flex-col gap-2">
-			<Button class="w-full">Log in with google</Button>
-			<p>
-				Don't have an account? <Button
-					variant="link"
-					onclick={() => {
-						register = true;
-						console.log(register);
-					}}
-					href=""
-					class="pl-0 text-green-500 hover:text-red-700">Register</Button
-				>
-			</p>
-		</Card.Footer>
-	</Card.Root>
-</section>
+					<div class="mt-6 flex flex-col gap-2">
+						<Button class="w-full">Register</Button>
+						<Button class="w-full">Log in with google</Button>
+					</div>
+				</form>
+			</Card.Content>
+		</Card.Root>
+	</section>
+{:else}
+	<section class="my-50 flex items-center justify-center">
+		<Card.Root class="m-5 w-full max-w-lg">
+			<Card.Header>
+				<Card.Title class="text-2xl">Log into your account</Card.Title>
+			</Card.Header>
+			<Card.Content>
+				<form>
+					<div class="flex flex-col gap-6">
+						<div class="grid gap-2">
+							<Label for="email">Email</Label>
+							<Input id="email" type="email" placeholder="m@example.com" required />
+						</div>
+						<div class="grid gap-2">
+							<div class="flex items-center">
+								<Label for="password">Password</Label>
+								<a
+									href="##"
+									class="ml-auto inline-block text-sm underline-offset-4 hover:underline"
+								>
+									Forgot your password?
+								</a>
+							</div>
+							<Input id="password" type="password" required />
+						</div>
+					</div>
+					<div class="mt-7 flex flex-col">
+						<Button class="w-full">Log in</Button>
+					</div>
+				</form>
+			</Card.Content>
+			<Card.Footer class="flex flex-col gap-2">
+				<Button class="w-full">Log in with google</Button>
+				<p>
+					Don't have an account? <Button
+						variant="link"
+						onclick={() => {
+							register = true;
+						}}
+						href=""
+						class="cursor-pointer pl-0 text-green-500 hover:text-red-700">Register</Button
+					>
+				</p>
+			</Card.Footer>
+		</Card.Root>
+	</section>
+{/if}

@@ -2,6 +2,7 @@
 	import Button from '$lib/components/ui/button/button.svelte';
 	import * as Card from '$lib/components/ui/card/index.js';
 	import { Input } from '$lib/components/ui/input';
+	import Label from '$lib/components/ui/label/label.svelte';
 	import Textarea from '$lib/components/ui/textarea/textarea.svelte';
 
 	let inp: HTMLDivElement;
@@ -19,7 +20,7 @@
 	}
 </script>
 
-<section>
+<section class="max-w-2xl my-3.5 lg:mx-auto">
 	<Card.Root>
 		<Card.Header>
 			<div class="relative">
@@ -35,12 +36,12 @@
 					<Input id="title" />
 				</div>
 				<div class="mt-3.5">
-					<label for="image" class="max-h-[500px] max-w-[500px]">
+					<Label for="image" class="max-h-[500px] max-w-[500px]">
 						<span class="my-2.5 mb-2 inline-block" bind:this={span}
 							>Select an Image for your post</span
 						>
 						<img src="" alt="" bind:this={previmg} class="h-full w-full object-cover" />
-					</label>
+					</Label>
 					<div bind:this={inp}>
 						<Input
 							id="image"
