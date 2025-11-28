@@ -24,26 +24,23 @@
 				<Card.Title class="text-2xl">Register to Facepaw</Card.Title>
 			</Card.Header>
 			<Card.Content>
-				<form action="">
+				<form method="POST" action="?/register">
 					<div class="grid gap-2">
 						<Label for="name">Full Name</Label>
-						<Input id="name" type="text" placeholder="John Wick" required />
+						<Input id="name" name="name" type="text" placeholder="John Wick" required />
 					</div>
 					<div class="grid gap-2">
 						<Label for="email">Email</Label>
-						<Input id="email" type="email" placeholder="m@example.com" required />
+						<Input id="email" name="email" type="email" placeholder="m@example.com" required />
 					</div>
 					<div class="grid gap-2">
 						<div class="flex items-center">
 							<Label for="password">Password</Label>
-							<a href="##" class="ml-auto inline-block text-sm underline-offset-4 hover:underline">
-								Forgot your password?
-							</a>
 						</div>
-						<Input id="password" type="password" required />
+						<Input id="password" name="password" type="password" required />
 					</div>
 					<div class="mt-6 flex flex-col gap-2">
-						<Button class="w-full">Register</Button>
+						<Button class="w-full" type="submit">Register</Button>
 						<Button class="w-full">Log in with google</Button>
 					</div>
 				</form>
@@ -57,11 +54,11 @@
 				<Card.Title class="text-2xl">Log into your account</Card.Title>
 			</Card.Header>
 			<Card.Content>
-				<form>
+				<form method="POST" action="?/login">
 					<div class="flex flex-col gap-6">
 						<div class="grid gap-2">
 							<Label for="email">Email</Label>
-							<Input id="email" type="email" placeholder="m@example.com" required />
+							<Input id="email" name="email" type="email" placeholder="m@example.com" required />
 						</div>
 						<div class="grid gap-2">
 							<div class="flex items-center">
@@ -73,11 +70,11 @@
 									Forgot your password?
 								</a>
 							</div>
-							<Input id="password" type="password" required />
+							<Input id="password" name="password" type="password" required />
 						</div>
 					</div>
 					<div class="mt-7 flex flex-col">
-						<Button class="w-full">Log in</Button>
+						<Button class="w-full" type="submit">Log in</Button>
 					</div>
 				</form>
 			</Card.Content>
