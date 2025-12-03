@@ -1,6 +1,7 @@
 import { redirect } from '@sveltejs/kit';
 import { createUser, getUserByEmail } from '$lib/server/models/users';
 import { createSession } from '$lib/server/models/sessions.js';
+import type { User } from '$lib/types/user.js';
 
 export const actions = {
 	register: async ({ request, cookies }) => {
@@ -50,7 +51,7 @@ export const actions = {
 			return 'missing fields';
 		}
 
-		const user = getUserByEmail(email);
+		const user: User | undefined = getUserByEmail(email);
 		if (!user) {
 			// return fail(400, { message: 'Invalid credentials' });
 			console.log('invalid user');
@@ -59,6 +60,12 @@ export const actions = {
 		}
 
 		createSession(user.id);
+		cookies.set('session', user.id.toString(), {
+			path: '/',
+			httpOnly: true,
+			sameSite: 'strict',
+			maxAge: 60 * 60 * 24 * 60
+		});
 
 		// const valid = await verify(user.password, password);
 		// if (!valid) {
