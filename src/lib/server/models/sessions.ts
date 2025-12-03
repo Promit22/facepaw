@@ -14,3 +14,7 @@ export function getUserFromSession(id: string) {
 		)
 		.get(id);
 }
+
+export function deleteSessioin(id: string) {
+	db.prepare(`DELETE FROM sessions WHERE id = ?`).run(id);
+}
