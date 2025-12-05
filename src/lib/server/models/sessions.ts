@@ -1,3 +1,4 @@
+import type { User } from '$lib/types/user';
 import { db } from '../db/db';
 import crypto from 'node:crypto';
 
@@ -7,12 +8,12 @@ export function createSession(user_id: number) {
 	return id;
 }
 
-export function getUserFromSession(id: string) {
+export function getUserFromSession(id: string): User | undefined {
 	return db
 		.prepare(
 			`SELECT users.* FROM sessions JOIN users ON user.id = sessions.user_id WHERE sessions.id = ?`
 		)
-		.get(id);
+		.get(id) as User | undefined;
 }
 
 export function deleteSessioin(id: string) {
