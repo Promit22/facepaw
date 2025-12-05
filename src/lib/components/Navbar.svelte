@@ -1,4 +1,4 @@
 <script lang="ts">
 	let { user } = $props();
-	console.log('user');
+	console.log('user', user);
 </script>

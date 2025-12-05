@@ -52,6 +52,8 @@ export const actions = {
 		}
 
 		const user: User | undefined = getUserByEmail(email);
+		console.log('from page.server.ts user is: ', user);
+
 		if (!user) {
 			// return fail(400, { message: 'Invalid credentials' });
 			console.log('invalid user');
@@ -60,6 +62,8 @@ export const actions = {
 		}
 
 		createSession(user.id);
+		console.log(user.id);
+
 		cookies.set('session', user.id.toString(), {
 			path: '/',
 			httpOnly: true,
