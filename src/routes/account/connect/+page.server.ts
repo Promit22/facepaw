@@ -21,8 +21,8 @@ export const actions = {
 
 		try {
 			const userId = createUser(name, email, password).lastInsertRowid;
-			createSession(userId as number);
-			cookies.set('session', userId.toString(), {
+			const id = createSession(userId as number);
+			cookies.set('session', id.toString(), {
 				path: '/',
 				httpOnly: true,
 				sameSite: 'strict',
@@ -61,10 +61,10 @@ export const actions = {
 			return 'invalid user';
 		}
 
-		createSession(user.id);
+		const id = createSession(user.id);
 		console.log(user.id);
 
-		cookies.set('session', user.id.toString(), {
+		cookies.set('session', id.toString(), {
 			path: '/',
 			httpOnly: true,
 			sameSite: 'strict',
