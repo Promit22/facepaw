@@ -2,31 +2,30 @@
 	import * as Sidebar from '$lib/components/ui/sidebar/index.js';
 	import HouseIcon from '@lucide/svelte/icons/house';
 	import CircleUserIcon from '@lucide/svelte/icons/circle-user';
-	import HameburgerIcon from '@lucide/svelte/icons/hamburger'
-	import { HamburgerIcon } from '@lucide/svelte';
+	import HameburgerIcon from '@lucide/svelte/icons/hamburger';
 	const items = [
-		{
-			name: 'Home',
-			url: '/',
-			icon: HouseIcon
-		},
 		{
 			name: 'Account',
 			url: '/',
 			icon: CircleUserIcon
 		},
 		{
+			name: 'Home',
+			url: '/',
+			icon: HouseIcon
+		},
+		{
 			name: 'Posts',
 			url: '/',
-			icon: HamburgerIcon 
+			icon: HameburgerIcon
 		}
 	];
 </script>
 
-<Sidebar.Root side="right" variant="sidebar" collapsible="offcanvas">
+<Sidebar.Root>
 	<Sidebar.Content>
 		<Sidebar.Group>
-			<Sidebar.GroupLabel>Application</Sidebar.GroupLabel>
+			<Sidebar.GroupLabel>FacePaw</Sidebar.GroupLabel>
 			<Sidebar.GroupContent>
 				<Sidebar.Menu>
 					{#each items as item (item.name)}

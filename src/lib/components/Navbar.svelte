@@ -1,15 +1,6 @@
-<!-- <script lang="ts">
-	import { Button } from '$lib/components/ui/button';
-	import * as Sidebar from "$lib/components/ui/sidebar/index.js"
-	import AppSidebar from './AppSidebar.svelte';
-
-	let { children } = $props();
+<script lang="ts">
 </script>
 
-<Sidebar.Provider>
-  <AppSidebar />
-  <main>
-    <Sidebar.Trigger />
-    {@render children?.()}
-  </main>
-</Sidebar.Provider> -->
+<header class="fixed m-0 h-10 w-full bg-blue-300 p-0">
+	<h2 class="p-0 m-0">Facepaw</h2>
+</header>
