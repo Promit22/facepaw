@@ -20,14 +20,13 @@
 	}
 </script>
 
-<section class="max-w-2xl my-3.5 lg:mx-auto">
+<section class="mt-10 max-w-2xl lg:mx-auto">
 	<Card.Root>
 		<Card.Header>
 			<div class="relative">
-				<Button variant="destructive" class="w-[10ch] p-1.5 absolute right-0">Cancel</Button>
+				<Button variant="destructive" class="absolute right-0 w-[10ch] p-1.5">Cancel</Button>
 			</div>
 			<Card.Title>Create your post</Card.Title>
-			
 		</Card.Header>
 		<Card.Content>
 			<form action="">

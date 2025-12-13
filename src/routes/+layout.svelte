@@ -5,10 +5,10 @@
 	import HouseIcon from '@lucide/svelte/icons/house';
 	import CircleUserIcon from '@lucide/svelte/icons/circle-user';
 	import HameburgerIcon from '@lucide/svelte/icons/hamburger';
-
+	import UserIcon from '$lib/components/UserIcon.svelte';
 	import Input from '$lib/components/ui/input/input.svelte';
 
-	let { children } = $props();
+	let { children, data } = $props();
 
 	const items = [
 		{
@@ -30,14 +30,16 @@
 </script>
 
 <!-- <Navbar /> -->
-<header class="fixed right-5 text-2xl">
+<div class="fixed top-0 z-0 h-10 w-full bg-amber-200"></div>
+<header class="fixed top-0.5 right-5 z-5 text-2xl">
 	<h1>FacePaw</h1>
 </header>
 <nav class="m-5">
 	<Sidebar.Provider>
 		<AppSidebar {items} />
 		<main>
-			<Sidebar.Trigger class="cursor-pointer text-2xl" />
+			<UserIcon user={data.user ? data.user : ''} />
+			<!-- <Sidebar.Trigger  class="fixed cursor-pointer text-2xl" /> -->
 			<!-- <button onclick={() => sbar.toggle()}>toggle sidebar</button> -->
 			{@render children?.()}
 		</main>
