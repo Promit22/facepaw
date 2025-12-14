@@ -2,13 +2,14 @@
 	import type { PageProps } from './$types';
 	import * as Card from '$lib/components/ui/card/index.js';
 	let { data }: PageProps = $props();
+	const user = data.user;
 </script>
 
-<article class="max-w-2xl">
+<article class="relative top-15 m-2 h-full max-w-2xl">
 	<Card.Root>
 		<Card.Header>
-			<Card.Title>Profile</Card.Title>
-			<Card.Description>Card Description</Card.Description>
+			<Card.Title>{user?.name}</Card.Title>
+			<Card.Description>{user?.email}</Card.Description>
 		</Card.Header>
 		<Card.Content>
 			<p>Card Content</p>

@@ -30,7 +30,7 @@
 </script>
 
 <!-- <Navbar /> -->
-<div class="fixed top-0 z-0 h-10 w-full bg-amber-200"></div>
+<div class="fixed top-0 z-2 h-12 w-full bg-amber-200"></div>
 <header class="fixed top-0.5 right-5 z-5 text-2xl">
 	<h1>FacePaw</h1>
 </header>
