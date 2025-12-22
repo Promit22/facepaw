@@ -29,7 +29,7 @@
 			<Card.Title>Create your post</Card.Title>
 		</Card.Header>
 		<Card.Content>
-			<form action="">
+			<form action="?/compress">
 				<div>
 					<label for="title">Post Title</label>
 					<Input id="title" />
@@ -47,6 +47,7 @@
 							type="file"
 							accept="image/jpeg, imgage/png"
 							class="hover:cursor-pointer"
+							name="image"
 							onchange={showpreview}
 						/>
 					</div>
@@ -56,7 +57,7 @@
 					<Textarea class="h-60" />
 				</div>
 				<div class="my-5">
-					<Button class="w-full">Publish post</Button>
+					<Button class="w-full" type="submit">Publish post</Button>
 				</div>
 			</form>
 		</Card.Content>
