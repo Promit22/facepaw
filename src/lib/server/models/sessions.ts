@@ -17,7 +17,7 @@ export function getUserFromSession(id: string): User | undefined {
 			 WHERE sessions.id = ?`
 		)
 		.get(id) as User | undefined;
-}
+}                  
 
 export function deleteSessioin(id: string) {
 	db.prepare(`DELETE FROM sessions WHERE id = ?`).run(id);

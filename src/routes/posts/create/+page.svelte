@@ -29,10 +29,10 @@
 			<Card.Title>Create your post</Card.Title>
 		</Card.Header>
 		<Card.Content>
-			<form action="?/compress">
+			<form method="POST" action="?/compress" enctype="multipart/form-data">
 				<div>
 					<label for="title">Post Title</label>
-					<Input id="title" />
+					<Input id="title" name="title" />
 				</div>
 				<div class="mt-3.5">
 					<Label for="image" class="max-h-[500px] max-w-[500px]">
@@ -54,7 +54,7 @@
 				</div>
 				<div class="mt-5">
 					<label for="description">Share your story</label>
-					<Textarea class="h-60" />
+					<Textarea class="h-60" id="description" name="description"/>
 				</div>
 				<div class="my-5">
 					<Button class="w-full" type="submit">Publish post</Button>
