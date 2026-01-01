@@ -1,3 +1,10 @@
-import { db } from "./db/db";
+import { db } from './db/db';
+// import crypto from 'node:crypto';
 
-function createPost()
+export function createPost(user_id: number, title: string, content: string) {
+	db.prepare(
+		`
+        INSERT INTO posts (user_id, title, content) VALUES(?, ?, ?))
+        `
+	).run(user_id, title, content);
+}

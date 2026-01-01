@@ -1,5 +1,11 @@
 import sharp from 'sharp';
-import type { RequestEvent } from './$types';
+import type { PageServerLoad } from './$types';
+
+export const load: PageServerLoad = async ({ parent }) => {
+	const { user } = await parent();
+	console.log('from load', user);
+};
+
 export const actions = {
 	compress: async ({ request }) => {
 		const data = await request.formData();
@@ -25,4 +31,10 @@ export const actions = {
 	when user publishes a post their id needs to be retrieved from the users 
 	table and store the title anad des in the posts table while the image info
 	will be saved to the image table such as image path
+*/
+
+/*
+	current plan: on publish store necessary data in posts table and store image path in image table
+	all of this will be done by functions. need to write two functions which will do the following:
+	user posts so a function 
 */

@@ -35,6 +35,6 @@ db.exec(`
 		id INTEGER PRIMARY KEY,
 		post_Id INTEGER NOT NULL,
 		path TEXT,
-		FOREIGN KEY (post_id) REFERENCES posts(ud)
+		FOREIGN KEY (post_id) REFERENCES posts(id)
 	)	
 	`);
