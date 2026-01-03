@@ -1,20 +1,23 @@
 import sharp from 'sharp';
-import type { PageServerLoad } from './$types';
+import { createPost } from '$lib/server/models/posts.js';
+import { getString } from '$lib/helper/string.js';
+import { getRandomId } from '$lib/helper/randomid.js';
+import { storeImagePath } from '$lib/server/models/image.js';
+import { getNumber } from '$lib/helper/number.js';
+import path from 'node:path';
 
-export const load: PageServerLoad = async ({ parent }) => {
-	const { user } = await parent();
-	console.log('from load', user);
-};
+const dir = 'static/images/posts';
 
 export const actions = {
-	compress: async ({ request }) => {
+	compress: async ({ request, locals }) => {
 		const data = await request.formData();
-		const title = data.get('title');
+		const title = getString(data.get('title'));
 		const image = data.get('image') as File;
-		const description = data.get('description');
-		console.log(image);
-
-		// if (!image) return 'not';
+		const description = getString(data.get('description'));
+		const user = locals.user;
+		const fileName = `${getRandomId()}.webp`;
+		const currentPath = path.join('static', 'images', 'posts', fileName);
+		// const currentPath = `${dir}/${getRandomId()}.webp`;
 		const buffer = await image.arrayBuffer();
 		console.log('image', buffer);
 		await sharp(buffer)
@@ -23,7 +26,12 @@ export const actions = {
 			.webp({
 				quality: 65
 			})
-			.toFile('src/lib/assets/test.webp');
+			.toFile(currentPath);
+		if (user && title && description) {
+			const postId = getNumber(createPost(user.id, title, description).lastInsertRowid);
+			if (postId) storeImagePath(postId, currentPath);
+			// console.log(post.lastInsertRowId);
+		}
 	}
 };
 
