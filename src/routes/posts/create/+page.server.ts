@@ -6,8 +6,6 @@ import { storeImagePath } from '$lib/server/models/image.js';
 import { getNumber } from '$lib/helper/number.js';
 import path from 'node:path';
 
-const dir = 'static/images/posts';
-
 export const actions = {
 	compress: async ({ request, locals }) => {
 		const data = await request.formData();
@@ -28,8 +26,11 @@ export const actions = {
 			})
 			.toFile(currentPath);
 		if (user && title && description) {
-			const postId = getNumber(createPost(user.id, title, description).lastInsertRowid);
-			if (postId) storeImagePath(postId, currentPath);
+			// const postId = getNumber(createPost(user.id, title, description).lastInsertRowid);
+			const postId = createPost(user.id, title, description).lastInsertRowid;
+			console.log('postid', postId);
+
+			if (postId) storeImagePath(postId as number, currentPath);
 			// console.log(post.lastInsertRowId);
 		}
 	}

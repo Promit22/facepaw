@@ -27,14 +27,14 @@ db.exec(`
 		title TEXT,
 		content TEXT,
 		FOREIGN KEY (user_id) REFERENCES users(id)
-	)
+	);
 	`);
 
 db.exec(`
 	CREATE TABLE IF NOT EXISTS image (
 		id INTEGER PRIMARY KEY,
-		post_Id INTEGER NOT NULL,
+		post_id INTEGER NOT NULL,
 		path TEXT,
 		FOREIGN KEY (post_id) REFERENCES posts(id)
-	)	
+	);	
 	`);

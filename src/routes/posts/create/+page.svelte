@@ -32,7 +32,7 @@
 			<form method="POST" action="?/compress" enctype="multipart/form-data">
 				<div>
 					<label for="title">Post Title</label>
-					<Input id="title" name="title" />
+					<Input id="title" name="title" required />
 				</div>
 				<div class="mt-3.5">
 					<Label for="image" class="max-h-[500px] max-w-[500px]">
@@ -49,12 +49,13 @@
 							class="hover:cursor-pointer"
 							name="image"
 							onchange={showpreview}
+							required
 						/>
 					</div>
 				</div>
 				<div class="mt-5">
 					<label for="description">Share your story</label>
-					<Textarea class="h-60" id="description" name="description"/>
+					<Textarea class="h-60" id="description" name="description" required />
 				</div>
 				<div class="my-5">
 					<Button class="w-full" type="submit">Publish post</Button>
