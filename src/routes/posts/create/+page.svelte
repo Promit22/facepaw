@@ -5,6 +5,9 @@
 	import Label from '$lib/components/ui/label/label.svelte';
 	import Textarea from '$lib/components/ui/textarea/textarea.svelte';
 
+	let { posts } = $props();
+	console.log('posts from posts page', posts);
+
 	let inp: HTMLDivElement;
 	let previmg: HTMLImageElement;
 	let span: HTMLSpanElement;
