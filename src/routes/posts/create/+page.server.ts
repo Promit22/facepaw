@@ -30,7 +30,7 @@ export const actions = {
 			const postId = createPost(user.id, title, description).lastInsertRowid;
 			console.log('postid', postId);
 
-			if (postId) storeImagePath(postId as number, currentPath);
+			if (postId) storeImagePath(postId as number, currentPath.replace('static', ''));
 			// console.log(post.lastInsertRowId);
 		}
 	}
