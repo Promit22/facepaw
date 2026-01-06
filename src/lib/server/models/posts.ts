@@ -1,3 +1,4 @@
+import type { Post } from '$lib/types/post';
 import { db } from '../db/db';
 
 export function createPost(user_id: number, title: string, content: string) {
@@ -11,13 +12,15 @@ export function createPost(user_id: number, title: string, content: string) {
 }
 
 export function getPosts() {
-	const posts = db
+	const posts: Post[] = db
 		.prepare(
 			`
 			SELECT posts.id AS postId, posts.title, posts.content, posts.created_At, image.path as imagePath
 			FROM posts LEFT JOIN image ON posts.id = image.post_id ORDER BY posts.created_At DESC
 		`
 		)
-		.all();
-	return { posts };
+		.all() as Post[];
+	console.log('posts from posts.ts', posts);
+
+	return posts;
 }

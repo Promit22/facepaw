@@ -3,9 +3,12 @@
 	import imag from '$lib/assets/IMG-20250822-WA0001.jpg';
 	import { ThumbsUp } from '@lucide/svelte';
 	import { MessageCircleMore } from '@lucide/svelte';
+	let { data } = $props();
+	let { posts } = data;
+	console.log('posts', posts);
 </script>
 
-<article class="relative z-0 top-5 m-2 mx-auto my-5 max-w-2xl">
+<article class="relative top-5 z-0 m-2 mx-auto my-5 max-w-2xl">
 	<Card.Root>
 		<Card.Header>
 			<a href="/users/id" class="flex flex-row items-center gap-4">
