@@ -3,7 +3,6 @@ import { createPost } from '$lib/server/models/posts.js';
 import { getString } from '$lib/helper/string.js';
 import { getRandomId } from '$lib/helper/randomid.js';
 import { storeImagePath } from '$lib/server/models/image.js';
-import { getNumber } from '$lib/helper/number.js';
 import path from 'node:path';
 
 export const actions = {

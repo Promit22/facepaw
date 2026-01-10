@@ -24,3 +24,23 @@ export function getPosts() {
 
 	return posts;
 }
+
+export function like(id: number) {
+	return db
+		.prepare(
+			`
+		UPDATE posts SET likes_count = likes_count + 1 where id = ?;
+		`
+		)
+		.run(id);
+}
+
+export function unLike(id: number) {
+	return db
+		.prepare(
+			`
+	 	UPDATE posts SET likes_count = likes_count - 1 WHERE id = ?
+		`
+		)
+		.run(id);
+}
