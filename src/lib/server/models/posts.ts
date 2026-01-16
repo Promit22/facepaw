@@ -25,7 +25,9 @@ export function getPosts() {
 	return posts;
 }
 
-export function like(id: number) {
+export function addLikeToPosts(id: number) {
+	console.log('called like function');
+
 	return db
 		.prepare(
 			`
@@ -35,7 +37,15 @@ export function like(id: number) {
 		.run(id);
 }
 
-export function unLike(id: number) {
+export function addLike(post_id: number, user_id: number) {
+	db.prepare(
+		`
+		INSERT INTO post_like (post_id, user_id) VALUES(?, ?)
+		`
+	).run(post_id, user_id);
+}
+
+export function removeLikeFromPosts(id: number) {
 	return db
 		.prepare(
 			`
@@ -43,4 +53,46 @@ export function unLike(id: number) {
 		`
 		)
 		.run(id);
+}
+
+export function removeLike(post_id: number, user_id: number) {
+	db.prepare(
+		`
+		DELETE FROM post_likes
+		where post_id = ? AND user_id = ?
+		`
+	).run(post_id, user_id);
+}
+
+export function hasLiked(post_id: number, user_id: number) {
+	const row = db
+		.prepare(
+			`
+		SELECT 1 FROM post_likes
+	    WHERE post_id = ? AND user_id = ?
+		`
+		)
+		.get(post_id, user_id);
+
+	return !!row;
+}
+
+export function toggleLike(post_id: number, user_id: number) {
+	try {
+		const trans = db.transaction(() => {
+			const liked = hasLiked(post_id, user_id);
+			if (liked) {
+				removeLike(post_id, user_id);
+				removeLikeFromPosts(post_id);
+				return { liked: false };
+			} else {
+				addLike(post_id, user_id);
+				addLikeToPosts(post_id);
+				return { liked: true };
+			}
+		});
+		trans();
+	} catch (e) {
+		return { message: 'failed to like' };
+	}
 }

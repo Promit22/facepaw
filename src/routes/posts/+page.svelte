@@ -33,18 +33,21 @@
 				</section>
 			</Card.Content>
 			<Card.Footer>
-				<div class="flex w-full cursor-pointer flex-row items-center gap-2">
-					<div
-						class="flex w-2.5 flex-1 justify-center rounded-lg p-2 duration-300 ease-in-out hover:bg-gray-200"
+				<form method="POST" class="flex w-full cursor-pointer flex-row items-center gap-2">
+					<input type="hidden" name="postId" value={postId} />
+					<button
+						type="submit"
+						formaction="?/like"
+						class="flex w-2.5 flex-1 cursor-pointer justify-center rounded-lg p-2 duration-300 ease-in-out hover:bg-gray-200"
 					>
 						<ThumbsUp class="" />
-					</div>
-					<div
+					</button>
+					<button
 						class="flex flex-1 justify-center rounded-lg p-2 duration-300 ease-in-out hover:bg-gray-200"
 					>
 						<MessageCircleMore />
-					</div>
-				</div>
+					</button>
+				</form>
 			</Card.Footer>
 		</Card.Root>
 	</article>
