@@ -1,4 +1,4 @@
-import { getPosts, like } from '$lib/server/models/posts';
+import { getPosts, toggleLike } from '$lib/server/models/posts';
 // import type { Post } from '$lib/types/post';
 
 export const load = async () => {
@@ -10,9 +10,10 @@ export const actions = {
 	like: async ({ request }) => {
 		const data = await request.formData();
 		const postId = Number(data.get('postId'));
-		like(postId);
-		// if (typeof postId === 'number') like(postId);
-		console.log('post id from post server', postId);
+		const userId = Number(data.get('userId'));
+		if (postId && userId) {
+			toggleLike(postId, userId);
+		}
 	}
 };
 

@@ -25,7 +25,7 @@ export function getPosts() {
 	return posts;
 }
 
-export function addLikeToPosts(id: number) {
+export function addLikeToPost(id: number) {
 	console.log('called like function');
 
 	return db
@@ -45,7 +45,7 @@ export function addLike(post_id: number, user_id: number) {
 	).run(post_id, user_id);
 }
 
-export function removeLikeFromPosts(id: number) {
+export function removeLikeFromPost(id: number) {
 	return db
 		.prepare(
 			`
@@ -83,11 +83,11 @@ export function toggleLike(post_id: number, user_id: number) {
 			const liked = hasLiked(post_id, user_id);
 			if (liked) {
 				removeLike(post_id, user_id);
-				removeLikeFromPosts(post_id);
+				removeLikeFromPost(post_id);
 				return { liked: false };
 			} else {
 				addLike(post_id, user_id);
-				addLikeToPosts(post_id);
+				addLikeToPost(post_id);
 				return { liked: true };
 			}
 		});

@@ -35,6 +35,7 @@
 			<Card.Footer>
 				<form method="POST" class="flex w-full cursor-pointer flex-row items-center gap-2">
 					<input type="hidden" name="postId" value={postId} />
+					<input type="hidden" name="userId" value={user?.id} />
 					<button
 						type="submit"
 						formaction="?/like"
