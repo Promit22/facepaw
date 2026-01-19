@@ -4,4 +4,5 @@ export interface Post {
 	content: string;
 	createdAt: string;
 	imagePath: string;
+	likes_count: number;
 }

@@ -12,7 +12,9 @@ export const actions = {
 		const postId = Number(data.get('postId'));
 		const userId = Number(data.get('userId'));
 		if (postId && userId) {
-			toggleLike(postId, userId);
+			console.log(userId, 'liked');
+
+			return toggleLike(postId, userId);
 		}
 	}
 };

@@ -15,7 +15,7 @@ export function getPosts() {
 	const posts: Post[] = db
 		.prepare(
 			`
-			SELECT posts.id AS postId, posts.title, posts.content, posts.created_At, image.path as imagePath
+			SELECT posts.id AS postId, posts.title, posts.content, posts.created_At, posts.likes_count, image.path as imagePath
 			FROM posts LEFT JOIN image ON posts.id = image.post_id ORDER BY posts.created_At DESC
 		`
 		)
@@ -40,7 +40,7 @@ export function addLikeToPost(id: number) {
 export function addLike(post_id: number, user_id: number) {
 	db.prepare(
 		`
-		INSERT INTO post_like (post_id, user_id) VALUES(?, ?)
+		INSERT INTO post_likes (post_id, user_id) VALUES(?, ?)
 		`
 	).run(post_id, user_id);
 }
@@ -81,6 +81,9 @@ export function toggleLike(post_id: number, user_id: number) {
 	try {
 		const trans = db.transaction(() => {
 			const liked = hasLiked(post_id, user_id);
+
+			console.log('likes from posts.ts', liked);
+
 			if (liked) {
 				removeLike(post_id, user_id);
 				removeLikeFromPost(post_id);
