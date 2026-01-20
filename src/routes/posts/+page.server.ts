@@ -3,6 +3,8 @@ import { getPosts, toggleLike } from '$lib/server/models/posts';
 
 export const load = async () => {
 	const posts = getPosts();
+	console.log('posts from page server', posts);
+
 	return { posts };
 };
 

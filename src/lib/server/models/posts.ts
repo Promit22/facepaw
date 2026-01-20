@@ -46,6 +46,8 @@ export function addLike(post_id: number, user_id: number) {
 }
 
 export function removeLikeFromPost(id: number) {
+	console.log('called remove like from posts');
+
 	return db
 		.prepare(
 			`
@@ -56,6 +58,8 @@ export function removeLikeFromPost(id: number) {
 }
 
 export function removeLike(post_id: number, user_id: number) {
+	console.log('called remove like function');
+
 	db.prepare(
 		`
 		DELETE FROM post_likes
@@ -81,6 +85,7 @@ export function toggleLike(post_id: number, user_id: number) {
 	try {
 		const trans = db.transaction(() => {
 			const liked = hasLiked(post_id, user_id);
+			console.log(post_id, user_id);
 
 			console.log('likes from posts.ts', liked);
 

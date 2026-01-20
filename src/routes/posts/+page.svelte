@@ -3,6 +3,7 @@
 	import imag from '$lib/assets/IMG-20250822-WA0001.jpg';
 	import { ThumbsUp } from '@lucide/svelte';
 	import { MessageCircleMore } from '@lucide/svelte';
+	import { enhance } from '$app/forms';
 	let { data, form } = $props();
 	let { posts, user } = data;
 	console.log('posts', posts);
@@ -33,7 +34,11 @@
 				</section>
 			</Card.Content>
 			<Card.Footer>
-				<form method="POST" class="flex w-full cursor-pointer flex-row items-center gap-2">
+				<form
+					method="POST"
+					use:enhance
+					class="flex w-full cursor-pointer flex-row items-center gap-2"
+				>
 					<input type="hidden" name="postId" value={postId} />
 					<input type="hidden" name="userId" value={user?.id} />
 					<button

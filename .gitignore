@@ -8,6 +8,7 @@ facepaw.db
 .wrangler
 /.svelte-kit
 /build
+/static/images/posts
 
 # OS
 .DS_Store
