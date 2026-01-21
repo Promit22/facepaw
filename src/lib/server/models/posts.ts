@@ -25,16 +25,22 @@ export function getPosts() {
 	return posts;
 }
 
+function getLikes(postId: number): number {
+	const row = db.prepare(`SELECT likes_count FROM posts WHERE id = ?`).get(postId) as
+		| { likes_count?: number }
+		| undefined;
+
+	return row?.likes_count ?? 0;
+}
+
 export function addLikeToPost(id: number) {
 	console.log('called like function');
 
-	return db
-		.prepare(
-			`
+	db.prepare(
+		`
 		UPDATE posts SET likes_count = likes_count + 1 where id = ?;
 		`
-		)
-		.run(id);
+	).run(id);
 }
 
 export function addLike(post_id: number, user_id: number) {
@@ -48,13 +54,11 @@ export function addLike(post_id: number, user_id: number) {
 export function removeLikeFromPost(id: number) {
 	console.log('called remove like from posts');
 
-	return db
-		.prepare(
-			`
+	db.prepare(
+		`
 	 	UPDATE posts SET likes_count = likes_count - 1 WHERE id = ?
 		`
-		)
-		.run(id);
+	).run(id);
 }
 
 export function removeLike(post_id: number, user_id: number) {
@@ -92,14 +96,15 @@ export function toggleLike(post_id: number, user_id: number) {
 			if (liked) {
 				removeLike(post_id, user_id);
 				removeLikeFromPost(post_id);
-				return { liked: false };
 			} else {
 				addLike(post_id, user_id);
 				addLikeToPost(post_id);
-				return { liked: true };
 			}
+			return {
+				likes_count: getLikes(post_id)
+			};
 		});
-		trans();
+		return trans();
 	} catch (e) {
 		return { message: 'failed to like' };
 	}

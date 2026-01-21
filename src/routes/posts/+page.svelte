@@ -45,8 +45,9 @@
 						type="submit"
 						formaction="?/like"
 						class="flex w-2.5 flex-1 cursor-pointer justify-center rounded-lg p-2 duration-300 ease-in-out hover:bg-gray-200"
+						onclick={() => console.log('form', form)}
 					>
-						<ThumbsUp class="font-bold text-green-600" /><span>{likes_count}</span>
+						<ThumbsUp class="font-bold text-green-600" /><span>{form?.likes_count}</span>
 					</button>
 					<button
 						class="flex flex-1 justify-center rounded-lg p-2 duration-300 ease-in-out hover:bg-gray-200"

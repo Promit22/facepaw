@@ -14,9 +14,11 @@ export const actions = {
 		const postId = Number(data.get('postId'));
 		const userId = Number(data.get('userId'));
 		if (postId && userId) {
-			console.log(userId, 'liked');
+			console.log(userId, 'liked', 'postid', postId);
 
 			return toggleLike(postId, userId);
+			// const likeStatus = toggleLike(postId, userId);
+			// console.log('likestatus', likeStatus);
 		}
 	}
 };
