@@ -37,7 +37,7 @@
 <nav class="m-5">
 	<Sidebar.Provider>
 		<AppSidebar {items} />
-		<main>
+		<main class="flex-1">
 			<UserIcon user={data.user ? data.user : ''} />
 			<!-- <Sidebar.Trigger  class="fixed cursor-pointer text-2xl" /> -->
 			<!-- <button onclick={() => sbar.toggle()}>toggle sidebar</button> -->
