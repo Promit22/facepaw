@@ -8,9 +8,8 @@
 	console.log('posts', posts);
 </script>
 
-<div class=" ml-56 grid place-items-center"></div>
 {#each posts as { postId, title, content, likes_count, imagePath } (postId)}
-	<article class="relative top-5 z-0 m-2 mx-auto my-5 w-full max-w-3xl">
+	<article class="relative z-0 mt-20 w-full max-w-3xl">
 		<Card.Root>
 			<Card.Header>
 				<a href="/users/id" class="flex flex-row items-center gap-4">

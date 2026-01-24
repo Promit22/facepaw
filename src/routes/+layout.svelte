@@ -38,8 +38,9 @@
 		<AppSidebar {items} />
 		<main class="flex-1">
 			<UserIcon user={data.user ? data.user : ''} />
-
-			{@render children?.()}
+			<div class="flex justify-center">
+				{@render children?.()}
+			</div>
 		</main>
 	</Sidebar.Provider>
 </nav>
