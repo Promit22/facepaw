@@ -16,7 +16,6 @@ export const actions = {
 		const currentPath = path.join('static', 'images', 'posts', fileName);
 		// const currentPath = `${dir}/${getRandomId()}.webp`;
 		const buffer = await image.arrayBuffer();
-		console.log('image', buffer);
 		await sharp(buffer)
 			.resize(1200, 630, { fit: 'cover' })
 			.sharpen({ sigma: 0.8 })
@@ -27,10 +26,8 @@ export const actions = {
 		if (user && title && description) {
 			// const postId = getNumber(createPost(user.id, title, description).lastInsertRowid);
 			const postId = createPost(user.id, title, description).lastInsertRowid;
-			console.log('postid', postId);
 
 			if (postId) storeImagePath(postId as number, currentPath.replace('static', ''));
-			// console.log(post.lastInsertRowId);
 		}
 	}
 };

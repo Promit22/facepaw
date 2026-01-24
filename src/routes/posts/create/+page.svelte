@@ -38,7 +38,7 @@
 					<Input id="title" name="title" required />
 				</div>
 				<div class="mt-3.5">
-					<Label for="image" class="max-h-[500px] max-w-[500px]">
+					<Label for="image" class="max-h-[500px] max-w-[500px] overflow-hidden">
 						<span class="my-2.5 mb-2 inline-block" bind:this={span}
 							>Select an Image for your post</span
 						>

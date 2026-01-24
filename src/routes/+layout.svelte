@@ -6,7 +6,6 @@
 	import CircleUserIcon from '@lucide/svelte/icons/circle-user';
 	import HameburgerIcon from '@lucide/svelte/icons/hamburger';
 	import UserIcon from '$lib/components/UserIcon.svelte';
-	import Input from '$lib/components/ui/input/input.svelte';
 
 	let { children, data } = $props();
 
@@ -39,8 +38,7 @@
 		<AppSidebar {items} />
 		<main class="flex-1">
 			<UserIcon user={data.user ? data.user : ''} />
-			<!-- <Sidebar.Trigger  class="fixed cursor-pointer text-2xl" /> -->
-			<!-- <button onclick={() => sbar.toggle()}>toggle sidebar</button> -->
+
 			{@render children?.()}
 		</main>
 	</Sidebar.Provider>

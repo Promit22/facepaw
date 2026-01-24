@@ -5,19 +5,14 @@ import type { User } from '$lib/types/user.js';
 
 export const actions = {
 	register: async ({ request, cookies }) => {
-		console.log('in register');
-
 		const formDt = await request.formData();
 		const name = formDt.get('name')?.toString();
 		const email = formDt.get('email')?.toString();
 		const password = formDt.get('password')?.toString();
-		console.log(name, email, password);
-		console.log(formDt);
 
 		if (!name || !email || !password) {
 			return 'missing';
 		}
-		console.log('passed the undefined checking');
 
 		try {
 			const userId = createUser(name, email, password).lastInsertRowid;
@@ -30,15 +25,11 @@ export const actions = {
 			});
 		} catch (e) {
 			if (String(e).includes('UNIQUE')) {
-				console.log('Duplicate email');
-
 				return 'Email already exists';
 			}
-			console.log('error occured');
 
 			return 'hujubuju';
 		}
-		console.log('redirecting to posts');
 
 		throw redirect(303, '../posts');
 	},
@@ -52,17 +43,14 @@ export const actions = {
 		}
 
 		const user: User | undefined = getUserByEmail(email);
-		console.log('from page.server.ts user is: ', user);
 
 		if (!user) {
 			// return fail(400, { message: 'Invalid credentials' });
-			console.log('invalid user');
 
 			return 'invalid user';
 		}
 
 		const id = createSession(user.id);
-		console.log(user.id);
 
 		cookies.set('session', id.toString(), {
 			path: '/',

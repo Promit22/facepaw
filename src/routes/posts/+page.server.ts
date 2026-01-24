@@ -3,7 +3,6 @@ import { getPosts, toggleLike } from '$lib/server/models/posts';
 
 export const load = async () => {
 	const posts = getPosts();
-	console.log('posts from page server', posts);
 
 	return { posts };
 };
@@ -14,11 +13,9 @@ export const actions = {
 		const postId = Number(data.get('postId'));
 		const userId = Number(data.get('userId'));
 		if (postId && userId) {
-			console.log(userId, 'liked', 'postid', postId);
-
 			return toggleLike(postId, userId);
 			// const likeStatus = toggleLike(postId, userId);
-			// console.log('likestatus', likeStatus);
+			//
 		}
 	}
 };
