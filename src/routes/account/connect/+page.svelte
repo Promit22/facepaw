@@ -11,8 +11,8 @@
 </script>
 
 {#if register}
-	<section class="my-50 flex items-center justify-center">
-		<Card.Root class="m-5 w-full max-w-lg">
+	<section class=" w-full max-w-3xl">
+		<Card.Root class="">
 			<Card.Header>
 				<div class="relative">
 					<Button
