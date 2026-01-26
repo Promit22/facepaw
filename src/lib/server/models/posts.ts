@@ -11,18 +11,24 @@ export function createPost(user_id: number, title: string, content: string) {
 		.run(user_id, title, content);
 }
 
-export function getPosts() {
-	const posts: Post[] = db
-		.prepare(
-			`
+export function getPosts(id?: number) {
+	const postsByDId = db.prepare(
+		`
+			SELECT posts.id AS postId, posts.title, posts.content, posts.created_At, posts.likes_count, image.path as imagePath
+			FROM posts LEFT JOIN image ON posts.id = image.post_id WHERE posts.user_id = ? ORDER BY posts.created_At DESC
+		`
+	);
+
+	const allPosts = db.prepare(
+		`
 			SELECT posts.id AS postId, posts.title, posts.content, posts.created_At, posts.likes_count, image.path as imagePath
 			FROM posts LEFT JOIN image ON posts.id = image.post_id ORDER BY posts.created_At DESC
 		`
-		)
-		.all() as Post[];
-	console.log('posts from posts.ts', posts);
-
-	return posts;
+	);
+	if (id !== undefined) {
+		return postsByDId.all(id) as Post[];
+	}
+	return allPosts.all() as Post[];
 }
 
 function getLikes(postId: number): number {
