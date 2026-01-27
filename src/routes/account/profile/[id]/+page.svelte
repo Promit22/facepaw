@@ -3,8 +3,10 @@
 	import * as Card from '$lib/components/ui/card/index.js';
 	import { Button } from '$lib/components/ui/button';
 	import { User } from '@lucide/svelte';
+	import Post from '$lib/components/Post.svelte';
+	import PostPreview from '$lib/components/PostPreview.svelte';
 	let { data }: PageProps = $props();
-	const user = data.user;
+	const { user, posts } = data;
 
 	/**
 	 todo:
@@ -14,7 +16,7 @@
 	 */
 </script>
 
-<article class="relative top-15 m-2 h-full w-full max-w-2xl">
+<article class="relative top-15 m-2 mb-3 h-full w-full max-w-2xl">
 	<Card.Root>
 		<Card.Header class="flex flex-1 items-center justify-between">
 			<div>
@@ -24,10 +26,13 @@
 				</div>
 				<Card.Description>{user?.email}</Card.Description>
 			</div>
+			<!-- {#if user.id === }
+				
+			{/if} -->
 			<Button>Edit Profile</Button>
 		</Card.Header>
 		<Card.Content>
-			<p>Card Content</p>
+			<PostPreview {posts} />
 		</Card.Content>
 		<Card.Footer>
 			<p>Card Footer</p>
