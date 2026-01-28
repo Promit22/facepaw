@@ -3,16 +3,26 @@
 	import * as Card from '$lib/components/ui/card/index.js';
 	import { Button } from '$lib/components/ui/button';
 	import { User } from '@lucide/svelte';
-	import Post from '$lib/components/Post.svelte';
+	// import Post from '$lib/components/Post.svelte';
+	import type { User as Cuser } from '$lib/types/user';
+	import type { Post } from '$lib/types/post';
 	import PostPreview from '$lib/components/PostPreview.svelte';
 	let { data }: PageProps = $props();
-	const { user, posts } = data;
+	// const { user, posts } = data;
+	const user: Cuser = data.user;
+	const posts: Post[] = data.posts;
 
 	/**
 	 todo:
 	 show the posts posted by the user on their profile
 	 provide deeplink to the displayed posts
 	 more?
+
+	 current stat: undone
+
+	 a user clicks the post in the feed. when the user clicks the post owners username/profile pic it takes them to 
+	 the profile. However, the spectator should not be allowed to edit the profile aka the other users profile. 
+	 to achieve this the script needs to verify that the viewing user is not the owner.
 	 */
 </script>
 
@@ -26,7 +36,7 @@
 				</div>
 				<Card.Description>{user?.email}</Card.Description>
 			</div>
-			<!-- {#if user.id === }
+			<!-- {#if user.id === posts.user_id}
 				
 			{/if} -->
 			<Button>Edit Profile</Button>
