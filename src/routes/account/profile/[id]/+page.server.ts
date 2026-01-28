@@ -6,5 +6,5 @@ export const load: PageServerLoad = async ({ params }) => {
 	console.log(id);
 	const posts = getPosts(id);
 
-	return { posts };
+	return { posts, id };
 };

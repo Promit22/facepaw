@@ -11,6 +11,7 @@
 	// const { user, posts } = data;
 	const user: Cuser = data.user;
 	const posts: Post[] = data.posts;
+	const id: number = data.id;
 
 	/**
 	 todo:
@@ -36,10 +37,9 @@
 				</div>
 				<Card.Description>{user?.email}</Card.Description>
 			</div>
-			<!-- {#if user.id === posts.user_id}
-				
-			{/if} -->
-			<Button>Edit Profile</Button>
+			{#if user.id === id}
+				<Button>Edit Profile</Button>
+			{/if}
 		</Card.Header>
 		<Card.Content>
 			<PostPreview {posts} />
