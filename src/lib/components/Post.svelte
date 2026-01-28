@@ -8,7 +8,7 @@
 	console.log('posts from post component', posts);
 </script>
 
-{#each posts as { postId, title, content, likes_count, imagePath } (postId)}
+{#each posts as { postId, title, content, likes_count, imagePath }, i (postId)}
 	<article class="relative z-0 mt-20 w-full max-w-3xl">
 		<Card.Root>
 			<Card.Header>

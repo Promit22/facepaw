@@ -1,7 +1,12 @@
 import { getPosts, toggleLike } from '$lib/server/models/posts';
+import type { PageServerLoad } from './$types.js';
 // import type { Post } from '$lib/types/post';
 
-export const load = async () => {
+/*
+ it will be great if this load could return the relevant user along with each post
+*/
+
+export const load: PageServerLoad = async () => {
 	const posts = getPosts();
 
 	return { posts };

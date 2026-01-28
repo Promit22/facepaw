@@ -9,3 +9,13 @@ export function createUser(name: string, email: string, password: string) {
 export function getUserByEmail(email: string): User | undefined {
 	return db.prepare(`SELECT * FROM users WHERE email = ?`).get(email) as User | undefined;
 }
+
+export function getUserById(id: number) {
+	return db
+		.prepare(
+			`
+		SELECT users.* FROM users WHERE users.id = ?
+		`
+		)
+		.get(id);
+}
