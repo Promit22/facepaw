@@ -1,5 +1,8 @@
 import { getPosts, toggleLike } from '$lib/server/models/posts';
 import type { PageServerLoad } from './$types.js';
+import { getUserById } from '$lib/server/models/users.js';
+import type { Post } from '$lib/types/post.js';
+import type { User } from '$lib/types/user.js';
 // import type { Post } from '$lib/types/post';
 
 /*
@@ -8,8 +11,15 @@ import type { PageServerLoad } from './$types.js';
 
 export const load: PageServerLoad = async () => {
 	const posts = getPosts();
+	const length = posts.length;
+	const postsAndUsers: { post: Post; user: { name: string; email: string; id: number } }[] = [];
+	for (let i = 0; i < length; i++) {
+		const post = posts[i];
+		const user = getUserById(post.user_id);
+		postsAndUsers.push({ post: post, user: user });
+	}
 
-	return { posts };
+	return { postsAndUsers };
 };
 
 export const actions = {

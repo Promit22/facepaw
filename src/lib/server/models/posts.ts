@@ -21,7 +21,7 @@ export function getPosts(id?: number) {
 
 	const allPosts = db.prepare(
 		`
-			SELECT posts.id AS postId, posts.title, posts.content, posts.created_At, posts.likes_count, image.path as imagePath
+			SELECT posts.id AS postId, posts.title, posts.content, posts.created_At, posts.likes_count, posts.user_id, image.path as imagePath
 			FROM posts LEFT JOIN image ON posts.id = image.post_id ORDER BY posts.created_At DESC
 		`
 	);

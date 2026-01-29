@@ -3,6 +3,6 @@ export interface Post {
 	title: string;
 	content: string;
 	createdAt: string;
-	imagePath: string;
+	user_id: number;
 	likes_count: number;
 }

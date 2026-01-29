@@ -1,8 +1,8 @@
 <script lang="ts">
 	import Post from '$lib/components/Post.svelte';
 	let { data, form } = $props();
-	let { posts, user } = data;
-	console.log('posts', posts);
+	let { postsAndUsers, user } = data;
+	console.log('posts', postsAndUsers);
 </script>
 
-<Post {posts} {user} {form} />
+<Post {postsAndUsers} {user} {form} />

@@ -14,8 +14,8 @@ export function getUserById(id: number) {
 	return db
 		.prepare(
 			`
-		SELECT users.* FROM users WHERE users.id = ?
+		SELECT users.name, users.email, users.id FROM users WHERE users.id = ?
 		`
 		)
-		.get(id);
+		.get(id) as { name: string; email: string; id: number };
 }

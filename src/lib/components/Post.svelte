@@ -4,11 +4,11 @@
 	import { MessageCircleMore } from '@lucide/svelte';
 	import { enhance } from '$app/forms';
 	import { User } from '@lucide/svelte';
-	let { posts, user, form } = $props();
-	console.log('posts from post component', posts);
+	let { postsAndUsers, user, form } = $props();
+	console.log('postsAndUsers from post component', postsAndUsers);
 </script>
 
-{#each posts as { postId, title, content, likes_count, imagePath }, i (postId)}
+{#each postsAndUsers as { postId, title, content, likes_count, imagePath }, i (postId)}
 	<article class="relative z-0 mt-20 w-full max-w-3xl">
 		<Card.Root>
 			<Card.Header>
