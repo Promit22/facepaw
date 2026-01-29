@@ -4,21 +4,23 @@
 	import { MessageCircleMore } from '@lucide/svelte';
 	import { enhance } from '$app/forms';
 	import { User } from '@lucide/svelte';
-	let { postsAndUsers, user, form } = $props();
+	let { postsAndUsers, form, user } = $props();
+	// console.log(postsAndUsers[0].user.id);
+
 	console.log('postsAndUsers from post component', postsAndUsers);
 </script>
 
-{#each postsAndUsers as { postId, title, content, likes_count, imagePath }, i (postId)}
+{#each postsAndUsers as { post: { postId, title, content, likes_count, imagePath }, puser } (postId)}
 	<article class="relative z-0 mt-20 w-full max-w-3xl">
 		<Card.Root>
 			<Card.Header>
-				<a href="/account/profile/{user.id}" class="flex flex-row items-center gap-4">
+				<a href="/account/profile/{puser.id}" class="flex flex-row items-center gap-4">
 					{#if imagePath}
 						<img src={imagePath} alt="" class="h-8 w-8 rounded-full" />
 					{:else}
 						<User class="mr-2 h-7 w-7 rounded-full bg-amber-300 p-1.5" />
 					{/if}
-					<p>{user?.name}</p>
+					<p>{puser?.name}</p>
 				</a>
 			</Card.Header>
 			<Card.Content>
@@ -48,7 +50,7 @@
 						type="submit"
 						formaction="?/like"
 						class="flex w-2.5 flex-1 cursor-pointer justify-center rounded-lg p-2 duration-300 ease-in-out hover:bg-gray-200"
-						onclick={() => console.log('form', form)}
+						onclick={() => console.log('form', form, 'user', user)}
 					>
 						<ThumbsUp class="font-bold text-green-600" /><span
 							>{form?.likes_count ?? likes_count}</span
