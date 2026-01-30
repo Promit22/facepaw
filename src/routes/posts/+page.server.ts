@@ -11,7 +11,7 @@ import type { Post } from '$lib/types/post.js';
 export const load: PageServerLoad = async () => {
 	const posts = getPosts();
 	// const length = posts.length;
-	const postsAndUsers: { post: Post; puser: { name: string; email: string; id: number } }[] = [];
+	const postsAndUsers: { post: Post; puser: { name: string; id: number } }[] = [];
 	// for (let i = 0; i < length; i++) {
 	// 	const post = posts[i];
 	// 	const user = getUserById(post.user_id);

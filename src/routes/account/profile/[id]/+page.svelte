@@ -11,7 +11,7 @@
 	// const { user, posts } = data;
 	const user: Cuser = data.user;
 	const posts: Post[] = data.posts;
-	const id: number = data.id;
+	const puser: { name: string; id: number } = data.puser;
 
 	/**
 	 todo:
@@ -33,12 +33,12 @@
 			<div>
 				<div class="flex items-center">
 					<User class="mr-2 h-7 w-7 rounded-full bg-amber-300 p-1.5" />
-					<Card.Title>{user?.name}</Card.Title>
+					<Card.Title>{puser?.name}</Card.Title>
 				</div>
-				<Card.Description>{user?.email}</Card.Description>
+				<!-- <Card.Description>{puser?.email}</Card.Description> -->
 			</div>
-			{#if user.id === id}
-				<Button>Edit Profile</Button>
+			{#if user.id === puser.id}
+				<a href="/account/edit">Edit Profile</a>
 			{/if}
 		</Card.Header>
 		<Card.Content>
