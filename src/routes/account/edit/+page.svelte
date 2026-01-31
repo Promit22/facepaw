@@ -7,7 +7,7 @@
 	const user = data.user;
 </script>
 
-<div>
+<div class=" w-full max-w-3xl">
 	<Card.Root>
 		<Card.Header>
 			<Card.Title>Edit your profile</Card.Title>
