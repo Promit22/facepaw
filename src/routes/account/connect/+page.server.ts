@@ -2,18 +2,25 @@ import { redirect } from '@sveltejs/kit';
 import { createUser, getUserByEmail } from '$lib/server/models/users';
 import { createSession } from '$lib/server/models/sessions.js';
 import type { User } from '$lib/types/user.js';
+import path from 'node:path';
+import { getRandomId } from '$lib/helper/randomid.js';
+import { processImage } from '$lib/server/models/imageService.js';
 
 export const actions = {
 	register: async ({ request, cookies }) => {
 		const formDt = await request.formData();
+		const pimage = formDt.get('pimage') as File;
 		const name = formDt.get('name')?.toString();
 		const email = formDt.get('email')?.toString();
 		const password = formDt.get('password')?.toString();
 
+		const buffer = await pimage.arrayBuffer();
+		const fileName = `${getRandomId()}.webp`;
+		const filePath = path.join('static', 'images', 'profile', fileName);
 		if (!name || !email || !password) {
 			return 'missing';
 		}
-
+		processImage(buffer, filePath, 196, 196);
 		try {
 			const userId = createUser(name, email, password).lastInsertRowid;
 			const id = createSession(userId as number);

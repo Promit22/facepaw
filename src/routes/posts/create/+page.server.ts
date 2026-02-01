@@ -4,6 +4,7 @@ import { getString } from '$lib/helper/string.js';
 import { getRandomId } from '$lib/helper/randomid.js';
 import { storeImagePath } from '$lib/server/models/image.js';
 import path from 'node:path';
+import { processImage } from '$lib/server/models/imageService.js';
 
 export const actions = {
 	compress: async ({ request, locals }) => {
@@ -16,13 +17,14 @@ export const actions = {
 		const currentPath = path.join('static', 'images', 'posts', fileName);
 		// const currentPath = `${dir}/${getRandomId()}.webp`;
 		const buffer = await image.arrayBuffer();
-		await sharp(buffer)
-			.resize(1200, 630, { fit: 'cover' })
-			.sharpen({ sigma: 0.8 })
-			.webp({
-				quality: 65
-			})
-			.toFile(currentPath);
+		processImage(buffer, currentPath, 1200, 630);
+		// await sharp(buffer)
+		// 	.resize(1200, 630, { fit: 'cover' })
+		// 	.sharpen({ sigma: 0.8 })
+		// 	.webp({
+		// 		quality: 65
+		// 	})
+		// 	.toFile(currentPath);
 		if (user && title && description) {
 			// const postId = getNumber(createPost(user.id, title, description).lastInsertRowid);
 			const postId = createPost(user.id, title, description).lastInsertRowid;
