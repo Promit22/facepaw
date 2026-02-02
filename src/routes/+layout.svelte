@@ -38,7 +38,9 @@
 		<AppSidebar {items} />
 		<main class="flex-1">
 			{#if data.user}
-				<UserIcon user={data.user ? data.user : ''} />
+				<div class="fixed top-2 z-5">
+					<UserIcon user={data.user ? data.user : ''} />
+				</div>
 			{/if}
 			<div class="mt-[10vh] flex justify-center">
 				{@render children?.()}

@@ -4,6 +4,7 @@
 	import { MessageCircleMore } from '@lucide/svelte';
 	import { enhance } from '$app/forms';
 	import { User } from '@lucide/svelte';
+	import UserIcon from './UserIcon.svelte';
 	let { postsAndUsers, form, user } = $props();
 	// console.log(postsAndUsers[0].user.id);
 
@@ -14,12 +15,15 @@
 	<article class="relative z-0 mt-20 w-full max-w-3xl">
 		<Card.Root>
 			<Card.Header>
-				<a href="/account/profile/{puser.id}" class="flex flex-row items-center gap-4">
-					{#if imagePath}
-						<img src={imagePath} alt="" class="h-8 w-8 rounded-full" />
+				<a href="/account/profile/{puser.id}" class="flex flex-row items-center gap-5">
+					<div class="">
+						<UserIcon user={puser} />
+					</div>
+					<!-- {#if puser.image}
+						<img src={puser.image} alt="" class="h-8 w-8 rounded-full" />
 					{:else}
 						<User class="mr-2 h-7 w-7 rounded-full bg-amber-300 p-1.5" />
-					{/if}
+					{/if} -->
 					<p>{puser?.name}</p>
 				</a>
 			</Card.Header>

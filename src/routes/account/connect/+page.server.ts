@@ -25,7 +25,12 @@ export const actions = {
 		}
 		processImage(buffer, filePath, 196, 196);
 		try {
-			const userId = createUser(name, email, password).lastInsertRowid;
+			const userId = createUser(
+				filePath.replace('static', ''),
+				name,
+				email,
+				password
+			).lastInsertRowid;
 			const id = createSession(userId as number);
 			cookies.set('session', id.toString(), {
 				path: '/',

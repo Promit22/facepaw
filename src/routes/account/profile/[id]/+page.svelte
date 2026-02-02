@@ -1,17 +1,19 @@
 <script lang="ts">
 	import type { PageProps } from '../$types';
 	import * as Card from '$lib/components/ui/card/index.js';
+	// import UserIcon from '$lib/components/UserIcon.svelte'
 	import { Button } from '$lib/components/ui/button';
 	import { User } from '@lucide/svelte';
 	// import Post from '$lib/components/Post.svelte';
 	import type { User as Cuser } from '$lib/types/user';
 	import type { Post } from '$lib/types/post';
 	import PostPreview from '$lib/components/PostPreview.svelte';
+	import UserIcon from '$lib/components/UserIcon.svelte';
 	let { data }: PageProps = $props();
 	// const { user, posts } = data;
 	const user: Cuser = data.user;
 	const posts: Post[] = data.posts;
-	const puser: { name: string; id: number } = data.puser;
+	const puser: { image: string; name: string; id: number } = data.puser;
 
 	/**
 	 todo:
@@ -31,8 +33,8 @@
 	<Card.Root>
 		<Card.Header class="flex flex-1 items-center justify-between">
 			<div>
-				<div class="flex items-center">
-					<User class="mr-2 h-7 w-7 rounded-full bg-amber-300 p-1.5" />
+				<div class="flex items-center gap-2">
+					<UserIcon user={puser} />
 					<Card.Title>{puser?.name}</Card.Title>
 				</div>
 				<!-- <Card.Description>{puser?.email}</Card.Description> -->

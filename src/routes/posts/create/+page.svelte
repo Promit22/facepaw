@@ -23,7 +23,7 @@
 	}
 </script>
 
-<section class="mt-10 max-w-2xl lg:mx-auto">
+<section class="mt-10 w-full max-w-3xl lg:mx-auto">
 	<Card.Root>
 		<Card.Header>
 			<div class="relative">

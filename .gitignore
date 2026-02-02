@@ -9,6 +9,7 @@ facepaw.db
 /.svelte-kit
 /build
 /static/images/posts/*
+/static/images/profile/*
 
 # OS
 .DS_Store
