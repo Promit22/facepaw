@@ -13,8 +13,11 @@ export const actions = {
 		const name = formDt.get('name')?.toString();
 		const email = formDt.get('email')?.toString();
 		const password = formDt.get('password')?.toString();
+		console.log(pimage);
 
 		const buffer = await pimage.arrayBuffer();
+		console.log('bffer', buffer);
+
 		const fileName = `${getRandomId()}.webp`;
 		const filePath = path.join('static', 'images', 'profile', fileName);
 		if (!name || !email || !password) {

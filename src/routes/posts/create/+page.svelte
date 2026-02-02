@@ -48,7 +48,7 @@
 						<Input
 							id="image"
 							type="file"
-							accept="image/jpeg, imgage/png"
+							accept="image/jpeg, image/png"
 							class="hover:cursor-pointer"
 							name="image"
 							onchange={showpreview}

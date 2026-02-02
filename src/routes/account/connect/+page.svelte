@@ -25,12 +25,12 @@
 					<Card.Title class=" text-[20px] lg:text-2xl">Register to Facepaw</Card.Title>
 				</Card.Header>
 				<Card.Content>
-					<form method="POST" action="?/register">
+					<form method="POST" action="?/register" enctype="multipart/form-data">
 						<div class=" mb-5 flex justify-center">
 							<div></div>
 							<div>
 								<Input type="file" accept="image/*" id="pimage" name="pimage" class=" w-20" />
-								<Label>Upload profile image</Label>
+								<Label for="pimage">Upload profile image</Label>
 							</div>
 						</div>
 						<div class="grid gap-2">
