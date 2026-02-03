@@ -29,8 +29,8 @@
 			</Card.Header>
 			<Card.Content>
 				<h1 class="m-0 text-2xl">{title}</h1>
-				<section class="flex justify-center">
-					<div class="   mt-10 mb-10 rounded-xs lg:mt-16 lg:mb-16 lg:h-auto lg:w-[500px]">
+				<section class="flex w-full justify-center">
+					<div class=" mt-10 mb-10 w-full lg:mt-16 lg:mb-16 lg:h-auto lg:w-[500px]">
 						<img src={imagePath} alt="" class=" h-full w-full object-contain" />
 					</div>
 				</section>
