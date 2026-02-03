@@ -29,7 +29,7 @@
 	 */
 </script>
 
-<article class="relative top-15 m-2 mb-3 h-full w-full max-w-2xl">
+<article class="relative top-15 m-2 mb-3 h-full w-full max-w-3xl">
 	<Card.Root>
 		<Card.Header class="flex flex-1 flex-col items-center justify-between">
 			<div class=" w-full">
