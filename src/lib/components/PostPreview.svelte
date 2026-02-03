@@ -1,15 +1,15 @@
 <script lang="ts">
 	import * as Card from '$lib/components/ui/card';
-	import type { Post } from '$lib/types/post';
+	import type { Post, PostWithImage } from '$lib/types/post';
 	import { Button } from '$lib/components/ui/button';
 
-	let { posts }: { posts: Post[] } = $props();
+	let { posts }: { posts: PostWithImage[] } = $props();
 </script>
 
 {#each posts as { postId, title, imagePath } (postId)}
 	<Card.Root>
 		<Card.Header>
-			<h1>{title}</h1>
+			<h1 class=" text-2xl">{title}</h1>
 		</Card.Header>
 		<Card.Content>
 			<section class="flex justify-center">

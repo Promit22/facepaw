@@ -6,3 +6,7 @@ export interface Post {
 	user_id: number;
 	likes_count: number;
 }
+
+export interface PostWithImage extends Post {
+	imagePath: string;
+}

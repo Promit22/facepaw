@@ -6,13 +6,13 @@
 	import { User } from '@lucide/svelte';
 	// import Post from '$lib/components/Post.svelte';
 	import type { User as Cuser } from '$lib/types/user';
-	import type { Post } from '$lib/types/post';
+	import type { Post, PostWithImage } from '$lib/types/post';
 	import PostPreview from '$lib/components/PostPreview.svelte';
 	import UserIcon from '$lib/components/UserIcon.svelte';
 	let { data }: PageProps = $props();
 	// const { user, posts } = data;
 	const user: Cuser = data.user;
-	const posts: Post[] = data.posts;
+	const posts: PostWithImage[] = data.posts;
 	const puser: { image: string; name: string; id: number } = data.puser;
 
 	/**
@@ -31,16 +31,23 @@
 
 <article class="relative top-15 m-2 mb-3 h-full w-full max-w-2xl">
 	<Card.Root>
-		<Card.Header class="flex flex-1 items-center justify-between">
-			<div>
+		<Card.Header class="flex flex-1 flex-col items-center justify-between">
+			<div class=" w-full">
 				<div class="flex items-center gap-2">
 					<UserIcon user={puser} />
 					<Card.Title>{puser?.name}</Card.Title>
 				</div>
+				<div class=" mt-3 mb-3 flex w-full justify-center">
+					{#if puser.image}
+						<img src={puser.image} alt="" class=" h-[80%] w-[80%] rounded-full" />
+					{:else}
+						<User class=" h-[80%] w-[80%] rounded-full border-3 p-2" />
+					{/if}
+				</div>
 				<!-- <Card.Description>{puser?.email}</Card.Description> -->
 			</div>
 			{#if user.id === puser.id}
-				<a href="/account/edit">Edit Profile</a>
+				<a href="/account/edit" class=" w-[13ch] bg-amber-500 p-0.5 text-center">Edit Profile</a>
 			{/if}
 		</Card.Header>
 		<Card.Content>
