@@ -7,6 +7,16 @@
 	import { Input } from '$lib/components/ui/input';
 	import { Label } from '$lib/components/ui/label';
 
+	let prevImg: HTMLImageElement;
+	let imgSrc: string;
+
+	function showPreview(e: Event) {
+		const elm = e.target as HTMLInputElement;
+		if (!elm.files) return '';
+		const image = elm.files[0];
+		if (imgSrc) URL.revokeObjectURL(imgSrc);
+	}
+
 	let register = false;
 </script>
 
@@ -29,8 +39,19 @@
 						<div class=" mb-5 flex justify-center">
 							<div></div>
 							<div>
-								<Input type="file" accept="image/*" id="pimage" name="pimage" class=" w-20" />
-								<Label for="pimage">Upload profile image</Label>
+								<Label for="pimage">
+									Upload profile image
+									<Input
+										type="file"
+										accept="image/*"
+										id="pimage"
+										name="pimage"
+										class=" w-20"
+										onchange={showPreview}
+										hidden
+									/>
+									<img src="" alt="" bind:this={prevImg} />
+								</Label>
 							</div>
 						</div>
 						<div class="grid gap-2">

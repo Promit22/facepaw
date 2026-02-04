@@ -38,10 +38,10 @@
 					<Card.Title>{puser?.name}</Card.Title>
 				</div>
 				<div class=" mt-3 mb-3 flex w-full justify-center">
-					{#if puser.image}
+					{#if puser.imag}
 						<img src={puser.image} alt="" class=" h-[80%] w-[80%] rounded-full" />
 					{:else}
-						<User class=" h-[80%] w-[80%] rounded-full border-3 p-2" />
+						<User class=" h-[80%] w-[80%] rounded-full border-3 p-2 opacity-15" />
 					{/if}
 				</div>
 				<!-- <Card.Description>{puser?.email}</Card.Description> -->
