@@ -15,6 +15,7 @@
 		if (!elm.files) return '';
 		const image = elm.files[0];
 		if (imgSrc) URL.revokeObjectURL(imgSrc);
+		imgSrc = URL.createObjectURL(image);
 	}
 
 	let register = false;
@@ -39,7 +40,7 @@
 						<div class=" mb-5 flex justify-center">
 							<div></div>
 							<div>
-								<Label for="pimage">
+								<Label for="pimage" class="flex flex-col">
 									Upload profile image
 									<Input
 										type="file"
@@ -50,7 +51,9 @@
 										onchange={showPreview}
 										hidden
 									/>
-									<img src="" alt="" bind:this={prevImg} />
+									<div class=" max-h-80 max-w-80 rounded-full">
+										<img src={imgSrc} alt="" class="h-full w-full rounded-full" />
+									</div>
 								</Label>
 							</div>
 						</div>

@@ -41,7 +41,7 @@
 					{#if puser.imag}
 						<img src={puser.image} alt="" class=" h-[80%] w-[80%] rounded-full" />
 					{:else}
-						<User class=" h-[80%] w-[80%] rounded-full border-3 p-2 opacity-15" />
+						<User class=" h-[80%] w-[80%] rounded-full p-2 opacity-15" />
 					{/if}
 				</div>
 				<!-- <Card.Description>{puser?.email}</Card.Description> -->
