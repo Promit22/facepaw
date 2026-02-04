@@ -6,6 +6,8 @@
 	import * as Card from '$lib/components/ui/card';
 	import { Input } from '$lib/components/ui/input';
 	import { Label } from '$lib/components/ui/label';
+	import { User } from '@lucide/svelte';
+	import { onDestroy } from 'svelte';
 
 	let prevImg: HTMLImageElement;
 	let imgSrc: string;
@@ -19,6 +21,10 @@
 	}
 
 	let register = false;
+
+	onDestroy(() => {
+		URL.revokeObjectURL(imgSrc);
+	});
 </script>
 
 <div class=" w-full max-w-3xl">
@@ -40,8 +46,10 @@
 						<div class=" mb-5 flex justify-center">
 							<div></div>
 							<div>
-								<Label for="pimage" class="flex flex-col">
-									Upload profile image
+								<Label
+									for="pimage"
+									class="flex cursor-pointer flex-col items-center justify-center"
+								>
 									<Input
 										type="file"
 										accept="image/*"
@@ -51,8 +59,14 @@
 										onchange={showPreview}
 										hidden
 									/>
-									<div class=" max-h-80 max-w-80 rounded-full">
-										<img src={imgSrc} alt="" class="h-full w-full rounded-full" />
+									<div class=" w-full max-w-100">
+										{#if !imgSrc}
+											<div class="rounded-full border-2">
+												<User class="h-full w-full p-4 opacity-20" />
+											</div>
+										{:else}
+											<img src={imgSrc} alt="" class=" m-0" />
+										{/if}
 									</div>
 								</Label>
 							</div>
