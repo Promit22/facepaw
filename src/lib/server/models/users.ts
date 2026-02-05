@@ -19,3 +19,5 @@ export function getUserById(id: number) {
 		)
 		.get(id) as { name: string; id: number; image: string };
 }
+
+export function checkPassword() {}

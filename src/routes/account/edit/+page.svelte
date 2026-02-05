@@ -3,6 +3,7 @@
 	import * as Card from '$lib/components/ui/card';
 	import { Input } from '$lib/components/ui/input';
 	import { Eye, EyeOff, User } from '@lucide/svelte';
+	import Button from '$lib/components/ui/button/button.svelte';
 
 	let visible = $state(false);
 	let { data }: PageProps = $props();
@@ -20,7 +21,7 @@
 		</Card.Header>
 		<Card.Content>
 			<div>
-				<form action="" class="flex flex-col gap-4">
+				<form action="" method="POST" class="flex flex-col gap-4">
 					<div class=" flex w-full justify-center">
 						{#if !user?.image}
 							<div class="rounded-full border-2">
@@ -37,7 +38,12 @@
 						<Input type="email" id="email" value={user?.email} />
 					</label>
 					<label for="password" class=" relative">
-						<Input type={visible ? 'text' : 'password'} id="password" value={user?.email} />
+						<Input
+							type={visible ? 'text' : 'password'}
+							id="password"
+							value={user?.email}
+							name="password"
+						/>
 						<button
 							class="absolute top-1.5 right-1 cursor-pointer"
 							onclick={toggleVisibility}
@@ -50,6 +56,10 @@
 							{/if}
 						</button>
 					</label>
+					<input type="hidden" value={user?.id} id="id" name="id" />
+					<Button class="mx-auto w-[15ch]" variant="destructive" formaction="?/verifyPassword"
+						>Verify Password</Button
+					>
 				</form>
 			</div>
 		</Card.Content>
