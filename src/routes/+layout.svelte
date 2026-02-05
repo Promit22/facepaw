@@ -12,7 +12,7 @@
 	const items = [
 		{
 			name: 'Account',
-			url: '/account/connect',
+			url: data.user ? `/account/profile/${data.user.id}` : '/account/connect',
 			icon: CircleUserIcon
 		},
 		{

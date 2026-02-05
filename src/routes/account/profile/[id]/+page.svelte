@@ -38,7 +38,7 @@
 					<Card.Title>{puser?.name}</Card.Title>
 				</div>
 				<div class=" mt-3 mb-3 flex w-full justify-center">
-					{#if puser.imag}
+					{#if puser.image}
 						<img src={puser.image} alt="" class=" h-[80%] w-[80%] rounded-full" />
 					{:else}
 						<User class=" h-[80%] w-[80%] rounded-full p-2 opacity-15" />
@@ -46,15 +46,18 @@
 				</div>
 				<!-- <Card.Description>{puser?.email}</Card.Description> -->
 			</div>
-			{#if user.id === puser.id}
-				<a href="/account/edit" class=" w-[13ch] bg-amber-500 p-0.5 text-center">Edit Profile</a>
-			{/if}
 		</Card.Header>
 		<Card.Content>
 			<PostPreview {posts} />
 		</Card.Content>
 		<Card.Footer>
-			<p>Card Footer</p>
+			{#if user.id === puser.id}
+				<div class="flex w-full justify-between">
+					<a href="/account/edit" class=" w-[13ch] bg-amber-500 p-0.5 text-center">Edit Profile</a>
+					<!-- <Button variant="link">Edit Profile</Button> -->
+					<Button>Log Out</Button>
+				</div>
+			{/if}
 		</Card.Footer>
 	</Card.Root>
 </article>
