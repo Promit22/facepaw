@@ -1,6 +1,8 @@
+ignoredBuiltDependencies:
+  - sharp
+
 onlyBuiltDependencies:
   - '@tailwindcss/oxide'
+  - bcrypt
   - better-sqlite3
   - esbuild
-ignoredBuiltDependencies:
-- 'sharp'
