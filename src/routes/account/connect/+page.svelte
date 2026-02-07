@@ -1,7 +1,6 @@
 <script lang="ts">
-	// import type { PageProps } from './$types';
+	import type { PageProps } from './$types';
 
-	// let { data }: PageProps = $props();
 	import { Button } from '$lib/components/ui/button';
 	import * as Card from '$lib/components/ui/card';
 	import { Input } from '$lib/components/ui/input';
@@ -10,7 +9,8 @@
 	import { onDestroy } from 'svelte';
 
 	let prevImg: HTMLImageElement;
-	let imgSrc: string;
+	let imgSrc: string = $state('');
+	let { form }: PageProps = $props();
 
 	function showPreview(e: Event) {
 		const elm = e.target as HTMLInputElement;
@@ -20,7 +20,7 @@
 		imgSrc = URL.createObjectURL(image);
 	}
 
-	let register = false;
+	let register = $state(false);
 
 	onDestroy(() => {
 		URL.revokeObjectURL(imgSrc);
@@ -84,6 +84,11 @@
 								<Label for="password">Password</Label>
 							</div>
 							<Input id="password" name="password" type="password" required />
+						</div>
+						<div>
+							{#if form?.missing}
+								<p>{form.message}</p>
+							{/if}
 						</div>
 						<div class="mt-6 flex flex-col gap-2">
 							<Button class="w-full" type="submit">Register</Button>

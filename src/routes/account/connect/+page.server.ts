@@ -1,10 +1,11 @@
 import { redirect } from '@sveltejs/kit';
-import { createUser, getUserByEmail } from '$lib/server/models/users';
+import { createUser, getUserByEmail, hashPassword, verifyPassword } from '$lib/server/models/users';
 import { createSession } from '$lib/server/models/sessions.js';
 import type { User } from '$lib/types/user.js';
 import path from 'node:path';
 import { getRandomId } from '$lib/helper/randomid.js';
 import { processImage } from '$lib/server/models/imageService.js';
+import { fail } from '@sveltejs/kit';
 
 export const actions = {
 	register: async ({ request, cookies }) => {
@@ -13,6 +14,7 @@ export const actions = {
 		const name = formDt.get('name')?.toString();
 		const email = formDt.get('email')?.toString();
 		const password = formDt.get('password')?.toString();
+
 		console.log(pimage);
 
 		const buffer = await pimage.arrayBuffer();
@@ -23,14 +25,11 @@ export const actions = {
 		if (!name || !email || !password) {
 			return 'missing';
 		}
+
+		const hash = await hashPassword(password);
 		processImage(buffer, filePath, 196, 196);
 		try {
-			const userId = createUser(
-				filePath.replace('static', ''),
-				name,
-				email,
-				password
-			).lastInsertRowid;
+			const userId = createUser(filePath.replace('static', ''), name, email, hash).lastInsertRowid;
 			const id = createSession(userId as number);
 			cookies.set('session', id.toString(), {
 				path: '/',
@@ -58,14 +57,16 @@ export const actions = {
 		}
 
 		const user: User | undefined = getUserByEmail(email);
+		const hash = user ? user.password : '';
+		const isValidUser = verifyPassword(password, hash);
 
-		if (!user) {
-			// return fail(400, { message: 'Invalid credentials' });
+		if (!isValidUser) {
+			return fail(401, { message: 'Invalid credentials', missing: true });
 
-			return 'invalid user';
+			// return 'invalid user';
 		}
 
-		const id = createSession(user.id);
+		const id = createSession(user ? user.id : 0);
 
 		cookies.set('session', id.toString(), {
 			path: '/',
