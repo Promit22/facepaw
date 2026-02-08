@@ -55,7 +55,9 @@
 				<div class="flex w-full justify-between">
 					<a href="/account/edit" class=" w-[13ch] bg-amber-500 p-0.5 text-center">Edit Profile</a>
 					<!-- <Button variant="link">Edit Profile</Button> -->
-					<Button>Log Out</Button>
+					<form action="?/logout" method="POST">
+						<Button type="submit">Log Out</Button>
+					</form>
 				</div>
 			{/if}
 		</Card.Footer>
