@@ -5,7 +5,7 @@
 	import * as Card from '$lib/components/ui/card';
 	import { Input } from '$lib/components/ui/input';
 	import { Label } from '$lib/components/ui/label';
-	import { User } from '@lucide/svelte';
+	import { User, Eye, EyeOff } from '@lucide/svelte';
 	import { onDestroy } from 'svelte';
 
 	let prevImg: HTMLImageElement;
@@ -21,6 +21,11 @@
 	}
 
 	let register = $state(false);
+
+	let visible = $state(false);
+	function toggleVisibility() {
+		return visible ? (visible = false) : (visible = true);
+	}
 
 	onDestroy(() => {
 		URL.revokeObjectURL(imgSrc);
@@ -83,7 +88,21 @@
 							<div class="flex items-center">
 								<Label for="password">Password</Label>
 							</div>
-							<Input id="password" name="password" type="password" required />
+							<!-- <Input id="password" name="password" type="password" required /> -->
+							<label for="password" class=" relative">
+								<Input type={visible ? 'text' : 'password'} id="password" name="password" />
+								<button
+									class="absolute top-1.5 right-1 cursor-pointer"
+									onclick={toggleVisibility}
+									type="button"
+								>
+									{#if visible}
+										<EyeOff />
+									{:else}
+										<Eye />
+									{/if}
+								</button>
+							</label>
 						</div>
 						<div>
 							{#if form?.missing}
@@ -113,7 +132,7 @@
 							</div>
 							<div class="grid gap-2">
 								<div class="flex items-center">
-									<Label for="password">Password</Label>
+									<!-- <Label for="password">Password</Label> -->
 									<a
 										href="##"
 										class="ml-auto inline-block text-sm underline-offset-4 hover:underline"
@@ -121,7 +140,21 @@
 										Forgot your password?
 									</a>
 								</div>
-								<Input id="password" name="password" type="password" required />
+								<label for="password" class=" relative">
+									<Input type={visible ? 'text' : 'password'} id="password" name="password" />
+									<button
+										class="absolute top-1.5 right-1 cursor-pointer"
+										onclick={toggleVisibility}
+										type="button"
+									>
+										{#if visible}
+											<EyeOff />
+										{:else}
+											<Eye />
+										{/if}
+									</button>
+								</label>
+								<!-- <Input id="password" name="password" type="password" required /> -->
 							</div>
 						</div>
 						<div class="mt-7 flex flex-col">

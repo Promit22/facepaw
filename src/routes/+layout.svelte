@@ -9,6 +9,8 @@
 
 	let { children, data } = $props();
 
+	console.log('user from layout svelte', data.user);
+
 	const items = [
 		{
 			name: 'Account',
@@ -30,14 +32,17 @@
 
 <!-- <Navbar /> -->
 <div class="fixed top-0 z-2 h-12 w-full bg-amber-200"></div>
-<header class="fixed top-0.5 right-5 z-5 text-2xl">
-	<h1>FacePaw</h1>
+<header class="fixed top-0.5 right-5 z-5 flex flex-row items-center justify-center gap-10">
+	{#if !data.user}
+		<a href="/account/connect" class="w-[7ch mt-0.5 p-1">Log In</a>
+	{/if}
+	<h1 class="text-2xl">FacePaw</h1>
 </header>
 <nav class="m-5">
 	<Sidebar.Provider>
 		<AppSidebar {items} />
 		<main class="flex-1">
-			{#if data.user}
+			{#if !data.user}
 				<div class="fixed top-2 z-5">
 					<UserIcon user={data.user ? data.user : ''} />
 				</div>
