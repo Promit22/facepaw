@@ -23,11 +23,26 @@ export const actions = {
 		const fileName = `${getRandomId()}.webp`;
 		const filePath = path.join('static', 'images', 'profile', fileName);
 		if (!name || !email || !password) {
-			return 'missing';
+			return fail(400, {
+				missing: true,
+				message: !name
+					? 'Name is missing'
+					: !email
+						? 'Email is missing'
+						: !password
+							? 'Password is missing'
+							: ''
+			});
+		}
+		if (password.length < 8) {
+			return fail(400, {
+				missing: true,
+				message: 'Password must be greater than or equal to 8 character'
+			});
 		}
 
 		const hash = await hashPassword(password);
-		processImage(buffer, filePath, 196, 196);
+		await processImage(buffer, filePath, 196, 196);
 		try {
 			const userId = createUser(filePath.replace('static', ''), name, email, hash).lastInsertRowid;
 			const id = createSession(userId as number);
@@ -53,7 +68,7 @@ export const actions = {
 		const password = form.get('password')?.toString();
 
 		if (!email || !password) {
-			return 'missing fields';
+			return fail(400, { missing: true, message: 'missinig fields' });
 		}
 
 		const user: User | undefined = getUserByEmail(email);

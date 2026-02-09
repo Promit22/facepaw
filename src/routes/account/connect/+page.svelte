@@ -7,6 +7,7 @@
 	import { Label } from '$lib/components/ui/label';
 	import { User, Eye, EyeOff } from '@lucide/svelte';
 	import { onDestroy } from 'svelte';
+	import { enhance } from '$app/forms';
 
 	let prevImg: HTMLImageElement;
 	let imgSrc: string = $state('');
@@ -27,6 +28,10 @@
 		return visible ? (visible = false) : (visible = true);
 	}
 
+	let password = $state('');
+	let touched = $state(false);
+	let isValid = $derived(password.length < 8);
+	let showError = $derived(touched && isValid);
 	onDestroy(() => {
 		URL.revokeObjectURL(imgSrc);
 	});
@@ -47,7 +52,7 @@
 					<Card.Title class=" text-[20px] lg:text-2xl">Register to Facepaw</Card.Title>
 				</Card.Header>
 				<Card.Content>
-					<form method="POST" action="?/register" enctype="multipart/form-data">
+					<form method="POST" action="?/register" enctype="multipart/form-data" use:enhance>
 						<div class=" mb-5 flex justify-center">
 							<div></div>
 							<div>
@@ -64,20 +69,20 @@
 										onchange={showPreview}
 										hidden
 									/>
-									<div class=" w-full max-w-100">
+									<div class=" size-40">
 										{#if !imgSrc}
-											<div class="rounded-full border-2">
+											<div class="h-full w-full rounded-full border-2">
 												<User class="h-full w-full p-4 opacity-20" />
 											</div>
 										{:else}
-											<img src={imgSrc} alt="" class=" m-0" />
+											<img src={imgSrc} alt="" class=" m-0 w-[300px] object-cover" />
 										{/if}
 									</div>
 								</Label>
 							</div>
 						</div>
 						<div class="grid gap-2">
-							<Label for="name">Full Name</Label>
+							<Label for="name">Name</Label>
 							<Input id="name" name="name" type="text" placeholder="John Wick" required />
 						</div>
 						<div class="grid gap-2">
@@ -90,7 +95,13 @@
 							</div>
 							<!-- <Input id="password" name="password" type="password" required /> -->
 							<label for="password" class=" relative">
-								<Input type={visible ? 'text' : 'password'} id="password" name="password" />
+								<Input
+									type={visible ? 'text' : 'password'}
+									id="password"
+									name="password"
+									bind:value={password}
+									oninput={() => (touched = true)}
+								/>
 								<button
 									class="absolute top-1.5 right-1 cursor-pointer"
 									onclick={toggleVisibility}
@@ -103,10 +114,15 @@
 									{/if}
 								</button>
 							</label>
+							{#if !touched}
+								<p>Password must be at least 8 character long</p>
+							{:else if showError}
+								<p class=" text-red-700">Password is too short</p>
+							{/if}
 						</div>
 						<div>
 							{#if form?.missing}
-								<p>{form.message}</p>
+								<p class=" text-yellow-300">{form?.message}</p>
 							{/if}
 						</div>
 						<div class="mt-6 flex flex-col gap-2">
@@ -124,7 +140,7 @@
 					<Card.Title class="text-2xl">Log into your account</Card.Title>
 				</Card.Header>
 				<Card.Content>
-					<form method="POST" action="?/login">
+					<form method="POST" action="?/login" use:enhance>
 						<div class="flex flex-col gap-6">
 							<div class="grid gap-2">
 								<Label for="email">Email</Label>
@@ -155,6 +171,11 @@
 									</button>
 								</label>
 								<!-- <Input id="password" name="password" type="password" required /> -->
+							</div>
+							<div>
+								{#if form?.missing}
+									<p class=" text-yellow-300">{form?.message}</p>
+								{/if}
 							</div>
 						</div>
 						<div class="mt-7 flex flex-col">
