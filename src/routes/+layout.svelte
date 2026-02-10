@@ -6,6 +6,9 @@
 	import CircleUserIcon from '@lucide/svelte/icons/circle-user';
 	import HameburgerIcon from '@lucide/svelte/icons/hamburger';
 	import UserIcon from '$lib/components/UserIcon.svelte';
+	import { Cat } from '@lucide/svelte';
+	import { Dog } from '@lucide/svelte';
+	import { Bone } from '@lucide/svelte';
 
 	let { children, data } = $props();
 
@@ -28,6 +31,25 @@
 			icon: HameburgerIcon
 		}
 	];
+
+	const subItems = [
+		{
+			name: 'Breed',
+			icon: Bone,
+			sItems: [
+				{
+					name: 'Cat',
+					url: '/cat',
+					icon: Cat
+				},
+				{
+					name: 'Dog',
+					url: '/dog',
+					icon: Dog
+				}
+			]
+		}
+	];
 </script>
 
 <!-- <Navbar /> -->
@@ -40,7 +62,7 @@
 </header>
 <nav class="m-5">
 	<Sidebar.Provider>
-		<AppSidebar {items} />
+		<AppSidebar {items} {subItems} />
 		<main class="flex-1">
 			{#if !data.user}
 				<div class="fixed top-2 z-5">

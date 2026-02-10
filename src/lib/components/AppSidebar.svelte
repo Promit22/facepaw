@@ -1,10 +1,10 @@
 <script lang="ts">
 	import * as Sidebar from '$lib/components/ui/sidebar/index.js';
-
+	import { Collapsible } from 'bits-ui';
 	import XIcon from '@lucide/svelte/icons/x';
 	import { useSidebar } from '$lib/components/ui/sidebar/index.js';
 	const sbar = useSidebar();
-	let { items } = $props();
+	let { items, subItems } = $props();
 
 	function toggleSbar() {
 		sbar.toggle();
@@ -33,6 +33,35 @@
 							</Sidebar.MenuButton>
 						</Sidebar.MenuItem>
 					{/each}
+					<Collapsible.Root open class="group/collapsible">
+						<Sidebar.MenuItem>
+							<Collapsible.Trigger>
+								{#snippet child({ props })}
+									<Sidebar.MenuButton {...props}>
+										{#each subItems as sItem}
+											<sItem.icon />
+											<span>{sItem.name}</span>
+										{/each}
+									</Sidebar.MenuButton>
+								{/snippet}
+								<!-- <Sidebar.MenuButton>Breed</Sidebar.MenuButton> -->
+							</Collapsible.Trigger>
+							<Collapsible.Content>
+								<Sidebar.MenuSub>
+									{#each subItems[0].sItems as sItem}
+										<Sidebar.MenuSubItem class="w-full">
+											<a href={sItem.url} class="">
+												<sItem.icon />
+												<span>{sItem.name}</span>
+											</a>
+										</Sidebar.MenuSubItem>
+									{/each}
+									<!-- <Sidebar.MenuSubItem>Cat</Sidebar.MenuSubItem>
+									<Sidebar.MenuSubItem>Dog</Sidebar.MenuSubItem> -->
+								</Sidebar.MenuSub>
+							</Collapsible.Content>
+						</Sidebar.MenuItem>
+					</Collapsible.Root>
 				</Sidebar.Menu>
 			</Sidebar.GroupContent>
 		</Sidebar.Group>
