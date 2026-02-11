@@ -7,9 +7,6 @@ export const handle: Handle = async ({ event, resolve }) => {
 
 	if (sessionId) {
 		const user: User | undefined = getUserFromSession(sessionId);
-		console.log('user form hook', user);
-		console.log('sessionid hook', sessionId);
-		console.log('sessionid type', typeof sessionId);
 
 		event.locals.user = user ?? null;
 	} else {

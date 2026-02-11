@@ -34,7 +34,7 @@
 						</Sidebar.MenuItem>
 					{/each}
 					<Collapsible.Root open class="group/collapsible">
-						<Sidebar.MenuItem>
+						<Sidebar.MenuItem class="mt-2.5">
 							<Collapsible.Trigger>
 								{#snippet child({ props })}
 									<Sidebar.MenuButton {...props}>
@@ -49,9 +49,9 @@
 							<Collapsible.Content>
 								<Sidebar.MenuSub>
 									{#each subItems[0].sItems as sItem}
-										<Sidebar.MenuSubItem class="w-full">
-											<a href={sItem.url} class="">
-												<sItem.icon />
+										<Sidebar.MenuSubItem class=" mt-1 w-full">
+											<a href={sItem.url} class=" flex flex-row text-sm">
+												<sItem.icon class=" h-5 w-5" />
 												<span>{sItem.name}</span>
 											</a>
 										</Sidebar.MenuSubItem>
