@@ -10,6 +10,7 @@ facepaw.db
 /build
 /static/images/posts/*
 /static/images/profile/*
+/data/*
 
 # OS
 .DS_Store
