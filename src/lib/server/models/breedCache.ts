@@ -47,7 +47,7 @@ async function refreshBreeds(type: 'cat' | 'dog', filePath: string) {
 }
 
 export async function readBreed(type: 'cat' | 'dog') {
-	const filePath = path.join(dataDir, `${type}_breeds.json}`);
+	const filePath = path.join(dataDir, `${type}_breeds.json`);
 	const data = await fs.readFile(filePath, 'utf8');
 	return JSON.parse(data);
 }

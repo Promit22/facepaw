@@ -39,12 +39,12 @@
 			sItems: [
 				{
 					name: 'Cat',
-					url: '/cat',
+					url: '/breed/cat',
 					icon: Cat
 				},
 				{
 					name: 'Dog',
-					url: '/dog',
+					url: '/breed/dog',
 					icon: Dog
 				}
 			]
