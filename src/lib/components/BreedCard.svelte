@@ -1,11 +1,11 @@
 <script lang="ts">
 	import * as Card from '$lib/components/ui/card';
-	import type { CatBreed } from '$lib/types/cat';
-	// import type { DogBreed } from '$lib/types/dog';
+	import type { Cats, Dogs } from '$lib/types/breed.ts';
+	import { ArrowRight } from '@lucide/svelte';
 	import { Cat } from '@lucide/svelte';
 	import { Dog } from '@lucide/svelte';
-	let { data } = $props();
-	let { breed, type } = data;
+	let { breed, type } = $props();
+	// let { breed, type } = data;
 </script>
 
 <div>
@@ -32,7 +32,7 @@
 			</div>
 		</Card.Content>
 		<Card.Footer>
-			<p>Card Footer</p>
+			<p>Details <span><ArrowRight /></span></p>
 		</Card.Footer>
 	</Card.Root>
 </div>

@@ -1,12 +1,13 @@
 <script lang="ts">
 	import type { PageProps } from './$types';
-	import type { CatBreed } from '$lib/types/cat';
+	import type { Cats } from '$lib/types/breed';
+	import BreedCard from '$lib/components/BreedCard.svelte';
 	let { data }: PageProps = $props();
 	let { cats } = data;
-	let breeds: CatBreed[] = [];
+	let breeds: Cats[] = $state([]);
 	const limit = 20;
 	let loading = false;
-	let allBreads: CatBreed[] = [];
+	let allBreads: Cats[] = [];
 	let index = 0;
 	function loadMore() {
 		if (loading) return;
@@ -24,5 +25,10 @@
 	<div class="m-0 flex flex-col justify-center p-0">
 		<h1 class=" mt-0 pt-0 text-center text-3xl">Cats</h1>
 		<p>Click cats for details</p>
+	</div>
+	<div>
+		{#each breeds as breed}
+			<BreedCard {breed} type="cat" />
+		{/each}
 	</div>
 </div>
