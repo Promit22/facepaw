@@ -8,8 +8,8 @@
 	// let { breed, type } = data;
 </script>
 
-<div>
-	<Card.Root>
+<div class=" h-96 w-full max-w-[320px] overflow-y-auto">
+	<Card.Root class=" p-2">
 		<Card.Header>
 			{#if breed.name && breed.description}
 				<Card.Title>{breed.name}</Card.Title>
@@ -17,7 +17,7 @@
 			{/if}
 		</Card.Header>
 		<Card.Content>
-			<div>
+			<div class=" h-full w-full max-w-3xs">
 				{#if breed.image?.url}
 					<img src={breed.image.url} alt="" />
 				{:else}
