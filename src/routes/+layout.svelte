@@ -69,7 +69,7 @@
 					<UserIcon user={data.user ? data.user : ''} />
 				</div>
 			{/if}
-			<div class="mt-[10vh] flex justify-center">
+			<div class="mt-[10vh] flex flex-col items-center justify-center">
 				{@render children?.()}
 			</div>
 		</main>

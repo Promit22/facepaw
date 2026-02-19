@@ -6,7 +6,6 @@
 
 :root {
 	--radius: 0.625rem;
-	--background: #e6f7ff;
 	--foreground: oklch(0.145 0 0);
 	--card: oklch(1 0 0);
 	--card-foreground: oklch(0.145 0 0);
@@ -37,6 +36,11 @@
 	--sidebar-accent-foreground: oklch(0.205 0 0);
 	--sidebar-border: oklch(0.922 0 0);
 	--sidebar-ring: oklch(0.708 0 0);
+	/* start of custom variables*/
+	--background: #e6f7ff;
+	--g-cols: repeat(auto-fit, minmax(12.5rem, 1fr));
+	--g-cols-f: minmax(0, 1fr);
+	--g-rows-f: minmax(0, 1fr);
 }
 
 .dark {

@@ -4,11 +4,12 @@
 	import { ArrowRight } from '@lucide/svelte';
 	import { Cat } from '@lucide/svelte';
 	import { Dog } from '@lucide/svelte';
+	import unavailable from '$lib/assets/unavailable.webp';
 	let { breed, type } = $props();
 	// let { breed, type } = data;
 </script>
 
-<div class=" h-96 w-full max-w-[320px] overflow-y-auto">
+<!-- <div class=" h-96 w-full max-w-[320px] overflow-y-auto">
 	<Card.Root class=" p-2">
 		<Card.Header>
 			{#if breed.name && breed.description}
@@ -35,4 +36,37 @@
 			<p>Details <span><ArrowRight /></span></p>
 		</Card.Footer>
 	</Card.Root>
-</div>
+</div> -->
+
+<figure
+	class=" @container/figure grid grid-cols-(--g-cols-f) grid-rows-(--g-rows-f) overflow-hidden"
+>
+	{#if !breed.image}
+		<img src={unavailable} alt="" class=" col-span-full row-span-full h-full w-full object-cover" />
+	{:else}
+		<img
+			src={breed.image.url}
+			alt={breed.name}
+			class=" col-span-full row-span-full h-full w-full object-cover"
+		/>
+	{/if}
+	<figcaption class=" z-10 col-span-full row-span-full self-end text-xs text-white">
+		<h3>{breed.name}</h3>
+	</figcaption>
+</figure>
+
+<style>
+	@media (width > 600px) {
+		figure:nth-child(1) {
+			grid-area: span 2 / span 2;
+		}
+
+		figure:nth-child(4n + 1) {
+			grid-row: span 2;
+		}
+
+		figure:nth-child(4n + 2) {
+			grid-column: span 2;
+		}
+	}
+</style>
