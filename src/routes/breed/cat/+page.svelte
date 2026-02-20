@@ -3,40 +3,40 @@
 	import type { Cats } from '$lib/types/breed';
 	import BreedCard from '$lib/components/BreedCard.svelte';
 	import { onMount } from 'svelte';
-	import { loadMore, breeds } from '$lib/helper/breedService.svelte';
+	// import { loadMore, breeds } from '$lib/helper/breedService.svelte';
 	let { data }: PageProps = $props();
 	let cats: Cats[] = data.cats;
-	// let breeds: Cats[] = $state([]);
-	// const limit = 40;
-	// let loading = false;
-	// let index = 0;
+	let breeds: Cats[] = $state([]);
+	const limit = 40;
+	let loading = false;
+	let index = 0;
 	let allBreads: Cats[] = cats;
-	// function loadMore() {
-	// 	if (loading) return;
-	// 	loading = true;
-	// 	const start = index * limit;
-	// 	const end = start + limit < allBreads.length ? start + limit : allBreads.length;
-	// 	const nextBatch = allBreads.slice(start, end);
-	// 	console.log('before update', breeds.length);
+	function loadMore() {
+		if (loading) return;
+		loading = true;
+		const start = index * limit;
+		const end = start + limit < allBreads.length ? start + limit : allBreads.length;
+		const nextBatch = allBreads.slice(start, end);
+		console.log('before update', breeds.length);
 
-	// 	breeds = [...breeds, ...nextBatch];
-	// 	console.log('after updata', breeds.length);
+		breeds = [...breeds, ...nextBatch];
+		console.log('after updata', breeds.length);
 
-	// 	index++;
-	// 	loading = false;
-	// 	console.log('end', end);
-	// }
+		index++;
+		loading = false;
+		console.log('end', end);
+	}
 
 	function handleScroll(e: Event) {
 		const target = e.target as HTMLElement;
 		// console.log(target);
 
 		if (target.scrollHeight - target.scrollTop <= target.clientHeight + 100) {
-			loadMore(allBreads);
+			loadMore();
 		}
 	}
 	onMount(() => {
-		loadMore(allBreads);
+		loadMore();
 		console.log('mounted');
 	});
 </script>

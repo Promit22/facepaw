@@ -7,6 +7,10 @@
 	import unavailable from '$lib/assets/unavailable.webp';
 	let { breed, type } = $props();
 	// let { breed, type } = data;
+	// let caption: HTMLElement;
+	// if (!breed.image.url) {
+	// 	caption.style.color = 'black';
+	// }
 </script>
 
 <!-- <div class=" h-96 w-full max-w-[320px] overflow-y-auto">
@@ -47,10 +51,12 @@
 		<img
 			src={breed.image.url}
 			alt={breed.name}
-			class=" col-span-full row-span-full h-full w-full object-cover"
+			class=" col-span-full row-span-full h-full w-full object-cover transition-[scale] duration-1000 ease-in-out hover:scale-105"
 		/>
 	{/if}
-	<figcaption class=" z-10 col-span-full row-span-full self-end text-xs text-white">
+	<figcaption
+		class=" bg-[linear-gradient(transparent 25%, rgb(0 0 0 / 0.75))] z-10 col-span-full row-span-full m-1 self-end text-2xl text-white"
+	>
 		<h3>{breed.name}</h3>
 	</figcaption>
 </figure>
