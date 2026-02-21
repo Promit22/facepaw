@@ -40,24 +40,25 @@
 			<p>Details <span><ArrowRight /></span></p>
 		</Card.Footer>
 	</Card.Root>
-</div> -->
-
-<figure
-	class=" @container/figure grid grid-cols-(--g-cols-f) grid-rows-(--g-rows-f) overflow-hidden"
->
+	</div> -->
+<figure class=" group relative grid grid-cols-(--g-cols-f) grid-rows-(--g-rows-f) overflow-hidden">
 	{#if !breed.image}
 		<img src={unavailable} alt="" class=" col-span-full row-span-full h-full w-full object-cover" />
 	{:else}
 		<img
 			src={breed.image.url}
 			alt={breed.name}
-			class=" col-span-full row-span-full h-full w-full object-cover transition-[scale] duration-1000 ease-in-out hover:scale-105"
+			class=" col-span-full row-span-full h-full w-full object-cover transition-[scale] duration-1000 ease-in-out group-hover:scale-105"
 		/>
 	{/if}
+	<button
+		class=" absolute inset-0 z-20 h-full w-full cursor-pointer opacity-0"
+		aria-label="clickable area"
+	></button>
 	<figcaption
-		class=" bg-[linear-gradient(transparent 25%, rgb(0 0 0 / 0.75))] z-10 col-span-full row-span-full m-1 self-end text-2xl text-white"
+		class=" z-10 col-span-full row-span-full m-1 flex justify-center self-end rounded-2xl bg-(--bg-f) text-[1.2rem] text-white"
 	>
-		<h3>{breed.name}</h3>
+		<h3 class=" p-1.5">{breed.name}</h3>
 	</figcaption>
 </figure>
 
@@ -75,4 +76,8 @@
 			grid-column: span 2;
 		}
 	}
+
+	/* button {
+		all: unset;
+	} */
 </style>
