@@ -4,6 +4,7 @@
 	import BreedCard from '$lib/components/BreedCard.svelte';
 	import { onMount } from 'svelte';
 	import BreedDetailPannel from '$lib/components/BreedDetailPannel.svelte';
+	import { fade, fly } from 'svelte/transition';
 	// import { loadMore, breeds } from '$lib/helper/breedService.svelte';
 	let { data }: PageProps = $props();
 	let cats: Cats[] = data.cats;
@@ -68,5 +69,5 @@
 	{/each}
 </div>
 {#if selectedBreed}
-	<BreedDetailPannel breed={selectedBreed} type="cat" open={!!selectedBreed} {closePanel} />
+	<BreedDetailPannel breed={selectedBreed} type="cat" {closePanel} />
 {/if}
