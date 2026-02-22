@@ -5,7 +5,7 @@
 	import { Cat } from '@lucide/svelte';
 	import { Dog } from '@lucide/svelte';
 	import unavailable from '$lib/assets/unavailable.webp';
-	let { breed, type } = $props();
+	let { breed, type, selected } = $props();
 	// let { breed, type } = data;
 	// let caption: HTMLElement;
 	// if (!breed.image.url) {
@@ -54,6 +54,7 @@
 	<button
 		class=" absolute inset-0 z-20 h-full w-full cursor-pointer opacity-0"
 		aria-label="clickable area"
+		onclick={() => selected(breed)}
 	></button>
 	<figcaption
 		class=" z-10 col-span-full row-span-full m-1 flex justify-center self-end rounded-2xl bg-(--bg-f) text-[1.2rem] text-white"

@@ -3,6 +3,7 @@
 	import type { Cats } from '$lib/types/breed';
 	import BreedCard from '$lib/components/BreedCard.svelte';
 	import { onMount } from 'svelte';
+	import BreedDetailPannel from '$lib/components/BreedDetailPannel.svelte';
 	// import { loadMore, breeds } from '$lib/helper/breedService.svelte';
 	let { data }: PageProps = $props();
 	let cats: Cats[] = data.cats;
@@ -11,6 +12,7 @@
 	let loading = false;
 	let index = 0;
 	let allBreads: Cats[] = cats;
+	let selectedBreed: null | Cats = $state(null);
 	function loadMore() {
 		if (loading) return;
 		loading = true;
@@ -39,6 +41,14 @@
 		loadMore();
 		console.log('mounted');
 	});
+
+	function handleSelect(breed: Cats) {
+		selectedBreed = breed;
+	}
+
+	function closePanel() {
+		selectedBreed = null;
+	}
 </script>
 
 <!-- <div
@@ -54,6 +64,9 @@
 	onscroll={handleScroll}
 >
 	{#each breeds as breed (breed.id)}
-		<BreedCard {breed} type="cat" />
+		<BreedCard {breed} type="cat" selected={handleSelect} />
 	{/each}
 </div>
+{#if selectedBreed}
+	<BreedDetailPannel breed={selectedBreed} type="cat" open={!!selectedBreed} {closePanel} />
+{/if}
