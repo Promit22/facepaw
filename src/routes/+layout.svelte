@@ -56,7 +56,7 @@
 <div class="fixed top-0 z-2 h-12 w-full bg-amber-200"></div>
 <header class="fixed top-0.5 right-5 z-5 flex flex-row items-center justify-center gap-10">
 	{#if !data.user}
-		<a href="/account/connect" class="w-[7ch mt-0.5 p-1">Log In</a>
+		<a href="/account/connect" class=" mt-0.5 hidden p-1 md:block md:w-fit">Log In</a>
 	{/if}
 	<h1 class="text-2xl">FacePaw</h1>
 </header>

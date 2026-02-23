@@ -1,6 +1,7 @@
 import type { User } from '$lib/types/user';
 import { db } from '../db/db';
 import bcrypt from 'bcrypt';
+import { randomBytes, createHash } from 'node:crypto';
 
 export function createUser(imagePath: string, name: string, email: string, password: string) {
 	return db
@@ -28,4 +29,36 @@ export async function hashPassword(password: string) {
 
 export async function verifyPassword(password: string, hash: string) {
 	return await bcrypt.compare(password, hash);
+}
+
+export function checkIfEmailExists(email: string) {
+	return db
+		.prepare(
+			`
+			SELECT users.id FROM users WHERE email = ?
+		`
+		)
+		.get(email) as { id: number };
+}
+
+export function deleteToken(id: number) {
+	db.prepare(`DELETE FROM password_reset WHERE user_id = ?`);
+}
+
+export function hashToken() {
+	const token = randomBytes(32).toString('hex');
+	const tokenHash = createHash('sha256').update(token).digest('hex');
+
+	const expiresAt = new Date(Date.now() + 30 * 60 * 1000).toISOString();
+
+	return { token, tokenHash, expiresAt };
+}
+
+export function storeTokenHash(userId: number, tokenHash: string, expiresAt: string) {
+	db.prepare(
+		`
+        INSERT INTO password_reset (user_id, token_hash, expires_at)
+        VALUES (?, ?, ?)
+      `
+	).run(userId, tokenHash, expiresAt);
 }

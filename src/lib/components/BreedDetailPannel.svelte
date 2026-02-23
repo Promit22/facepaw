@@ -39,7 +39,7 @@
 	class="fixed top-0 right-0 z-50 mt-0 h-full w-full
 		       overflow-y-auto bg-white
 		       p-6 shadow-2xl md:h-screen md:w-2/5"
-	transition:fly={{ x: '30%', duration: 1500 }}
+	transition:fly={{ x: '50%', duration: 1000 }}
 >
 	<button class=" cursor-pointer bg-red-500 text-white" onclick={closePanel}>
 		<X />

@@ -55,3 +55,14 @@ db.exec(`
 		REFERENCES users(id) ON DELETE CASCADE
 	);
 	`);
+
+db.exec(`
+CREATE TABLE IF NOT EXISTS password_reset (
+	id INTEGER PRIMARY KEY,
+	user_id INTEGER,
+	token_hash TEXT,
+	expires_at TEXT,
+	created_at TEXT DEFAULT CURRENT_TIMESTAMP,
+	FOREIGN KEY(user_id) REFERENCES users(id)
+);
+`);
