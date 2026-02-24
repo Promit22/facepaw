@@ -2,6 +2,7 @@ import { checkIfEmailExists, deleteToken } from '$lib/server/models/users.js';
 import type { PageServerLoad } from './$types';
 import { fail } from '@sveltejs/kit';
 import { hashToken, storeTokenHash } from '$lib/server/models/users.js';
+import { sendResetEmail } from '$lib/server/models/email.js';
 export const load = (async () => {
 	return {};
 }) satisfies PageServerLoad;
@@ -18,13 +19,13 @@ export const actions = {
 		}
 		const user = checkIfEmailExists(email);
 		if (user) {
-			deleteToken(user.id);
+			deleteToken(null, user.id);
 			const token = hashToken();
 			storeTokenHash(Number(user.id), token.tokenHash, token.expiresAt);
-			const resetLink = `${url.origin}/account/reset-password?token=${token.token}`;
+			const resetLink = `${url.origin}/account/reset-password?token=${token.tkn}`;
 
 			console.log('RESET LINK:', resetLink);
-			// Later: send email
+			await sendResetEmail(email, resetLink);
 		} else {
 			return { message: 'Something went wrong' };
 		}
