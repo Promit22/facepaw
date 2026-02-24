@@ -52,12 +52,12 @@
 		/>
 	{/if}
 	<button
-		class=" absolute inset-0 z-20 h-full w-full cursor-pointer opacity-0"
+		class=" absolute inset-0 z-4 h-full w-full cursor-pointer opacity-0"
 		aria-label="clickable area"
 		onclick={() => selected(breed)}
 	></button>
 	<figcaption
-		class=" z-10 col-span-full row-span-full m-1 flex justify-center self-end rounded-2xl bg-(--bg-f) text-[1.2rem] text-white"
+		class=" z-3 col-span-full row-span-full m-1 flex justify-center self-end rounded-2xl bg-(--bg-f) text-[1.2rem] text-white"
 	>
 		<h3 class=" p-1.5">{breed.name}</h3>
 	</figcaption>

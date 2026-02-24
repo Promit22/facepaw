@@ -60,6 +60,7 @@
 	<h1 class=" m-0 p-0 text-3xl">Cats</h1>
 	<p>Click cats for details</p>
 </div> -->
+
 <div
 	class=" grid h-[95vh] w-full max-w-[90vw] grid-flow-dense auto-rows-[12.5rem] grid-cols-(--g-cols) gap-3 overflow-hidden overflow-y-auto"
 	onscroll={handleScroll}

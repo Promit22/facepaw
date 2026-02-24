@@ -53,8 +53,8 @@
 </script>
 
 <!-- <Navbar /> -->
-<div class="fixed top-0 z-2 h-12 w-full bg-amber-200"></div>
-<header class="fixed top-0.5 right-5 z-5 flex flex-row items-center justify-center gap-10">
+<div class="fixed top-0 z-7 h-12 w-full bg-amber-200"></div>
+<header class="fixed top-0.5 right-5 z-8 flex flex-row items-center justify-center gap-10">
 	{#if !data.user}
 		<a href="/account/connect" class=" mt-0.5 hidden p-1 md:block md:w-fit">Log In</a>
 	{/if}
@@ -65,7 +65,7 @@
 		<AppSidebar {items} {subItems} />
 		<main class="flex-1">
 			{#if !data.user}
-				<div class="fixed top-2 z-5">
+				<div class="fixed top-2 z-10">
 					<UserIcon user={data.user ? data.user : ''} />
 				</div>
 			{/if}
