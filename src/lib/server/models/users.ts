@@ -42,14 +42,14 @@ export function checkIfEmailExists(email: string) {
 }
 
 export function deleteToken(id: number) {
-	db.prepare(`DELETE FROM password_reset WHERE user_id = ?`);
+	db.prepare(`DELETE FROM password_reset WHERE user_id = ?`).run(id);
 }
 
-export function hashToken() {
-	const token = randomBytes(32).toString('hex');
-	const tokenHash = createHash('sha256').update(token).digest('hex');
+export function hashToken(token?: string) {
+	const tkn = token ? token : randomBytes(32).toString('hex');
+	const tokenHash = createHash('sha256').update(tkn).digest('hex');
 
-	const expiresAt = new Date(Date.now() + 30 * 60 * 1000).toISOString();
+	const expiresAt = token ? '' : new Date(Date.now() + 30 * 60 * 1000).toISOString();
 
 	return { token, tokenHash, expiresAt };
 }
@@ -61,4 +61,16 @@ export function storeTokenHash(userId: number, tokenHash: string, expiresAt: str
         VALUES (?, ?, ?)
       `
 	).run(userId, tokenHash, expiresAt);
+}
+
+export function getRecord(tokenHash: string) {
+	return db
+		.prepare(
+			`
+			SELECT user_id, expires_at
+			FROM password_reset
+			WHERE token_hash = ?
+		`
+		)
+		.get(tokenHash) as { user_id: number; expires_at: string };
 }

@@ -1,4 +1,4 @@
-import { checkIfEmailExists } from '$lib/server/models/users.js';
+import { checkIfEmailExists, deleteToken } from '$lib/server/models/users.js';
 import type { PageServerLoad } from './$types';
 import { fail } from '@sveltejs/kit';
 import { hashToken, storeTokenHash } from '$lib/server/models/users.js';
@@ -18,6 +18,7 @@ export const actions = {
 		}
 		const user = checkIfEmailExists(email);
 		if (user) {
+			deleteToken(user.id);
 			const token = hashToken();
 			storeTokenHash(Number(user.id), token.tokenHash, token.expiresAt);
 			const resetLink = `${url.origin}/account/reset-password?token=${token.token}`;
