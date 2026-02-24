@@ -18,7 +18,6 @@ export const load = (async ({ url }) => {
 	}
 
 	return {
-		userId: record.user_id,
 		token
 	};
 }) satisfies PageServerLoad;
