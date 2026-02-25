@@ -34,7 +34,13 @@
 		<Card.Header class="flex flex-1 flex-col items-center justify-between">
 			<div class=" w-full">
 				<div class="flex items-center gap-2">
-					<UserIcon user={puser} />
+					<div class=" h-7 w-7">
+						{#if puser.image}
+							<img src={puser.image} alt={`image of ${puser.name}`} class=" rounded-full" />
+						{:else}
+							<User />
+						{/if}
+					</div>
 					<Card.Title>{puser?.name}</Card.Title>
 				</div>
 				<div class=" mt-3 mb-3 flex w-full justify-center">

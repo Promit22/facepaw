@@ -3,6 +3,7 @@
 	import AppSidebar from '$lib/components/AppSidebar.svelte';
 	import '../app.css';
 	import HouseIcon from '@lucide/svelte/icons/house';
+	import { User } from '@lucide/svelte';
 	import CircleUserIcon from '@lucide/svelte/icons/circle-user';
 	import HameburgerIcon from '@lucide/svelte/icons/hamburger';
 	import UserIcon from '$lib/components/UserIcon.svelte';
@@ -64,11 +65,13 @@
 	<Sidebar.Provider>
 		<AppSidebar {items} {subItems} />
 		<main class="flex-1">
-			{#if !data.user}
-				<div class="fixed top-2 z-10">
+			<div class="fixed top-2 z-10">
+				{#if data.user}
 					<UserIcon user={data.user ? data.user : ''} />
-				</div>
-			{/if}
+				{:else}
+					<User />
+				{/if}
+			</div>
 			<div class="mt-[10vh] flex flex-col items-center justify-center">
 				{@render children?.()}
 			</div>

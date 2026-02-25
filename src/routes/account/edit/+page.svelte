@@ -4,9 +4,11 @@
 	import { Input } from '$lib/components/ui/input';
 	import { Eye, EyeOff, User } from '@lucide/svelte';
 	import Button from '$lib/components/ui/button/button.svelte';
+	import { Label } from '$lib/components/ui/label';
+	import { enhance } from '$app/forms';
 
 	let visible = $state(false);
-	let { data }: PageProps = $props();
+	let { data, form }: PageProps = $props();
 	const user = data.user;
 	function toggleVisibility() {
 		return visible ? (visible = false) : (visible = true);
@@ -21,50 +23,99 @@
 		</Card.Header>
 		<Card.Content>
 			<div>
-				<form action="" method="POST" class="flex flex-col gap-4">
+				<form
+					action="?/update"
+					method="POST"
+					enctype="multipart/form-data"
+					class="flex flex-col gap-4"
+					use:enhance
+				>
 					<div class=" flex w-full justify-center">
 						{#if !user?.image}
 							<div class="rounded-full border-2">
 								<User class="h-full w-full p-4 opacity-20" />
 							</div>
 						{:else}
-							<img src={user?.image} alt="" class=" m-5 w-[60%]" />
+							<img src={user?.image} alt="" class=" m-5 w-full" />
 						{/if}
 					</div>
-					<label for="name">
-						<Input type="text" id="name" value={user?.name} />
-					</label>
-					<label for="email">
-						<Input type="email" id="email" value={user?.email} />
-					</label>
-					<label for="password" class=" relative">
-						<Input
-							type={visible ? 'text' : 'password'}
-							id="password"
-							value={user?.email}
-							name="password"
-						/>
-						<button
-							class="absolute top-1.5 right-1 cursor-pointer"
-							onclick={toggleVisibility}
-							type="button"
-						>
-							{#if visible}
-								<EyeOff />
-							{:else}
-								<Eye />
-							{/if}
-						</button>
-					</label>
+					<Label for="name">Name</Label>
+					<Input type="text" id="name" name="name" value={user?.name} />
+					<Label for="email">Email</Label>
+					<Input type="email" id="email" name="email" value={user?.email} />
+					{#if !form?.valid}
+						<Label for="password">Password</Label>
+						<div class=" relative">
+							<Input
+								type={visible ? 'text' : 'password'}
+								id="password"
+								name="password"
+								placeholder="password"
+							/>
+							<button
+								class="absolute top-1.5 right-1 cursor-pointer"
+								onclick={toggleVisibility}
+								type="button"
+							>
+								{#if visible}
+									<EyeOff />
+								{:else}
+									<Eye />
+								{/if}
+							</button>
+						</div>
+					{/if}
+					{#if form?.valid}
+						<Label for="new">Enter New Password</Label>
+						<div class=" relative">
+							<Input
+								type={visible ? 'text' : 'password'}
+								id="new"
+								name="new"
+								placeholder="Confirm Password"
+							/>
+							<button
+								class="absolute top-1.5 right-1 cursor-pointer"
+								onclick={toggleVisibility}
+								type="button"
+							>
+								{#if visible}
+									<EyeOff />
+								{:else}
+									<Eye />
+								{/if}
+							</button>
+						</div>
+						<Label for="confirm">Confirm New Password</Label>
+						<div class=" relative">
+							<Input
+								type={visible ? 'text' : 'password'}
+								id="confirm"
+								name="confirm"
+								placeholder="Confirm Password"
+							/>
+							<button
+								class="absolute top-1.5 right-1 cursor-pointer"
+								onclick={toggleVisibility}
+								type="button"
+							>
+								{#if visible}
+									<EyeOff />
+								{:else}
+									<Eye />
+								{/if}
+							</button>
+						</div>
+					{/if}
 					<input type="hidden" value={user?.id} id="id" name="id" />
-					<Button class="mx-auto w-[15ch]" variant="destructive" formaction="?/verifyPassword"
-						>Verify Password</Button
-					>
+					<Button class="mx-auto w-fit" type="submit">Submit</Button>
 				</form>
 			</div>
 		</Card.Content>
 		<Card.Footer>
-			<p>Card Footer</p>
+			{#if form?.error}
+				<p class=" text-red-700">{form.error}</p>
+			{/if}
 		</Card.Footer>
 	</Card.Root>
 </div>

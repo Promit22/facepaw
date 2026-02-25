@@ -23,6 +23,16 @@ export function getUserById(id: number) {
 		.get(id) as { name: string; id: number; image: string };
 }
 
+export function getFullUser(id: number) {
+	return db
+		.prepare(
+			`
+		SELECT users.name, users.id, users.image, users.password FROM users WHERE users.id = ?
+		`
+		)
+		.get(id) as { name: string; id: number; image: string; password: string };
+}
+
 export async function hashPassword(password: string) {
 	return await bcrypt.hash(password, 10);
 }
@@ -38,6 +48,16 @@ export function updatePassword(hashedPassword: string, userId: number) {
 			WHERE id = ?
 		`
 	).run(hashedPassword, userId);
+}
+
+export function updateUser(name: string, email: string, password: string, id: number) {
+	db.prepare(
+		`
+		  UPDATE users
+      SET name = ?, email = ?, password = ?
+      WHERE id = ?
+		`
+	).run(name, email, password, id);
 }
 
 export function checkIfEmailExists(email: string) {
