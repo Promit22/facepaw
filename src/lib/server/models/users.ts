@@ -67,7 +67,7 @@ export function checkIfEmailExists(email: string) {
 			SELECT users.id FROM users WHERE email = ?
 		`
 		)
-		.get(email) as { id: number };
+		.get(email) as { id: number } | undefined;
 }
 
 export function deleteToken(token_hash?: string | null, id?: number) {

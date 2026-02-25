@@ -43,71 +43,69 @@
 					<Input type="text" id="name" name="name" value={user?.name} />
 					<Label for="email">Email</Label>
 					<Input type="email" id="email" name="email" value={user?.email} />
-					{#if !form?.valid}
-						<Label for="password">Password</Label>
-						<div class=" relative">
-							<Input
-								type={visible ? 'text' : 'password'}
-								id="password"
-								name="password"
-								placeholder="password"
-							/>
-							<button
-								class="absolute top-1.5 right-1 cursor-pointer"
-								onclick={toggleVisibility}
-								type="button"
-							>
-								{#if visible}
-									<EyeOff />
-								{:else}
-									<Eye />
-								{/if}
-							</button>
-						</div>
-					{/if}
-					{#if form?.valid}
-						<Label for="new">Enter New Password</Label>
-						<div class=" relative">
-							<Input
-								type={visible ? 'text' : 'password'}
-								id="new"
-								name="new"
-								placeholder="Confirm Password"
-							/>
-							<button
-								class="absolute top-1.5 right-1 cursor-pointer"
-								onclick={toggleVisibility}
-								type="button"
-							>
-								{#if visible}
-									<EyeOff />
-								{:else}
-									<Eye />
-								{/if}
-							</button>
-						</div>
-						<Label for="confirm">Confirm New Password</Label>
-						<div class=" relative">
-							<Input
-								type={visible ? 'text' : 'password'}
-								id="confirm"
-								name="confirm"
-								placeholder="Confirm Password"
-							/>
-							<button
-								class="absolute top-1.5 right-1 cursor-pointer"
-								onclick={toggleVisibility}
-								type="button"
-							>
-								{#if visible}
-									<EyeOff />
-								{:else}
-									<Eye />
-								{/if}
-							</button>
-						</div>
-					{/if}
-					<input type="hidden" value={user?.id} id="id" name="id" />
+
+					<Label for="password">Password</Label>
+					<div class=" relative">
+						<Input
+							type={visible ? 'text' : 'password'}
+							id="password"
+							name="password"
+							placeholder="password"
+						/>
+						<button
+							class="absolute top-1.5 right-1 cursor-pointer"
+							onclick={toggleVisibility}
+							type="button"
+						>
+							{#if visible}
+								<EyeOff />
+							{:else}
+								<Eye />
+							{/if}
+						</button>
+					</div>
+
+					<Label for="new">Enter New Password</Label>
+					<div class=" relative">
+						<Input
+							type={visible ? 'text' : 'password'}
+							id="new"
+							name="new"
+							placeholder="New Password"
+						/>
+						<button
+							class="absolute top-1.5 right-1 cursor-pointer"
+							onclick={toggleVisibility}
+							type="button"
+						>
+							{#if visible}
+								<EyeOff />
+							{:else}
+								<Eye />
+							{/if}
+						</button>
+					</div>
+					<Label for="confirm">Confirm New Password</Label>
+					<div class=" relative">
+						<Input
+							type={visible ? 'text' : 'password'}
+							id="confirm"
+							name="confirm"
+							placeholder="Confirm Password"
+						/>
+						<button
+							class="absolute top-1.5 right-1 cursor-pointer"
+							onclick={toggleVisibility}
+							type="button"
+						>
+							{#if visible}
+								<EyeOff />
+							{:else}
+								<Eye />
+							{/if}
+						</button>
+					</div>
+
 					<Button class="mx-auto w-fit" type="submit">Submit</Button>
 				</form>
 			</div>
@@ -115,6 +113,9 @@
 		<Card.Footer>
 			{#if form?.error}
 				<p class=" text-red-700">{form.error}</p>
+			{/if}
+			{#if form?.success}
+				<p class=" text-green-600">Success</p>
 			{/if}
 		</Card.Footer>
 	</Card.Root>

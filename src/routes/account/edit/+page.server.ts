@@ -39,16 +39,18 @@ export const actions = {
 							: ''
 			});
 		}
-		const fullUser = password ? getFullUser(user.id) : null;
-		const valid = fullUser ? verifyPassword(password, fullUser.password) : null;
-		if (valid !== null) {
-			if (!valid) {
-				return fail(400, { error: 'Incorrect password' });
-			} else {
-				return { valid: true };
-			}
+		const fullUser = getFullUser(user.id);
+		const valid = verifyPassword(password, fullUser.password);
+		if (!valid) {
+			return fail(400, { error: 'Incorrect password' });
 		}
-		let passwordHash = user.password;
+
+		const emailExists = checkIfEmailExists(email);
+		if (emailExists && emailExists.id !== user.id) {
+			return fail(400, { error: 'email already in use' });
+		}
+
+		let passwordHash = fullUser.password;
 		const newPassword = formData.get('new')?.toString();
 		const confirmPassword = formData.get('confirm')?.toString();
 		if (newPassword) {
@@ -59,6 +61,7 @@ export const actions = {
 		}
 		try {
 			updateUser(name, email, passwordHash, user.id);
+			return { success: true };
 		} catch (error) {
 			return fail(500, { error: 'server faced an unknown problem' });
 		}
