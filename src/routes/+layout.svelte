@@ -66,11 +66,9 @@
 		<AppSidebar {items} {subItems} />
 		<main class="flex-1">
 			<div class="fixed top-2 z-10">
-				{#if data.user}
-					<UserIcon user={data.user ? data.user : ''} />
-				{:else}
-					<User />
-				{/if}
+				
+					<UserIcon user={data.user ? data.user : {} }/>
+				
 			</div>
 			<div class="mt-[10vh] flex flex-col items-center justify-center">
 				{@render children?.()}
