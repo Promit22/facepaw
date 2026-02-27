@@ -23,6 +23,16 @@ export async function ensureDataDir(type: 'cat' | 'dog') {
 	}
 }
 
+function normalizeLifespan(str: string) {
+  const cleaned = str ? str.replace(/[^0-9\-]/g, '') : null;
+  const [min, max] = cleaned ? cleaned.split('-').map(Number) : ['unavailable', 'unavailable']
+
+  return {
+    min,
+    max
+  }
+}
+
 async function refreshBreeds(type: 'cat' | 'dog', filePath: string) {
 	const url =
 		type === 'cat' ? 'https://api.thecatapi.com/v1/breeds' : 'https://api.thedogapi.com/v1/breeds';
@@ -42,6 +52,12 @@ async function refreshBreeds(type: 'cat' | 'dog', filePath: string) {
 	});
 
 	const data = await res.json();
+	
+	await data.forEach((v) => {
+	  const normalLife = normalizeLifespan(v.life_span);
+	  v.minLifeSpan = normalLife.min;
+	  v.maxLifeSpan = normalLife.max;
+	})
 
 	await fs.writeFile(filePath, JSON.stringify(data, null, 2));
 }
