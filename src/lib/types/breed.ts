@@ -33,6 +33,8 @@ export interface Dogs {
 	weight?: Weight;
 	height?: Height;
 	image?: Image;
+	minLifeSpan: number;
+	maxLifeSpan: number;
 }
 export interface Cats {
 	weight?: Weight;
@@ -74,4 +76,6 @@ export interface Cats {
 	hypoallergenic?: number;
 	reference_image_id?: string;
 	image?: Image;
+	minLifeSpan: number;
+	maxLifeSpan: number;
 }
