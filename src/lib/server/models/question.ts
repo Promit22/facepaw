@@ -3,12 +3,30 @@ import type { Cats, Dogs } from '$lib/types/breed';
 import { getRandomType } from '$lib/helper/questionHelper';
 import { pickRandom } from '$lib/helper/questionHelper';
 import { shuffle } from '$lib/helper/questionHelper';
-function generateQuizSession(breeds: Cats[] | Dogs[], count = 10) {
+// import unavailable from '$lib/assets/unavailable.webp'
+
+export function generateQuizSession(breeds: Cats[] | Dogs[], count = 10) {
 	const selectedBreeds = pickUniqueRandomBreeds(breeds, count);
 
-	return selectedBreeds.map((breed, index) => {
-		const type = getRandomType();
-		return generateQuestionByType(type, breed, breeds);
+	// return selectedBreeds.map((breed, index) => {
+	// 	const type = getRandomType();
+	// 	return generateQuestionByType(type, breed, breeds);
+	// });
+	return selectedBreeds.map((breed) => {
+		let question;
+		let attempts = 0;
+
+		while (!question && attempts < 3) {
+			const type = getRandomType();
+			question = generateQuestionByType(type, breed, breeds);
+			attempts++;
+		}
+
+		if (!question) {
+			throw new Error('Failed to generate question');
+		}
+
+		return question;
 	});
 }
 
@@ -69,6 +87,7 @@ function generateImageQuestion(correctBreed: Cats | Dogs, allBreeds: Cats[] | Do
 	const pool = allBreeds.filter((b) => b.id !== correctBreed.id && b.image?.url).map((b) => b.name);
 
 	const wrongOptions = pickRandom(pool, 3);
+	console.log('correctbreed from image generator', correctBreed);
 
 	if (!wrongOptions || !correctBreed.name) return;
 
@@ -80,8 +99,8 @@ function generateImageQuestion(correctBreed: Cats | Dogs, allBreeds: Cats[] | Do
 		breedId: correctBreed.id,
 		question: `Which breed is shown in this image?`,
 		options,
-		correctAnswer: correctBreed.name,
-		imageUrl: correctBreed.image.url
+		imageUrl: correctBreed.image.url,
+		correctAnswer: correctBreed.name
 	};
 }
 

@@ -48,8 +48,8 @@ export function pickRandom(value: (string | undefined)[], count: number) {
 	// Filter out undefined values and type guard
 	const stringValues = value.filter((item): item is string => item !== undefined);
 
-	if (stringValues.length === 0) {
-		return;
+	if (stringValues.length < count) {
+		return stringValues;
 	}
 
 	const ranDomSet: Set<string> = new Set();
@@ -69,4 +69,5 @@ export function shuffle(option: string[]) {
 
 		[option[currentIndex], option[randomIndex]] = [option[randomIndex], option[currentIndex]];
 	}
+	return option;
 }

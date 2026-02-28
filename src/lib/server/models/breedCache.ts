@@ -1,6 +1,8 @@
 import fs from 'node:fs/promises';
 import path from 'node:path';
 import { CAT_API_KEY, DOG_API_KEY } from '$env/static/private';
+import unavailable from '$lib/assets/unavailable.webp';
+import type { Cats, Dogs } from '$lib/types/breed';
 
 const dataDir = path.join(process.cwd(), 'data');
 const oneWeek = 7 * 24 * 60 * 60 * 1000;
@@ -24,13 +26,13 @@ export async function ensureDataDir(type: 'cat' | 'dog') {
 }
 
 function normalizeLifespan(str: string) {
-  const cleaned = str ? str.replace(/[^0-9\-]/g, '') : null;
-  const [min, max] = cleaned ? cleaned.split('-').map(Number) : ['unavailable', 'unavailable']
+	const cleaned = str ? str.replace(/[^0-9\-]/g, '') : null;
+	const [min, max] = cleaned ? cleaned.split('-').map(Number) : [0, 0];
 
-  return {
-    min,
-    max
-  }
+	return {
+		min,
+		max
+	};
 }
 
 async function refreshBreeds(type: 'cat' | 'dog', filePath: string) {
@@ -52,12 +54,15 @@ async function refreshBreeds(type: 'cat' | 'dog', filePath: string) {
 	});
 
 	const data = await res.json();
-	
-	await data.forEach((v) => {
-	  const normalLife = normalizeLifespan(v.life_span);
-	  v.minLifeSpan = normalLife.min;
-	  v.maxLifeSpan = normalLife.max;
-	})
+
+	await data.forEach((v: Cats | Dogs) => {
+		const normalLife = normalizeLifespan(v.life_span ? v.life_span : 'unavailable');
+		v.minLifeSpan = normalLife.min;
+		v.maxLifeSpan = normalLife.max;
+		if (!v.image) {
+			v.image = { url: unavailable };
+		}
+	});
 
 	await fs.writeFile(filePath, JSON.stringify(data, null, 2));
 }

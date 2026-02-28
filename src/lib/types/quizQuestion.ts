@@ -1,7 +1,13 @@
-export type QuizQuestion = {
+export type Quiz = {
 	id: string;
-	type: 'origin' | 'lifespan' | 'image';
+	type: string;
 	question: string;
 	options: string[];
+	imageUrl?: string;
 	correctAnswer: string;
+};
+
+export type QuizQuestion = {
+	question: Quiz[];
+	createdAt: number;
 };
