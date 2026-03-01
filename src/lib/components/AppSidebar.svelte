@@ -20,13 +20,13 @@
 					class="absolute top-3 right-5 cursor-pointer hover:bg-amber-200"
 					onclick={toggleSbar}
 				/>
-				<Sidebar.Menu class="mt-5">
+				<Sidebar.Menu class="mt-5 ml-1">
 					{#each items as item (item.name)}
-						<Sidebar.MenuItem class="mt-2.5" onclick={toggleSbar}>
+						<Sidebar.MenuItem class="mt-2.5">
 							<Sidebar.MenuButton>
 								{#snippet child({ props })}
-									<a href={item.url} {...props}>
-										<item.icon />
+									<a href={item.url} {...props} class="flex flex-row gap-2">
+										<item.icon class=" h-5 w-5" />
 										<span>{item.name}</span>
 									</a>
 								{/snippet}

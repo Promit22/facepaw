@@ -10,6 +10,7 @@
 	import { Cat } from '@lucide/svelte';
 	import { Dog } from '@lucide/svelte';
 	import { Bone } from '@lucide/svelte';
+	import { BadgeQuestionMark } from '@lucide/svelte';
 
 	let { children, data } = $props();
 
@@ -30,6 +31,11 @@
 			name: 'Posts',
 			url: '/posts',
 			icon: HameburgerIcon
+		},
+		{
+			name: 'Quiz',
+			url: '/quiz',
+			icon: BadgeQuestionMark
 		}
 	];
 
@@ -66,9 +72,7 @@
 		<AppSidebar {items} {subItems} />
 		<main class="flex-1">
 			<div class="fixed top-2 z-10">
-				
-					<UserIcon user={data.user ? data.user : {} }/>
-				
+				<UserIcon user={data.user ? data.user : {}} />
 			</div>
 			<div class="mt-[10vh] flex flex-col items-center justify-center">
 				{@render children?.()}
