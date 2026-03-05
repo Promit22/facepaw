@@ -92,8 +92,7 @@
 				<Card.Header class=" ">
 					<PawPrint class=" mx-auto" size={50} />
 					<Card.Title class=" text-3xl/snug font-bold">Hybrid</Card.Title>
-					<Card.Description class=" font-medium"
-						>Identify both cat and dog breeds from images and facts.</Card.Description
+					<Card.Description class=" font-medium">Identify both cat and dog breeds.</Card.Description
 					>
 				</Card.Header>
 				<Card.Content>

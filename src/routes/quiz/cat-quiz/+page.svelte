@@ -2,7 +2,7 @@
 	import type { PageProps } from './$types';
 	import * as Card from '$lib/components/ui/card';
 	import { Button } from '$lib/components/ui/button';
-
+	import { Cat, Brain, Trophy, Clock } from '@lucide/svelte';
 	let { data }: PageProps = $props();
 	const { questions } = data;
 	let currentIndex = $state(0);
@@ -52,6 +52,40 @@
 	}
 </script>
 
+<div class=" w-full max-w-3xl">
+	<Card.Root class=" flex flex-col ">
+		<Card.Header class=" text-center">
+			<Cat size={80} class=" mx-auto" />
+			<Card.Title class=" text-3xl md:text-4xl">Cat Quiz</Card.Title>
+			<Card.Description class=" text-[16px]"
+				>Idenify 10 random cats from images or breed information</Card.Description
+			>
+		</Card.Header>
+		<Card.Content>
+			<h2 class=" mb-2.5 text-2xl font-bold">Rules:</h2>
+			<ul class=" flex w-full flex-col gap-3.5 text-[1rem] font-medium">
+				<li class=" flex gap-1.5 self-start">
+					<span><Brain class=" h-5 w-5" /></span> Answer 10 Questions within the time limit
+				</li>
+				<li class=" mt-2.5 flex gap-1.5 self-start">
+					<span><Clock class=" h-5 w-5" /></span> You have 2 minutes to complete the quiz.
+				</li>
+				<li class=" mt-2.5 flex gap-1.5 self-start">
+					<span><Trophy class=" h-5 w-5" /></span> Your score determines your leaderboard rank
+				</li>
+				<li class=" text-red-500">
+					<strong class=" font-black">Note:</strong> If you are not logged in(logged out/unregistered)
+					your answer won't be saved and you can't participate in the leaderboard
+				</li>
+			</ul>
+		</Card.Content>
+		<Card.Footer>
+			<Button class=" mx-auto w-[50%] cursor-pointer p-6 text-2xl md:w-[30%]">Start</Button>
+		</Card.Footer>
+	</Card.Root>
+</div>
+
+<!-- 
 {#if !finished}
 	<Card.Root class="mx-auto mt-10 max-w-xl p-6">
 		<Card.Header>
@@ -105,4 +139,4 @@
 			<Button onclick={() => location.reload()}>Play Again</Button>
 		</Card.Content>
 	</Card.Root>
-{/if}
+{/if} -->

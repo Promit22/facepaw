@@ -25,7 +25,9 @@ export const load = (async () => {
 			question: q.question,
 			options: q.options,
 			image: q.imageUrl
-		}))
+		})),
+		startedAt: Date.now(),
+		timeLimit: 120000
 	};
 }) satisfies PageServerLoad;
 
