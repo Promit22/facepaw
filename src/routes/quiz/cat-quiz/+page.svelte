@@ -3,8 +3,8 @@
 	import * as Card from '$lib/components/ui/card';
 	import { Button } from '$lib/components/ui/button';
 	import { Cat, Brain, Trophy, Clock } from '@lucide/svelte';
-	let { data }: PageProps = $props();
-	const { questions } = data;
+	let { data, form }: PageProps = $props();
+	const { questions, sessionId } = data;
 	let currentIndex = $state(0);
 	let selectedAnswer: string | null = $state(null);
 	let answers: Record<string, string>[] = [];
@@ -63,7 +63,7 @@
 		</Card.Header>
 		<Card.Content>
 			<h2 class=" mb-2.5 text-2xl font-bold">Rules:</h2>
-			<ul class=" flex w-full flex-col gap-3.5 text-[1rem] font-medium">
+			<ul class=" flex w-full list-disc flex-col gap-3.5 text-[1rem] font-medium">
 				<li class=" flex gap-1.5 self-start">
 					<span><Brain class=" h-5 w-5" /></span> Answer 10 Questions within the time limit
 				</li>
@@ -75,12 +75,15 @@
 				</li>
 				<li class=" text-red-500">
 					<strong class=" font-black">Note:</strong> If you are not logged in(logged out/unregistered)
-					your answer won't be saved and you can't participate in the leaderboard
+					your result won't be saved and you can't participate in the leaderboard
 				</li>
 			</ul>
 		</Card.Content>
 		<Card.Footer>
-			<Button class=" mx-auto w-[50%] cursor-pointer p-6 text-2xl md:w-[30%]">Start</Button>
+			<form action="?/startQuiz" method="POST" class=" flex w-full justify-center">
+				<input type="hidden" name="id" value={sessionId} />
+				<Button type="submit" class=" w-[50%] cursor-pointer p-6 text-2xl md:w-[30%]">Start</Button>
+			</form>
 		</Card.Footer>
 	</Card.Root>
 </div>

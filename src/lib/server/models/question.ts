@@ -87,7 +87,7 @@ function generateImageQuestion(correctBreed: Cats | Dogs, allBreeds: Cats[] | Do
 	const pool = allBreeds.filter((b) => b.id !== correctBreed.id && b.image?.url).map((b) => b.name);
 
 	const wrongOptions = pickRandom(pool, 3);
-	console.log('correctbreed from image generator', correctBreed);
+	// console.log('correctbreed from image generator', correctBreed);
 
 	if (!wrongOptions || !correctBreed.name) return;
 

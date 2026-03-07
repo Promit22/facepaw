@@ -4,31 +4,17 @@ import { readBreed } from '$lib/server/models/breedCache';
 import { quizStore } from '$lib/server/quiz/quizStore';
 import type { QuizQuestion } from '$lib/types/quizQuestion';
 import type { Quiz } from '$lib/types/quizQuestion';
+
+let sessionId: `${string}-${string}-${string}-${string}-${string}`;
+let quiz: Quiz[];
 export const load = (async () => {
 	const breeds = await readBreed('cat');
-	const quiz: Quiz[] = generateQuizSession(breeds, 10);
+	quiz = generateQuizSession(breeds, 10);
+	sessionId = crypto.randomUUID();
 	console.log(quiz);
 
-	const sessionId = crypto.randomUUID();
-
 	// store correct answers in memory/db/cache
-	quizStore.set(sessionId, {
-		question: quiz,
-		createdAt: Date.now()
-	});
-
-	return {
-		sessionId,
-		questions: quiz.map((q) => ({
-			id: q.id,
-			type: q.type,
-			question: q.question,
-			options: q.options,
-			image: q.imageUrl
-		})),
-		startedAt: Date.now(),
-		timeLimit: 120000
-	};
+	return {};
 }) satisfies PageServerLoad;
 
 function gradeQuizSession(
@@ -87,5 +73,26 @@ export const actions = {
 		console.log('result from action', result);
 
 		return { result };
+	},
+	startQuiz: async ({ request }) => {
+		// const formData = await request.formData();
+		// const id = formData.get('id');
+		const expiresAt = Date.now() + 120000;
+		quizStore.set(sessionId, {
+			question: quiz,
+			createdAt: Date.now(),
+			expiresAt
+		});
+		return {
+			sessionId,
+			questions: quiz.map((q) => ({
+				id: q.id,
+				type: q.type,
+				question: q.question,
+				options: q.options,
+				image: q.imageUrl
+			})),
+			expiresAt
+		};
 	}
 };

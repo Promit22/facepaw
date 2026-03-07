@@ -10,4 +10,5 @@ export type Quiz = {
 export type QuizQuestion = {
 	question: Quiz[];
 	createdAt: number;
+	expiresAt: number;
 };
