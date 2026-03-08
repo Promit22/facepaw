@@ -9,6 +9,7 @@
 	let selectedAnswer: string | null = $state(null);
 	let answers: Record<string, string>[] = [];
 	let finished = $state(false);
+	const hasStarted = $state(false);
 	let result: any = $state(null);
 
 	console.log(questions);

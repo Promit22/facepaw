@@ -11,7 +11,7 @@ export const load = (async () => {
 	const breeds = await readBreed('cat');
 	quiz = generateQuizSession(breeds, 10);
 	sessionId = crypto.randomUUID();
-	console.log(quiz);
+	console.log('quiz', quiz);
 
 	// store correct answers in memory/db/cache
 	return {};
