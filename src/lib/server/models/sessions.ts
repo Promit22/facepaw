@@ -7,7 +7,7 @@ export function createSession(user_id: number) {
 	db.prepare(`INSERT INTO sessions (id, user_id) VALUES(?, ?)`).run(id, user_id);
 	return id;
 }
-
+//this function is not production ready(credentials exposed)
 export function getUserFromSession(id: string): User | undefined {
 	return db
 		.prepare(
@@ -17,7 +17,7 @@ export function getUserFromSession(id: string): User | undefined {
 			 WHERE sessions.id = ?`
 		)
 		.get(id) as User | undefined;
-}                  
+}
 
 export function deleteSessioin(id: string) {
 	db.prepare(`DELETE FROM sessions WHERE id = ?`).run(id);

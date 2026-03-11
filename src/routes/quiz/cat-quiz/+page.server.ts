@@ -2,7 +2,7 @@ import type { PageServerLoad } from './$types';
 import { generateQuizSession } from '$lib/server/models/question';
 import { readBreed } from '$lib/server/models/breedCache';
 import { quizStore } from '$lib/server/quiz/quizStore';
-import type { QuizQuestion } from '$lib/types/quizQuestion';
+// import type { QuizQuestion } from '$lib/types/quizQuestion';
 import type { Quiz } from '$lib/types/quizQuestion';
 
 let sessionId: `${string}-${string}-${string}-${string}-${string}`;
@@ -11,7 +11,7 @@ export const load = (async () => {
 	const breeds = await readBreed('cat');
 	quiz = generateQuizSession(breeds, 10);
 	sessionId = crypto.randomUUID();
-	console.log('quiz', quiz);
+	// console.log('quiz', quiz);
 
 	// store correct answers in memory/db/cache
 	return {};
@@ -74,15 +74,17 @@ export const actions = {
 
 		return { result };
 	},
-	startQuiz: async ({ request }) => {
+	startQuiz: async () => {
 		// const formData = await request.formData();
 		// const id = formData.get('id');
-		const expiresAt = Date.now() + 120000;
+		const expiresAt = Date.now() + 123000;
 		quizStore.set(sessionId, {
 			question: quiz,
 			createdAt: Date.now(),
 			expiresAt
 		});
+		console.log('quiz from start quiz action', quiz);
+
 		return {
 			sessionId,
 			questions: quiz.map((q) => ({

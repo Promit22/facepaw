@@ -26,7 +26,7 @@ export async function ensureDataDir(type: 'cat' | 'dog') {
 }
 
 function normalizeLifespan(str: string) {
-	const cleaned = str ? str.replace(/[^0-9\-]/g, '') : null;
+	const cleaned = str ? str.replace(/[^0-9-]/g, '') : null;
 	const [min, max] = cleaned ? cleaned.split('-').map(Number) : [0, 0];
 
 	return {
