@@ -8,8 +8,9 @@
 	// const { sessionId } = data;
 	console.log('form', form);
 
-	let questions = form?.questions;
-	console.log(questions);
+	let questions = $derived(form?.questions ?? []);
+	const started = () => questions.length > 0;
+	console.log('started', started());
 
 	// if (form) {
 	// 	questions = form.questions;
@@ -21,7 +22,7 @@
 	let selectedAnswer: string | null = $state(null);
 	let answers: Record<string, string>[] = [];
 	let finished = $state(false);
-	let countDownStarted = $state(false);
+	// let countDownStarted = $state(false);
 	let countDownFinished = $state(false);
 	let result: any = $state(null);
 	let timer: number = $state(3);
@@ -65,23 +66,29 @@
 		console.log('result from quiz page', result);
 	}
 
-	function beginQuiz() {
-		console.log('called begin function');
-		countDownStarted = true;
-		const count = setInterval(() => {
-			timer--;
-			if (timer < 1) {
-				clearInterval(count);
-				countDownFinished = true;
-			}
-		}, 1000);
-		console.log('form from beginquiz:', form);
-	}
+	// function beginQuiz() {
+	// 	console.log('called begin function');
+	// 	countDownStarted = true;
+
+	// 	console.log('form from beginquiz:', form);
+	// }
+
+	$effect(() => {
+		if (started()) {
+			const count = setInterval(() => {
+				timer--;
+				if (timer < 1) {
+					clearInterval(count);
+					countDownFinished = true;
+				}
+			}, 1000);
+		}
+	});
 	// beginQuiz();
 </script>
 
 <div class=" flex h-full w-full max-w-3xl items-center justify-center">
-	{#if !countDownStarted}
+	{#if !started()}
 		<Card.Root class=" flex flex-col ">
 			<Card.Header class=" text-center">
 				<Cat size={80} class=" mx-auto" />
@@ -109,18 +116,7 @@
 				</ul>
 			</Card.Content>
 			<Card.Footer>
-				<form
-					method="POST"
-					action="?/startQuiz"
-					class=" flex w-full justify-center"
-					use:enhance={() => {
-						return async ({ result }) => {
-							if (result.type === 'success') {
-								beginQuiz();
-							}
-						};
-					}}
-				>
+				<form method="POST" action="?/startQuiz" class=" flex w-full justify-center" use:enhance>
 					<input type="hidden" name="id" value={sessionId} />
 					<Button type="submit" class=" w-[50%] cursor-pointer p-6 text-2xl md:w-[30%]"
 						>Start</Button
@@ -130,8 +126,8 @@
 		</Card.Root>
 	{:else if !countDownFinished}
 		<div class=" my-auto h-full text-9xl">{timer}</div>
-	{:else if !finished}
-		<!-- <Card.Root class="mx-auto mt-10 p-6">
+	{:else if countDownFinished}
+		<Card.Root class="mx-auto mt-10 p-6">
 			<Card.Header>
 				<Card.Title>
 					Question {currentIndex + 1} / {questions.length}
@@ -182,7 +178,7 @@
 
 				<Button onclick={() => location.reload()}>Play Again</Button>
 			</Card.Content>
-		</Card.Root> -->
+		</Card.Root>
 	{/if}
 </div>
 
