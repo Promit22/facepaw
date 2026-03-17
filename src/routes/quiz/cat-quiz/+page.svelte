@@ -1,5 +1,6 @@
 <script lang="ts">
 	import type { ActionData, PageProps } from './$types';
+	import { Hourglass } from '@lucide/svelte';
 	import * as Card from '$lib/components/ui/card';
 	import { Button } from '$lib/components/ui/button';
 	import { Cat, Brain, Trophy, Clock } from '@lucide/svelte';
@@ -9,19 +10,15 @@
 	console.log('form', form);
 
 	let questions = $derived(form?.questions ?? []);
+	const expiresAt = $derived(form?.expiresAt ?? 0);
 	const started = () => questions.length > 0;
 	console.log('started', started());
 
-	// if (form) {
-	// 	questions = form.questions;
-	// 	console.log('form inside if', form);
-	// 	console.log('question', questions);
-	// }
-	let sessionId = form?.sessionId;
+	let sessionId = $derived(form?.sessionId ?? '');
 	let currentIndex = $state(0);
 	let selectedAnswer: string | null = $state(null);
 	let answers: Record<string, string>[] = [];
-	let finished = $state(false);
+	let remaining = $state(0);
 	// let countDownStarted = $state(false);
 	let countDownFinished = $state(false);
 	let result: any = $state(null);
@@ -51,7 +48,7 @@
 		console.log('called submit');
 
 		const formData = new FormData();
-		formData.append('sessionId', data.sessionId);
+		formData.append('sessionId', sessionId);
 		formData.append('answers', JSON.stringify(answers));
 		const res = await fetch('/quiz/cat-quiz?/submitAns', {
 			method: 'POST',
@@ -62,7 +59,6 @@
 		console.log('response', response);
 
 		result = response.data.result;
-		finished = true;
 		console.log('result from quiz page', result);
 	}
 
@@ -73,6 +69,15 @@
 	// 	console.log('form from beginquiz:', form);
 	// }
 
+	function startCounting() {
+		const timer = setInterval(() => {
+			remaining = Math.ceil((expiresAt - Date.now()) / 1000);
+			if (Date.now() > expiresAt) {
+				clearInterval(timer);
+			}
+		}, 1000);
+	}
+
 	$effect(() => {
 		if (started()) {
 			const count = setInterval(() => {
@@ -82,6 +87,7 @@
 					countDownFinished = true;
 				}
 			}, 1000);
+			startCounting();
 		}
 	});
 	// beginQuiz();
@@ -129,8 +135,11 @@
 	{:else if countDownFinished}
 		<Card.Root class="mx-auto mt-10 p-6">
 			<Card.Header>
-				<Card.Title>
+				<Card.Title class=" flex items-center justify-between">
 					Question {currentIndex + 1} / {questions.length}
+					<div class="flex items-center gap-1.5 text-[18px]">
+						<span class=" animate-spin"><Hourglass size={20} /></span><span>{remaining}s</span>
+					</div>
 				</Card.Title>
 			</Card.Header>
 
