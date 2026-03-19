@@ -9,7 +9,7 @@ let sessionId: `${string}-${string}-${string}-${string}-${string}`;
 let quiz: Quiz[];
 export const load = (async () => {
 	const breeds = await readBreed('cat');
-	quiz = generateQuizSession(breeds, 10);
+	quiz = generateQuizSession(breeds, 2);
 	sessionId = crypto.randomUUID();
 	// console.log('quiz', quiz);
 
@@ -21,6 +21,9 @@ function gradeQuizSession(
 	sessionId: string,
 	userAnswers: { questionId: string; answer: string }[]
 ) {
+	console.log('sessionid', sessionId);
+	console.log('ans', userAnswers);
+
 	const MAX_AGE = 5 * 60 * 1000; // 5 minutes
 
 	for (const [id, session] of quizStore.entries()) {
@@ -29,7 +32,7 @@ function gradeQuizSession(
 		}
 	}
 
-	console.log(userAnswers);
+	console.log('userAnswer', userAnswers);
 
 	const session = quizStore.get(sessionId);
 	// const sessionEntries = session.entries()
@@ -41,6 +44,8 @@ function gradeQuizSession(
 
 	for (const userAnswer of userAnswers) {
 		const question = session.question.find((q) => q.id === userAnswer.questionId);
+		console.log('questionId', userAnswer.questionId);
+		console.log('questionId', userAnswer.answer);
 
 		if (!question) continue;
 
@@ -57,6 +62,7 @@ function gradeQuizSession(
 		total,
 		accuracy
 	};
+	// return { score, total };
 }
 
 export const actions = {
@@ -68,11 +74,12 @@ export const actions = {
 			return;
 		}
 		const obj = JSON.parse(answers);
-		console.log(sessionId, answers);
+		console.log(sessionId, answers, obj);
 		const result = gradeQuizSession(sessionId, obj);
 		console.log('result from action', result);
 
-		return { result };
+		// return { score: result.score, total: result.total, accuracy: result.accuracy };
+		return result;
 	},
 	startQuiz: async () => {
 		// const formData = await request.formData();
