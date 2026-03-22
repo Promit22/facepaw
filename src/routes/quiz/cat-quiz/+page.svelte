@@ -1,4 +1,5 @@
 <script lang="ts">
+	import { onMount } from 'svelte';
 	import type { PageProps } from './$types';
 	import { Hourglass } from '@lucide/svelte';
 	import * as Card from '$lib/components/ui/card';
@@ -8,20 +9,30 @@
 	let { form, data }: PageProps = $props();
 	// const { sessionId } = data;
 	console.log('form', form);
-
 	let questions = $derived(form?.questions ?? []);
 	const expiresAt = $derived(form?.expiresAt ?? 0);
-	const score = $derived(form?.score ?? 0);
-	const accuracy = $derived(form?.accuracy ?? 0);
-	const total = $derived(form?.total ?? 0);
+	// const score = $derived(form?.score ?? 0);
+	// const accuracy = $derived(form?.accuracy ?? 0);
+	// const total = $derived(form?.total ?? 0);
 	const started = () => questions.length > 0;
 	console.log('started', started());
 
 	// let sessionId = $derived(form?.sessionId ?? '');
 	let sessionId = data.sessionId;
+	let localSessionId: string;
+	onMount(() => {
+		if (localStorage.getItem('sessionId')) localStorage.removeItem('sessionId');
+
+		if (sessionId) {
+			localStorage.setItem('sessionId', sessionId);
+		}
+		const sId = localStorage.getItem('sessionId');
+		localSessionId = sId ? sId : '';
+	});
+
 	let currentIndex = $state(0);
 	let selectedAnswer: string | null = $state(null);
-	let answers: Record<string, string>[] = [];
+	// let answers: Record<string, string>[] = [];
 	let remaining = $state(0);
 	// let countDownStarted = $state(false);
 	let countDownFinished = $state(false);
@@ -31,53 +42,66 @@
 	// console.log(questions);
 
 	function next() {
-		if (!selectedAnswer) return;
+		if (!selectedAnswer) selectedAnswer = null;
 
-		const q = questions[currentIndex];
-		const ansObj: Record<string, string> = {};
+		const qId = questions[currentIndex].id;
+		// const ansObj: Record<string, string> = {};
 
-		ansObj['questionId'] = q.id;
-		ansObj['answer'] = selectedAnswer;
+		// ansObj['questionId'] = q.id;
+		// ansObj['answer'] = selectedAnswer;
 
-		answers.push(ansObj);
-
-		selectedAnswer = null;
+		// answers.push(ansObj);
 
 		if (currentIndex < questions.length - 1) {
 			currentIndex++;
-		} else {
-			console.log('answers from quiz page', answers);
-
-			submit();
 		}
+		submit(qId, JSON.stringify(selectedAnswer));
+		selectedAnswer = null;
+		// } else {
+		// 	console.log('answers from quiz page', answers);
+
+		// 	submit();
+		// }
 	}
 
-	async function submit() {
-		console.log('answers from submit', answers);
-
+	async function submit(qId: string, ans: string) {
+		const id = sessionId ?? localSessionId;
 		const formData = new FormData();
-		formData.append('sessionId', sessionId);
-		formData.append('answers', JSON.stringify(answers));
-		// formData.append('sessionId', JSON.stringify(sessionId));
-		const res = await fetch('/quiz/cat-quiz?/submitAns', {
+		formData.append('sessionId', id);
+		formData.append('qId', qId);
+		formData.append('selectedAnswer', ans);
+		await fetch('/quiz/cat-quiz?/submitAnswer', {
 			method: 'POST',
 			body: formData
 		});
-
-		const response = await res.json();
-		console.log('response', response);
-
-		const parsed = JSON.parse(response.data);
-		console.log('paresed response', parsed);
-
-		result = {
-			score: parsed[parsed[0]['score']],
-			total: parsed[parsed[0]['total']],
-			accuracy: parsed[parsed[0]['accuracy']]
-		};
-		finished = true;
-		// console.log('result from quiz page', result);
 	}
+
+	// async function submit() {
+	// 	console.log('answers from submit', answers);
+
+	// 	const formData = new FormData();
+	// 	formData.append('sessionId', sessionId);
+	// 	formData.append('answers', JSON.stringify(answers));
+	// 	// formData.append('sessionId', JSON.stringify(sessionId));
+	// 	const res = await fetch('/quiz/cat-quiz?/submitAns', {
+	// 		method: 'POST',
+	// 		body: formData
+	// 	});
+
+	// 	const response = await res.json();
+	// 	console.log('response', response);
+
+	// 	const parsed = JSON.parse(response.data);
+	// 	console.log('paresed response', parsed);
+
+	// 	result = {
+	// 		score: parsed[parsed[0]['score']],
+	// 		total: parsed[parsed[0]['total']],
+	// 		accuracy: parsed[parsed[0]['accuracy']]
+	// 	};
+	// 	finished = true;
+	// 	// console.log('result from quiz page', result);
+	// }
 
 	// function beginQuiz() {
 	// 	console.log('called begin function');
@@ -186,8 +210,8 @@
 						</button>
 					{/each}
 				</div>
-				<input type="hidden" value={selectedAnswer} />
-				<Button class="mt-4 w-full" disabled={!selectedAnswer} onclick={next} type="submit">
+
+				<Button class="mt-4 w-full" disabled={!selectedAnswer} onclick={next}>
 					{currentIndex === questions.length - 1 ? 'Submit' : 'Next'}
 				</Button>
 			</Card.Content>

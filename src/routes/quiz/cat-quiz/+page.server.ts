@@ -7,6 +7,7 @@ import type { PendingQuiz } from '$lib/types/quizQuestion';
 import type { Quiz } from '$lib/types/quizQuestion';
 
 const pendingQuiz = new Map<string, PendingQuiz>();
+const userAnswers = new Map<string, { answer: { id: string; ans: string }[]; createdAt: number }>();
 
 function cleanExpiredPending() {
 	const MAX_AGE = 30 * 60 * 1000;
@@ -17,13 +18,20 @@ function cleanExpiredPending() {
 		}
 	});
 }
+function cleanExpiredAnswers() {
+	const MAX_AGE = 30 * 60 * 1000;
+	userAnswers.forEach((value, key) => {
+		// console.log('value', value);
+		if (Date.now() - value.createdAt > MAX_AGE) {
+			userAnswers.delete(key);
+		}
+	});
+}
 
 export const load = (async () => {
 	const breeds = await readBreed('cat');
-	let sessionId: `${string}-${string}-${string}-${string}-${string}`;
-	let quiz: Quiz[];
-	quiz = generateQuizSession(breeds, 2);
-	sessionId = crypto.randomUUID();
+	const sessionId: `${string}-${string}-${string}-${string}-${string}` = crypto.randomUUID();
+	const quiz: Quiz[] = generateQuizSession(breeds, 2);
 	// console.log('quiz', quiz);
 	pendingQuiz.set(sessionId, { question: quiz, createdAt: Date.now() });
 	console.log(pendingQuiz);
@@ -127,7 +135,26 @@ export const actions = {
 		console.log('triggered submitanswer action');
 
 		const formData = await request.formData();
-		const selectedAnswer = formData.get('selectedAnswer');
+		const selectedAnswer = formData.get('selectedAnswer')?.toString();
+		const id = formData.get('sessionId')?.toString();
+		const qId = formData.get('qId')?.toString();
+		if (!selectedAnswer || !id || !qId) return { message: 'could not submit answer. Pleast retry' };
+		const preAns = userAnswers.get(id);
+		if (preAns) {
+			preAns.answer.push({ id: id, ans: selectedAnswer });
+		} else {
+			userAnswers.set(id, {
+				answer: [
+					{
+						id: id,
+						ans: selectedAnswer
+					}
+				],
+				createdAt: Date.now()
+			});
+		}
 		console.log('selectedAnswer from submitanswer action', selectedAnswer);
+		console.log('selectedAnswer from submitanswer action', id);
+		console.log('selectedAnswer from submitanswer action', qId);
 	}
 };
