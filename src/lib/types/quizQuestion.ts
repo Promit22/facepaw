@@ -12,3 +12,8 @@ export type QuizQuestion = {
 	createdAt: number;
 	expiresAt: number;
 };
+
+export type PendingQuiz = {
+	question: Quiz[];
+	createdAt: number;
+};

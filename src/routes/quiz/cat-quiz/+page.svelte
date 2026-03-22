@@ -5,7 +5,7 @@
 	import { Button } from '$lib/components/ui/button';
 	import { Cat, Brain, Trophy, Clock } from '@lucide/svelte';
 	import { enhance } from '$app/forms';
-	let { form }: PageProps = $props();
+	let { form, data }: PageProps = $props();
 	// const { sessionId } = data;
 	console.log('form', form);
 
@@ -17,7 +17,8 @@
 	const started = () => questions.length > 0;
 	console.log('started', started());
 
-	let sessionId = $derived(form?.sessionId ?? '');
+	// let sessionId = $derived(form?.sessionId ?? '');
+	let sessionId = data.sessionId;
 	let currentIndex = $state(0);
 	let selectedAnswer: string | null = $state(null);
 	let answers: Record<string, string>[] = [];
@@ -140,6 +141,7 @@
 			</Card.Content>
 			<Card.Footer>
 				<form method="POST" action="?/startQuiz" class=" flex w-full justify-center" use:enhance>
+					<input type="hidden" name="sessionId" value={sessionId} />
 					<Button type="submit" class=" w-[50%] cursor-pointer p-6 text-2xl md:w-[30%]"
 						>Start</Button
 					>
@@ -178,13 +180,14 @@
 							class="w-full rounded-lg border p-2 text-left
 					{selectedAnswer === option ? 'bg-muted' : ''}"
 							onclick={() => (selectedAnswer = option)}
+							type="button"
 						>
 							{option}
 						</button>
 					{/each}
 				</div>
-
-				<Button class="mt-4 w-full" disabled={!selectedAnswer} onclick={next}>
+				<input type="hidden" value={selectedAnswer} />
+				<Button class="mt-4 w-full" disabled={!selectedAnswer} onclick={next} type="submit">
 					{currentIndex === questions.length - 1 ? 'Submit' : 'Next'}
 				</Button>
 			</Card.Content>

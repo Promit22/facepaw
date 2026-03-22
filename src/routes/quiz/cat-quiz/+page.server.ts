@@ -2,19 +2,33 @@ import type { PageServerLoad } from './$types';
 import { generateQuizSession } from '$lib/server/models/question';
 import { readBreed } from '$lib/server/models/breedCache';
 import { quizStore } from '$lib/server/quiz/quizStore';
+import type { PendingQuiz } from '$lib/types/quizQuestion';
 // import type { QuizQuestion } from '$lib/types/quizQuestion';
 import type { Quiz } from '$lib/types/quizQuestion';
 
-let sessionId: `${string}-${string}-${string}-${string}-${string}`;
-let quiz: Quiz[];
+const pendingQuiz = new Map<string, PendingQuiz>();
+
+function cleanExpiredPending() {
+	const MAX_AGE = 30 * 60 * 1000;
+	pendingQuiz.forEach((value, key) => {
+		// console.log('value', value);
+		if (Date.now() - value.createdAt > MAX_AGE) {
+			pendingQuiz.delete(key);
+		}
+	});
+}
+
 export const load = (async () => {
 	const breeds = await readBreed('cat');
+	let sessionId: `${string}-${string}-${string}-${string}-${string}`;
+	let quiz: Quiz[];
 	quiz = generateQuizSession(breeds, 2);
 	sessionId = crypto.randomUUID();
 	// console.log('quiz', quiz);
-
+	pendingQuiz.set(sessionId, { question: quiz, createdAt: Date.now() });
+	console.log(pendingQuiz);
 	// store correct answers in memory/db/cache
-	return {};
+	return { sessionId };
 }) satisfies PageServerLoad;
 
 function gradeQuizSession(
@@ -81,20 +95,25 @@ export const actions = {
 		// return { score: result.score, total: result.total, accuracy: result.accuracy };
 		return result;
 	},
-	startQuiz: async () => {
-		// const formData = await request.formData();
-		// const id = formData.get('id');
+	startQuiz: async ({ request }) => {
+		const formData = await request.formData();
+		const sessionId = formData.get('sessionId')?.toString();
 		const expiresAt = Date.now() + 123000;
+		if (!sessionId) return { message: 'Could not start quiz. Please start again' };
+		const quiz = pendingQuiz.get(sessionId);
+		if (!quiz) return { message: 'Could not start quiz. Please start again' };
 		quizStore.set(sessionId, {
-			question: quiz,
+			question: quiz.question,
 			createdAt: Date.now(),
 			expiresAt
 		});
 		console.log('quiz from start quiz action', quiz);
-
+		cleanExpiredPending();
+		const currentQuiz = quizStore.get(sessionId);
+		if (!currentQuiz) return { message: 'Could not start quiz. Please start again' };
 		return {
 			sessionId,
-			questions: quiz.map((q) => ({
+			questions: currentQuiz.question.map((q) => ({
 				id: q.id,
 				type: q.type,
 				question: q.question,
@@ -103,5 +122,12 @@ export const actions = {
 			})),
 			expiresAt
 		};
+	},
+	submitAnswer: async ({ request }) => {
+		console.log('triggered submitanswer action');
+
+		const formData = await request.formData();
+		const selectedAnswer = formData.get('selectedAnswer');
+		console.log('selectedAnswer from submitanswer action', selectedAnswer);
 	}
 };
