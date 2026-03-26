@@ -1,6 +1,7 @@
 import type { User } from '$lib/types/user';
 import { db } from '../db/db';
 import crypto from 'node:crypto';
+import { quizStore } from '../quiz/quizStore';
 
 export function createSession(user_id: number) {
 	const id = crypto.randomUUID();
@@ -21,4 +22,22 @@ export function getUserFromSession(id: string): User | undefined {
 
 export function deleteSessioin(id: string) {
 	db.prepare(`DELETE FROM sessions WHERE id = ?`).run(id);
+}
+
+export function checkIfQuizSessionValid(sessionId: string) {
+	console.log('sessionid from check', sessionId);
+	console.log('quizstore from check', quizStore);
+
+	const session = quizStore.get(sessionId)?.expiresAt;
+	console.log('session from check', session);
+
+	if (!session) {
+		return false;
+	} else {
+		if ((session - Date.now()) / 1000 > 10) {
+			return true;
+		} else {
+			return false;
+		}
+	}
 }

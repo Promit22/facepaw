@@ -5,9 +5,13 @@ import { quizStore } from '$lib/server/quiz/quizStore';
 import type { PendingQuiz } from '$lib/types/quizQuestion';
 // import type { QuizQuestion } from '$lib/types/quizQuestion';
 import type { Quiz } from '$lib/types/quizQuestion';
+import { checkIfQuizSessionValid } from '$lib/server/models/sessions.js';
 
 const pendingQuiz = new Map<string, PendingQuiz>();
-const userAnswers = new Map<string, { answer: { id: string; ans: string }[]; createdAt: number }>();
+const userAnswers = new Map<
+	string,
+	{ answer: { id: string; ans: string }[]; createdAt: number; index: string }
+>();
 
 function cleanExpiredPending() {
 	const MAX_AGE = 30 * 60 * 1000;
@@ -28,14 +32,45 @@ function cleanExpiredAnswers() {
 	});
 }
 
-export const load = (async () => {
+export const load = (async ({ cookies }) => {
+	const sessionCookie = cookies.get('quizSessionId');
+	console.log('sessionCookie', sessionCookie);
+
+	if (sessionCookie) {
+		const isSessionValid = checkIfQuizSessionValid(sessionCookie);
+		if (isSessionValid) {
+			const session = quizStore.get(sessionCookie);
+			console.log('session', session);
+
+			const currentIndex = userAnswers.get(sessionCookie)?.answer.length;
+			if (session && currentIndex) {
+				return {
+					questions: session.question.map((q) => ({
+						id: q.id,
+						type: q.type,
+						question: q.question,
+						options: q.options,
+						image: q.imageUrl
+					})),
+					currentIndex,
+					sessionId: sessionCookie,
+					expiresAt: session.expiresAt
+				};
+			}
+		}
+	}
 	const breeds = await readBreed('cat');
 	const sessionId: `${string}-${string}-${string}-${string}-${string}` = crypto.randomUUID();
 	const quiz: Quiz[] = generateQuizSession(breeds, 2);
 	// console.log('quiz', quiz);
 	pendingQuiz.set(sessionId, { question: quiz, createdAt: Date.now() });
-	console.log(pendingQuiz);
-	// store correct answers in memory/db/cache
+	// console.log(pendingQuiz);
+	cookies.set('quizSessionId', sessionId, {
+		path: '/',
+		httpOnly: true,
+		sameSite: 'strict',
+		maxAge: 10 * 60
+	});
 	return { sessionId };
 }) satisfies PageServerLoad;
 
@@ -43,8 +78,8 @@ function gradeQuizSession(
 	sessionId: string,
 	userAnswers: { questionId: string; answer: string }[]
 ) {
-	console.log('sessionid', sessionId);
-	console.log('ans', userAnswers);
+	// console.log('sessionid', sessionId);
+	// console.log('ans', userAnswers);
 
 	const MAX_AGE = 5 * 60 * 1000; // 5 minutes
 
@@ -54,7 +89,7 @@ function gradeQuizSession(
 		}
 	}
 
-	console.log('userAnswer', userAnswers);
+	// console.log('userAnswer', userAnswers);
 
 	const session = quizStore.get(sessionId);
 	// const sessionEntries = session.entries()
@@ -66,8 +101,8 @@ function gradeQuizSession(
 
 	for (const userAnswer of userAnswers) {
 		const question = session.question.find((q) => q.id === userAnswer.questionId);
-		console.log('questionId', userAnswer.questionId);
-		console.log('questionId', userAnswer.answer);
+		// console.log('questionId', userAnswer.questionId);
+		// console.log('questionId', userAnswer.answer);
 
 		if (!question) continue;
 
@@ -96,26 +131,28 @@ export const actions = {
 			return;
 		}
 		const obj = JSON.parse(answers);
-		console.log(sessionId, answers, obj);
+		// console.log(sessionId, answers, obj);
 		const result = gradeQuizSession(sessionId, obj);
-		console.log('result from action', result);
+		// console.log('result from action', result);
 
 		// return { score: result.score, total: result.total, accuracy: result.accuracy };
 		return result;
 	},
-	startQuiz: async ({ request }) => {
-		const formData = await request.formData();
-		const sessionId = formData.get('sessionId')?.toString();
-		const expiresAt = Date.now() + 123000;
+	startQuiz: async ({ request, cookies }) => {
+		// const formData = await request.formData();
+		// const sessionId = formData.get('sessionId')?.toString();
+		// console.log('sessionid from start action', sessionId);
+		const sessionId = cookies.get('quizSessionId');
 		if (!sessionId) return { message: 'Could not start quiz. Please start again' };
 		const quiz = pendingQuiz.get(sessionId);
 		if (!quiz) return { message: 'Could not start quiz. Please start again' };
+		const expiresAt = Date.now() + 123000;
 		quizStore.set(sessionId, {
 			question: quiz.question,
 			createdAt: Date.now(),
 			expiresAt
 		});
-		console.log('quiz from start quiz action', quiz);
+		// console.log('quiz from start quiz action', quiz);
 		cleanExpiredPending();
 		const currentQuiz = quizStore.get(sessionId);
 		if (!currentQuiz) return { message: 'Could not start quiz. Please start again' };
@@ -138,10 +175,12 @@ export const actions = {
 		const selectedAnswer = formData.get('selectedAnswer')?.toString();
 		const id = formData.get('sessionId')?.toString();
 		const qId = formData.get('qId')?.toString();
-		if (!selectedAnswer || !id || !qId) return { message: 'could not submit answer. Pleast retry' };
+		const index = formData.get('index')?.toString();
+		if (!selectedAnswer || !id || !qId || !index)
+			return { message: 'could not submit answer. Pleast retry' };
 		const preAns = userAnswers.get(id);
 		if (preAns) {
-			preAns.answer.push({ id: id, ans: selectedAnswer });
+			preAns.answer.push({ id: qId, ans: selectedAnswer });
 		} else {
 			userAnswers.set(id, {
 				answer: [
@@ -150,11 +189,12 @@ export const actions = {
 						ans: selectedAnswer
 					}
 				],
-				createdAt: Date.now()
+				createdAt: Date.now(),
+				index: index
 			});
 		}
-		console.log('selectedAnswer from submitanswer action', selectedAnswer);
-		console.log('selectedAnswer from submitanswer action', id);
-		console.log('selectedAnswer from submitanswer action', qId);
+		// console.log('selectedAnswer from submitanswer action', selectedAnswer);
+		// console.log('selectedAnswer from submitanswer action', id);
+		// console.log('selectedAnswer from submitanswer action', qId);
 	}
 };

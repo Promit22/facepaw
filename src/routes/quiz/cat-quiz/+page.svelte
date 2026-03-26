@@ -8,27 +8,39 @@
 	import { enhance } from '$app/forms';
 	let { form, data }: PageProps = $props();
 	// const { sessionId } = data;
-	console.log('form', form);
+	// console.log('form', data);
+
 	let questions = $derived(form?.questions ?? []);
 	const expiresAt = $derived(form?.expiresAt ?? 0);
+	const dataSession = data.questions;
+	const dataExpiresAt = data.expiresAt;
 	// const score = $derived(form?.score ?? 0);
 	// const accuracy = $derived(form?.accuracy ?? 0);
 	// const total = $derived(form?.total ?? 0);
-	const started = () => questions.length > 0;
-	console.log('started', started());
+	// onMount(() => {
+	// 	if (data.session) {
+	// 		questions = data.session;
+	// 	}
+	// });
+	console.log('dataSession', dataSession);
+
+	const started = () => {
+		console.log('question', questions, 'dataSession', dataSession);
+
+		if (questions && questions.length > 0) {
+			return true;
+		} else {
+			if (dataSession && dataSession.length > 0) {
+				return true;
+			}
+		}
+		return false;
+	};
+	// let started = $state(false);
+	// console.log('questions after refresh', () => questions);
 
 	// let sessionId = $derived(form?.sessionId ?? '');
 	let sessionId = data.sessionId;
-	let localSessionId: string;
-	onMount(() => {
-		if (localStorage.getItem('sessionId')) localStorage.removeItem('sessionId');
-
-		if (sessionId) {
-			localStorage.setItem('sessionId', sessionId);
-		}
-		const sId = localStorage.getItem('sessionId');
-		localSessionId = sId ? sId : '';
-	});
 
 	let currentIndex = $state(0);
 	let selectedAnswer: string | null = $state(null);
@@ -41,10 +53,33 @@
 	let finished = $state(false);
 	// console.log(questions);
 
+	function getQuestion() {
+		if (questions && questions.length !== 0) {
+			return questions;
+		} else {
+			if (dataSession && dataSession.length !== 0) {
+				return dataSession;
+			}
+		}
+
+		return [];
+	}
+
+	function getExpiration() {
+		if (expiresAt && expiresAt !== 0) {
+			return expiresAt;
+		} else {
+			if (dataExpiresAt) {
+				return dataExpiresAt;
+			}
+		}
+		return 0;
+	}
+
 	function next() {
 		if (!selectedAnswer) selectedAnswer = null;
-
-		const qId = questions[currentIndex].id;
+		const question = getQuestion();
+		const qId = question[currentIndex].id;
 		// const ansObj: Record<string, string> = {};
 
 		// ansObj['questionId'] = q.id;
@@ -52,7 +87,7 @@
 
 		// answers.push(ansObj);
 
-		if (currentIndex < questions.length - 1) {
+		if (currentIndex < question.length - 1) {
 			currentIndex++;
 		}
 		submit(qId, JSON.stringify(selectedAnswer));
@@ -65,11 +100,12 @@
 	}
 
 	async function submit(qId: string, ans: string) {
-		const id = sessionId ?? localSessionId;
+		const id = sessionId;
 		const formData = new FormData();
 		formData.append('sessionId', id);
 		formData.append('qId', qId);
 		formData.append('selectedAnswer', ans);
+		formData.append('index', JSON.stringify(currentIndex));
 		await fetch('/quiz/cat-quiz?/submitAnswer', {
 			method: 'POST',
 			body: formData
@@ -111,6 +147,7 @@
 	// }
 
 	function startCounting() {
+		const expiresAt = getExpiration();
 		const timer = setInterval(() => {
 			remaining = Math.ceil((expiresAt - Date.now()) / 1000);
 			if (Date.now() > expiresAt) {
@@ -165,7 +202,7 @@
 			</Card.Content>
 			<Card.Footer>
 				<form method="POST" action="?/startQuiz" class=" flex w-full justify-center" use:enhance>
-					<input type="hidden" name="sessionId" value={sessionId} />
+					<!-- <input type="hidden" name="sessionId" value={sessionId} /> -->
 					<Button type="submit" class=" w-[50%] cursor-pointer p-6 text-2xl md:w-[30%]"
 						>Start</Button
 					>
