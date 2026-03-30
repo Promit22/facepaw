@@ -5,7 +5,7 @@ import { quizStore } from '$lib/server/quiz/quizStore';
 import type { PendingQuiz } from '$lib/types/quizQuestion';
 // import type { QuizQuestion } from '$lib/types/quizQuestion';
 import type { Quiz } from '$lib/types/quizQuestion';
-import { checkIfQuizSessionValid } from '$lib/server/models/sessions.js';
+import { checkIfQuizSessionValid, insertQuiz } from '$lib/server/models/sessions.js';
 
 const pendingQuiz = new Map<string, PendingQuiz>();
 const userAnswers = new Map<
@@ -40,10 +40,13 @@ export const load = (async ({ cookies }) => {
 		const isSessionValid = checkIfQuizSessionValid(sessionCookie);
 		if (isSessionValid) {
 			const session = quizStore.get(sessionCookie);
-			console.log('session', session);
+			console.log('useranswers sessioncookie', userAnswers.get(sessionCookie));
+			console.log('userAnswers', userAnswers);
 
 			const currentIndex = userAnswers.get(sessionCookie)?.answer.length;
 			if (session && currentIndex) {
+				console.log('currentIndex', currentIndex);
+
 				return {
 					questions: session.question.map((q) => ({
 						id: q.id,
@@ -63,7 +66,8 @@ export const load = (async ({ cookies }) => {
 	const sessionId: `${string}-${string}-${string}-${string}-${string}` = crypto.randomUUID();
 	const quiz: Quiz[] = generateQuizSession(breeds, 2);
 	// console.log('quiz', quiz);
-	pendingQuiz.set(sessionId, { question: quiz, createdAt: Date.now() });
+	insertQuiz({ id: sessionId, question: quiz, createdAt: Date.now(), expiresAt: 0 });
+	// quizStore.set(sessionId, { question: quiz, createdAt: Date.now(), expiresAt: 0 });
 	// console.log(pendingQuiz);
 	cookies.set('quizSessionId', sessionId, {
 		path: '/',
@@ -144,14 +148,10 @@ export const actions = {
 		// console.log('sessionid from start action', sessionId);
 		const sessionId = cookies.get('quizSessionId');
 		if (!sessionId) return { message: 'Could not start quiz. Please start again' };
-		const quiz = pendingQuiz.get(sessionId);
+		const quiz = quizStore.get(sessionId);
 		if (!quiz) return { message: 'Could not start quiz. Please start again' };
 		const expiresAt = Date.now() + 123000;
-		quizStore.set(sessionId, {
-			question: quiz.question,
-			createdAt: Date.now(),
-			expiresAt
-		});
+		quiz.expiresAt = expiresAt;
 		// console.log('quiz from start quiz action', quiz);
 		cleanExpiredPending();
 		const currentQuiz = quizStore.get(sessionId);
@@ -168,16 +168,21 @@ export const actions = {
 			expiresAt
 		};
 	},
-	submitAnswer: async ({ request }) => {
+	submitAnswer: async ({ request, cookies }) => {
 		console.log('triggered submitanswer action');
 
 		const formData = await request.formData();
 		const selectedAnswer = formData.get('selectedAnswer')?.toString();
-		const id = formData.get('sessionId')?.toString();
 		const qId = formData.get('qId')?.toString();
 		const index = formData.get('index')?.toString();
-		if (!selectedAnswer || !id || !qId || !index)
+		const id = cookies.get('quizSessionId');
+		console.log('before', selectedAnswer, qId, index);
+
+		if (!selectedAnswer || !id || !qId || !index) {
 			return { message: 'could not submit answer. Pleast retry' };
+		}
+		console.log(selectedAnswer, qId, index);
+
 		const preAns = userAnswers.get(id);
 		if (preAns) {
 			preAns.answer.push({ id: qId, ans: selectedAnswer });
@@ -185,7 +190,7 @@ export const actions = {
 			userAnswers.set(id, {
 				answer: [
 					{
-						id: id,
+						id: qId,
 						ans: selectedAnswer
 					}
 				],
@@ -193,6 +198,8 @@ export const actions = {
 				index: index
 			});
 		}
+		console.log(userAnswers);
+
 		// console.log('selectedAnswer from submitanswer action', selectedAnswer);
 		// console.log('selectedAnswer from submitanswer action', id);
 		// console.log('selectedAnswer from submitanswer action', qId);

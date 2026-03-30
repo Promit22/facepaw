@@ -2,6 +2,7 @@ import type { User } from '$lib/types/user';
 import { db } from '../db/db';
 import crypto from 'node:crypto';
 import { quizStore } from '../quiz/quizStore';
+import type { QuizQuestion } from '$lib/types/quizQuestion';
 
 export function createSession(user_id: number) {
 	const id = crypto.randomUUID();
@@ -22,6 +23,26 @@ export function getUserFromSession(id: string): User | undefined {
 
 export function deleteSessioin(id: string) {
 	db.prepare(`DELETE FROM sessions WHERE id = ?`).run(id);
+}
+
+export function insertQuiz(quiz: QuizQuestion) {
+	return db
+		.prepare(
+			`
+			INSERT INTO quiz (id, questions, created_At, expires_at) VALUES(?, ?, ?, ?))
+		`
+		)
+		.run(quiz.id, JSON.stringify(quiz.question), quiz.createdAt, quiz.expiresAt);
+}
+
+export function getSession(id: string) {
+	return db
+		.prepare(
+			`
+			SELECT * from quiz where quiz.id = ?
+		`
+		)
+		.get(id) as QuizQuestion;
 }
 
 export function checkIfQuizSessionValid(sessionId: string) {

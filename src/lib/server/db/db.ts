@@ -66,3 +66,12 @@ CREATE TABLE IF NOT EXISTS password_reset (
 	FOREIGN KEY(user_id) REFERENCES users(id)
 );
 `);
+
+db.exec(`
+CREATE TABLE IF NOT EXISTS quiz (
+	id TEXT PRIMARY KEY,
+	questions TEXT NOT NULL,
+	expires_at INTEGER NOT NULL,
+	created_at INTEGER NOT NULL
+);
+`);
