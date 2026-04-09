@@ -9,7 +9,7 @@ export type Quiz = {
 
 export type QuizQuestion = {
 	id: string;
-	question: Quiz[];
+	questions: Quiz[] | string;
 	createdAt: number;
 	expiresAt: number;
 };

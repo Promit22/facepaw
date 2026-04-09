@@ -5,7 +5,14 @@ import { quizStore } from '$lib/server/quiz/quizStore';
 import type { PendingQuiz } from '$lib/types/quizQuestion';
 // import type { QuizQuestion } from '$lib/types/quizQuestion';
 import type { Quiz } from '$lib/types/quizQuestion';
-import { checkIfQuizSessionValid, insertQuiz } from '$lib/server/models/sessions.js';
+import {
+	checkIfQuizSessionValid,
+	insertQuiz,
+	getSession,
+	updateSessionTime,
+	getPreAns,
+	insertAnswer
+} from '$lib/server/models/sessions.js';
 
 const pendingQuiz = new Map<string, PendingQuiz>();
 const userAnswers = new Map<
@@ -37,18 +44,33 @@ export const load = (async ({ cookies }) => {
 	console.log('sessionCookie', sessionCookie);
 
 	if (sessionCookie) {
+		console.log('sessionCookie available');
+
 		const isSessionValid = checkIfQuizSessionValid(sessionCookie);
-		if (isSessionValid) {
-			const session = quizStore.get(sessionCookie);
+		console.log(isSessionValid);
+
+		if (isSessionValid.valid) {
+			console.log('session is valid');
+
 			console.log('useranswers sessioncookie', userAnswers.get(sessionCookie));
 			console.log('userAnswers', userAnswers);
+			if (isSessionValid.session && typeof isSessionValid.session?.questions === 'string') {
+				console.log('session exists and typeof question is string');
 
-			const currentIndex = userAnswers.get(sessionCookie)?.answer.length;
-			if (session && currentIndex) {
+				isSessionValid.session.questions = JSON.parse(isSessionValid.session.questions);
+				console.log('question after pare', isSessionValid.session.questions);
+			}
+			const currentIndex = getPreAns(sessionCookie).length;
+
+			if (isSessionValid.session && currentIndex) {
+				console.log('session and correctindex exists', currentIndex);
+
 				console.log('currentIndex', currentIndex);
+				if (typeof isSessionValid.session.questions === 'string') return;
+				console.log('typeof questions is no longer/not string');
 
 				return {
-					questions: session.question.map((q) => ({
+					questions: isSessionValid.session.questions.map((q) => ({
 						id: q.id,
 						type: q.type,
 						question: q.question,
@@ -57,16 +79,17 @@ export const load = (async ({ cookies }) => {
 					})),
 					currentIndex,
 					sessionId: sessionCookie,
-					expiresAt: session.expiresAt
+					expiresAt: isSessionValid.session.expiresAt
 				};
 			}
 		}
 	}
+
 	const breeds = await readBreed('cat');
 	const sessionId: `${string}-${string}-${string}-${string}-${string}` = crypto.randomUUID();
 	const quiz: Quiz[] = generateQuizSession(breeds, 2);
 	// console.log('quiz', quiz);
-	insertQuiz({ id: sessionId, question: quiz, createdAt: Date.now(), expiresAt: 0 });
+	insertQuiz({ id: sessionId, questions: quiz, createdAt: Date.now(), expiresAt: 0 });
 	// quizStore.set(sessionId, { question: quiz, createdAt: Date.now(), expiresAt: 0 });
 	// console.log(pendingQuiz);
 	cookies.set('quizSessionId', sessionId, {
@@ -102,9 +125,10 @@ function gradeQuizSession(
 	}
 
 	let score = 0;
-
+	if (session && typeof session.questions === 'string')
+		session.questions = JSON.parse(session.questions);
 	for (const userAnswer of userAnswers) {
-		const question = session.question.find((q) => q.id === userAnswer.questionId);
+		const question = session.questions.find((q) => q.id === userAnswer.questionId);
 		// console.log('questionId', userAnswer.questionId);
 		// console.log('questionId', userAnswer.answer);
 
@@ -115,7 +139,7 @@ function gradeQuizSession(
 		}
 	}
 
-	const total = session.question.length;
+	const total = session.questions.length;
 	const accuracy = Math.round((score / total) * 100);
 
 	return {
@@ -148,17 +172,19 @@ export const actions = {
 		// console.log('sessionid from start action', sessionId);
 		const sessionId = cookies.get('quizSessionId');
 		if (!sessionId) return { message: 'Could not start quiz. Please start again' };
-		const quiz = quizStore.get(sessionId);
+		const quiz = getSession(sessionId);
 		if (!quiz) return { message: 'Could not start quiz. Please start again' };
 		const expiresAt = Date.now() + 123000;
-		quiz.expiresAt = expiresAt;
+		updateSessionTime(expiresAt, sessionId);
 		// console.log('quiz from start quiz action', quiz);
-		cleanExpiredPending();
-		const currentQuiz = quizStore.get(sessionId);
+
+		const currentQuiz = getSession(sessionId);
 		if (!currentQuiz) return { message: 'Could not start quiz. Please start again' };
+		console.log(typeof currentQuiz.questions);
+		if (typeof currentQuiz.questions !== 'string') return;
 		return {
 			sessionId,
-			questions: currentQuiz.question.map((q) => ({
+			questions: JSON.parse(currentQuiz.questions).map((q) => ({
 				id: q.id,
 				type: q.type,
 				question: q.question,
@@ -182,22 +208,22 @@ export const actions = {
 			return { message: 'could not submit answer. Pleast retry' };
 		}
 		console.log(selectedAnswer, qId, index);
-
-		const preAns = userAnswers.get(id);
-		if (preAns) {
-			preAns.answer.push({ id: qId, ans: selectedAnswer });
-		} else {
-			userAnswers.set(id, {
-				answer: [
-					{
-						id: qId,
-						ans: selectedAnswer
-					}
-				],
-				createdAt: Date.now(),
-				index: index
-			});
-		}
+		insertAnswer(id, qId, selectedAnswer);
+		// const preAns = getPreAns(id);
+		// if (preAns) {
+		// 	preAns.answer.push({ id: qId, ans: selectedAnswer });
+		// } else {
+		// 	userAnswers.set(id, {
+		// 		answer: [
+		// 			{
+		// 				id: qId,
+		// 				ans: selectedAnswer
+		// 			}
+		// 		],
+		// 		createdAt: Date.now(),
+		// 		index: index
+		// 	});
+		// }
 		console.log(userAnswers);
 
 		// console.log('selectedAnswer from submitanswer action', selectedAnswer);

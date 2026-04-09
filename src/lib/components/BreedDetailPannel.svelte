@@ -25,8 +25,7 @@
 		'history',
 		'cfa_url',
 		'vetstreet_url',
-		'vcahospitals_url',
-		'wikipedia_url'
+		'vcahospitals_url'
 	];
 </script>
 
@@ -37,7 +36,7 @@
 ></div>
 <aside
 	class="fixed top-0 right-0 z-50 mt-0 h-full w-full
-		       overflow-y-auto bg-white
+		       overflow-y-auto bg-background
 		       p-6 shadow-2xl md:h-screen md:w-2/5"
 	transition:fly={{ x: '50%', duration: 1000 }}
 >
@@ -57,6 +56,8 @@
 					{#each value.split(',') as temp}
 						<Badge class="text-[0.9rem]">{temp}</Badge>
 					{/each}
+				{:else if key === 'wikipedia_url'}
+					<a href={value} class=" self-end">Learn more</a>
 				{:else}
 					<span>{key.toUpperCase().replace('_', ' ')}:</span>
 					<Badge class="text-[0.9rem]">{value}</Badge>

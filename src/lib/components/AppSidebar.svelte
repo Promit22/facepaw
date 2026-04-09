@@ -12,7 +12,7 @@
 </script>
 
 <Sidebar.Root>
-	<Sidebar.Content>
+	<Sidebar.Content class=" bg-[#c6c0b9]">
 		<Sidebar.Group>
 			<Sidebar.GroupLabel>FacePaw</Sidebar.GroupLabel>
 			<Sidebar.GroupContent>

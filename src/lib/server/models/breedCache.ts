@@ -1,7 +1,7 @@
 import fs from 'node:fs/promises';
 import path from 'node:path';
 import { CAT_API_KEY, DOG_API_KEY } from '$env/static/private';
-import unavailable from '$lib/assets/unavailable.webp';
+// import unavailable from '$lib/assets/unavailable.webp';
 import type { Cats, Dogs } from '$lib/types/breed';
 
 const dataDir = path.join(process.cwd(), 'data');
@@ -59,9 +59,6 @@ async function refreshBreeds(type: 'cat' | 'dog', filePath: string) {
 		const normalLife = normalizeLifespan(v.life_span ? v.life_span : 'unavailable');
 		v.minLifeSpan = normalLife.min;
 		v.maxLifeSpan = normalLife.max;
-		if (!v.image) {
-			v.image = { url: unavailable };
-		}
 	});
 
 	await fs.writeFile(filePath, JSON.stringify(data, null, 2));

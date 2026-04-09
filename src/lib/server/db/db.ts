@@ -71,7 +71,17 @@ db.exec(`
 CREATE TABLE IF NOT EXISTS quiz (
 	id TEXT PRIMARY KEY,
 	questions TEXT NOT NULL,
-	expires_at INTEGER NOT NULL,
-	created_at INTEGER NOT NULL
+	expiresAt INTEGER NOT NULL,
+	createdAt INTEGER NOT NULL
+);
+`);
+
+db.exec(`
+CREATE TABLE IF NOT EXISTS users_answer (
+	id TEXT NOT NULL,
+	qId TEXT NOT NULL,
+	answer TEXT NOT NULL,
+	createdAt INTEGER NOT NULL,
+	PRIMARY KEY (id, qId)
 );
 `);

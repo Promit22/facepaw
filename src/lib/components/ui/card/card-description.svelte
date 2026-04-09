@@ -8,12 +8,13 @@
 		children,
 		...restProps
 	}: WithElementRef<HTMLAttributes<HTMLParagraphElement>> = $props();
+	//default text color = text-muted-foreground
 </script>
 
 <p
 	bind:this={ref}
 	data-slot="card-description"
-	class={cn('text-sm text-muted-foreground', className)}
+	class={cn('text-sm text-white opacity-75 ', className)}
 	{...restProps}
 >
 	{@render children?.()}

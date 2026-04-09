@@ -29,10 +29,10 @@ export function insertQuiz(quiz: QuizQuestion) {
 	return db
 		.prepare(
 			`
-			INSERT INTO quiz (id, questions, created_At, expires_at) VALUES(?, ?, ?, ?))
+			INSERT INTO quiz (id, questions, createdAt, expiresAt) VALUES(?, ?, ?, ?)
 		`
 		)
-		.run(quiz.id, JSON.stringify(quiz.question), quiz.createdAt, quiz.expiresAt);
+		.run(quiz.id, JSON.stringify(quiz.questions), quiz.createdAt, quiz.expiresAt);
 }
 
 export function getSession(id: string) {
@@ -45,20 +45,56 @@ export function getSession(id: string) {
 		.get(id) as QuizQuestion;
 }
 
+export function updateSessionTime(expiresAt: number, id: string) {
+	return db
+		.prepare(
+			`
+			UPDATE quiz SET expiresAt = ? WHERE id = ?
+		`
+		)
+		.run(expiresAt, id);
+}
+
+export function insertAnswer(
+	sessionId: string,
+	questionId: string,
+	answer: string,
+	createdAt: number = Date.now()
+) {
+	db.prepare(
+		`
+			INSERT INTO users_answer (id, qId, answer, createdAt) values(?, ?, ?, ?) ON CONFLICT DO UPDATE SET answer = excluded.answer
+		`
+	).run(sessionId, questionId, answer, createdAt);
+}
+
+export function getPreAns(sessionId: string) {
+	return db
+		.prepare(
+			`
+			SELECT qId, answer FROM users_answer where id = ?
+		`
+		)
+		.all(sessionId) as { qId: string; answer: string }[];
+}
+
 export function checkIfQuizSessionValid(sessionId: string) {
 	console.log('sessionid from check', sessionId);
 	console.log('quizstore from check', quizStore);
 
-	const session = quizStore.get(sessionId)?.expiresAt;
+	const session = getSession(sessionId);
+	// console.log('/');
+	console.log('session expiresAt', session.expiresAt);
+
 	console.log('session from check', session);
 
 	if (!session) {
-		return false;
+		return { valid: false, session: null };
 	} else {
-		if ((session - Date.now()) / 1000 > 10) {
-			return true;
+		if (session.expiresAt - Date.now() > 10000) {
+			return { valid: true, session };
 		} else {
-			return false;
+			return { valid: false, session: null };
 		}
 	}
 }
