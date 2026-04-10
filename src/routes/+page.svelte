@@ -5,9 +5,11 @@
 	import { PawPrint } from '@lucide/svelte';
 </script>
 
-<div class=" ">
-	<section>
-		<div class=" flex flex-row">
+<div class=" w-full">
+	<section
+		class="relative h-full w-full bg-[linear-gradient(90deg,rgba(214,181,136,1)_0%,rgba(112,94,70,1)_50%,rgba(198,192,185,1)_100%)] p-8"
+	>
+		<div class=" flex flex-row justify-between">
 			<div class=" ">
 				<!-- <h1 class=" text-9xl">FacePaw</h1> -->
 				<h1 class="  text-7xl/20 font-medium">
@@ -44,9 +46,9 @@
 					</Card.Content>
 				</Card.Root>
 			</div>
-			<div class=" w-full">
-				<img src={hero} alt="An static image with cat dog footprints on it" />
-			</div>
+			<!-- <div class=" w-full opacity-50">
+				<img src={hero} alt="An static image with cat dog footprints on it" /> 
+			</div> -->
 		</div>
 		<!-- <div class=" paws absolute top-2.5 grid h-full grid-cols-6 gap-7 opacity-50">
 			<PawPrint />
