@@ -61,17 +61,24 @@
 
 <!-- <Navbar /> -->
 <div class="fixed top-0 z-7 h-12 w-full bg-[#422701]"></div>
-<header
-	class="fixed top-0.5 right-5 z-8 flex flex-row items-center justify-center gap-10 text-white"
->
-	{#if !data.user}
+<header class="fixed top-0.5 z-8 flex flex-row items-center justify-center text-white">
+	<ul class=" flex list-none flex-row gap-6">
+		<li><a href="">Home</a></li>
+		<li><a href="Account">Account</a></li>
+		<li><a href="Posts">Posts</a></li>
+		<li><a href="">Breeds</a></li>
+		<li><a href="">Quiz</a></li>
+	</ul>
+	<!-- {#if !data.user}
 		<a href="/account/connect" class=" mt-0.5 hidden p-1 md:block md:w-fit">Log In</a>
-	{/if}
+	{/if} -->
 	<h1 class="text-2xl">FacePaw</h1>
 </header>
 <nav class="m-5">
 	<Sidebar.Provider>
-		<AppSidebar {items} {subItems} />
+		<div class=" md:hidden xl:hidden">
+			<AppSidebar {items} {subItems} />
+		</div>
 		<main class="flex-1">
 			<div class="fixed top-2 z-10">
 				<UserIcon user={data.user ? data.user : {}} />

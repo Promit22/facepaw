@@ -7,17 +7,18 @@
 
 <div class=" w-full">
 	<section
-		class="relative h-full w-full bg-[linear-gradient(90deg,rgba(214,181,136,1)_0%,rgba(112,94,70,1)_50%,rgba(198,192,185,1)_100%)] p-8"
+		class=" relative h-full w-full rounded-2xl bg-[linear-gradient(90deg,rgba(214,181,136,1)_0%,rgba(112,94,70,1)_50%,rgba(198,192,185,1)_100%)] p-8"
 	>
 		<div class=" flex flex-row justify-between">
 			<div class=" ">
 				<!-- <h1 class=" text-9xl">FacePaw</h1> -->
-				<h1 class="  text-7xl/20 font-medium">
+				<h1 class=" text-8xl/30 font-medium">
 					<!-- Explore breeds. Share moments. Learn. Compete in quizes -->
-					Inpaws, Posts, Play
+					Browse breeds. Post moments. Master the quiz.
 				</h1>
+				<p>A place to explore breeds, post moments and test knowledge</p>
 			</div>
-			<div class="  flex">
+			<div class=" flex w-full flex-2 flex-col gap-1.5">
 				<Card.Root>
 					<Card.Header>
 						<Card.Title>Breed Quiz</Card.Title>
@@ -40,7 +41,7 @@
 						<Card.Title>Explore breeds</Card.Title>
 						<Card.Description>Learn about different kinds of breeds</Card.Description>
 					</Card.Header>
-					<Card.Content>
+					<Card.Content class=" flex flex-col gap-2">
 						<Button>Explore Dogs</Button>
 						<Button>Explore Cats</Button>
 					</Card.Content>
