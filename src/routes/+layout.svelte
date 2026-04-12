@@ -61,8 +61,8 @@
 
 <!-- <Navbar /> -->
 <div class="fixed top-0 z-7 h-12 w-full bg-[#422701]"></div>
-<header class="fixed top-0.5 z-8 flex flex-row items-center justify-center text-white">
-	<ul class=" flex list-none flex-row gap-6">
+<header class="fixed top-1.5 z-8 flex w-full flex-row justify-center gap-11 text-white">
+	<ul class=" hidden list-none flex-row gap-20 text-2xl font-light md:flex">
 		<li><a href="">Home</a></li>
 		<li><a href="Account">Account</a></li>
 		<li><a href="Posts">Posts</a></li>
@@ -72,7 +72,7 @@
 	<!-- {#if !data.user}
 		<a href="/account/connect" class=" mt-0.5 hidden p-1 md:block md:w-fit">Log In</a>
 	{/if} -->
-	<h1 class="text-2xl">FacePaw</h1>
+	<h1 class=" absolute right-1.5 self-end text-2xl">FacePaw</h1>
 </header>
 <nav class="m-5">
 	<Sidebar.Provider>

@@ -5,7 +5,7 @@
 	import { PawPrint } from '@lucide/svelte';
 </script>
 
-<div class=" w-full">
+<div class=" w-full max-w-7xl">
 	<section
 		class=" relative h-full w-full rounded-2xl bg-[linear-gradient(90deg,rgba(214,181,136,1)_0%,rgba(112,94,70,1)_50%,rgba(198,192,185,1)_100%)] p-8"
 	>
@@ -16,7 +16,9 @@
 					<!-- Explore breeds. Share moments. Learn. Compete in quizes -->
 					Browse breeds. Post moments. Master the quiz.
 				</h1>
-				<p>A place to explore breeds, post moments and test knowledge</p>
+				<p class=" text-2xl font-medium">
+					A place to explore breeds, post moments and test knowledge
+				</p>
 			</div>
 			<div class=" flex w-full flex-2 flex-col gap-1.5">
 				<Card.Root>
