@@ -96,8 +96,43 @@
 	</section>
 </div>
 
-<style>
-	.paws:nth-child(even) {
-		margin-left: 50px;
-	}
-</style>
+<section class="mx-auto flex max-w-6xl flex-col gap-24 px-6 py-20">
+	<!-- Breed Explorer -->
+	<div class="flex flex-col items-center gap-12 md:flex-row">
+		<div class="aspect-video w-full rounded-2xl bg-muted md:w-1/2">
+			<!-- placeholder or actual screenshot/illustration -->
+		</div>
+		<div class="flex w-full flex-col gap-4 md:w-1/2">
+			<h2 class="text-3xl font-bold">Explore Every Breed</h2>
+			<p class="text-muted-foreground">
+				Browse hundreds of cat and dog breeds. Tap any breed to open a detailed panel with traits,
+				lifespan, origin, and more.
+			</p>
+			<a href="/breeds" class="w-fit ...">Go to Breed Explorer →</a>
+		</div>
+	</div>
+
+	<!-- Posts — reversed -->
+	<div class="flex flex-col items-center gap-12 md:flex-row-reverse">
+		<div class="aspect-video w-full rounded-2xl bg-muted md:w-1/2"></div>
+		<div class="flex w-full flex-col gap-4 md:w-1/2">
+			<h2 class="text-3xl font-bold">Share Your Pet Moments</h2>
+			<p class="text-muted-foreground">
+				Post photos of your pets and discover what the community is sharing.
+			</p>
+			<a href="/posts" class="w-fit ...">Browse Posts →</a>
+		</div>
+	</div>
+
+	<!-- PawLand Quiz — normal -->
+	<div class="flex flex-col items-center gap-12 md:flex-row">
+		<div class="aspect-video w-full rounded-2xl bg-muted md:w-1/2"></div>
+		<div class="flex w-full flex-col gap-4 md:w-1/2">
+			<h2 class="text-3xl font-bold">Test Your Breed Knowledge</h2>
+			<p class="text-muted-foreground">
+				Take the PawLand quiz, earn XP, and climb the leaderboard against other pet lovers.
+			</p>
+			<a href="/quiz" class="w-fit ...">Take the Quiz →</a>
+		</div>
+	</div>
+</section>

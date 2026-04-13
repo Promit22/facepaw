@@ -60,13 +60,26 @@
 </script>
 
 <!-- <Navbar /> -->
+
 <div class="fixed top-0 z-7 h-12 w-full bg-[#422701]"></div>
 <header class="fixed top-1.5 z-8 flex w-full flex-row justify-center gap-11 text-white">
 	<ul class=" hidden list-none flex-row gap-20 text-2xl font-light md:flex">
 		<li><a href="">Home</a></li>
 		<li><a href="Account">Account</a></li>
 		<li><a href="Posts">Posts</a></li>
-		<li><a href="">Breeds</a></li>
+		<li class=" group relative cursor-pointer">
+			<span>
+				Breeds
+				<ul
+					class=" group absolute top-[130%] left-0 hidden w-40 bg-[#705E46] p-2 shadow-md group-hover:block"
+				>
+					<div class=" flex-col gap-1.5 group-hover:flex">
+						<li class=" border-b-2 p-1">Cats</li>
+						<li>Dogs</li>
+					</div>
+				</ul>
+			</span>
+		</li>
 		<li><a href="">Quiz</a></li>
 	</ul>
 	<!-- {#if !data.user}
