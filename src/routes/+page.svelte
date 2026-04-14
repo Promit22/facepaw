@@ -3,6 +3,7 @@
 	import * as Card from '$lib/components/ui/card/index.js';
 	import { Button } from '$lib/components/ui/button/index.js';
 	import { PawPrint } from '@lucide/svelte';
+	import ctaOne from '$lib/assets/ctaImageOne.webp';
 </script>
 
 <div class=" w-full max-w-7xl">
@@ -99,8 +100,9 @@
 <section class="mx-auto flex max-w-6xl flex-col gap-24 px-6 py-20">
 	<!-- Breed Explorer -->
 	<div class="flex flex-col items-center gap-12 md:flex-row">
-		<div class="aspect-video w-full rounded-2xl bg-muted md:w-1/2">
+		<div class="aspect-16/7 w-full rounded-2xl bg-muted md:w-1/2">
 			<!-- placeholder or actual screenshot/illustration -->
+			<img src={ctaOne} alt="" class=" object-cover" />
 		</div>
 		<div class="flex w-full flex-col gap-4 md:w-1/2">
 			<h2 class="text-3xl font-bold">Explore Every Breed</h2>
