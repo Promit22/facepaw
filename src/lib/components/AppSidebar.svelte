@@ -3,6 +3,7 @@
 	import { Collapsible } from 'bits-ui';
 	import XIcon from '@lucide/svelte/icons/x';
 	import { useSidebar } from '$lib/components/ui/sidebar/index.js';
+	import { it } from 'node:test';
 	const sbar = useSidebar();
 	let { items, subItems } = $props();
 
@@ -48,13 +49,15 @@
 							</Collapsible.Trigger>
 							<Collapsible.Content>
 								<Sidebar.MenuSub>
-									{#each subItems[0].sItems as sItem}
-										<Sidebar.MenuSubItem class=" mt-1 w-full">
-											<a href={sItem.url} class=" flex flex-row text-sm">
-												<sItem.icon class=" h-5 w-5" />
-												<span>{sItem.name}</span>
-											</a>
-										</Sidebar.MenuSubItem>
+									{#each subItems as items}
+										{#each items.sItems as sItem}
+											<Sidebar.MenuSubItem class=" mt-1 w-full">
+												<a href={sItem.url} class=" flex flex-row text-sm">
+													<sItem.icon class=" h-5 w-5" />
+													<span>{sItem.name}</span>
+												</a>
+											</Sidebar.MenuSubItem>
+										{/each}
 									{/each}
 									<!-- <Sidebar.MenuSubItem>Cat</Sidebar.MenuSubItem>
 									<Sidebar.MenuSubItem>Dog</Sidebar.MenuSubItem> -->

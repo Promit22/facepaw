@@ -3,7 +3,7 @@
 	import AppSidebar from '$lib/components/AppSidebar.svelte';
 	import '../app.css';
 	import HouseIcon from '@lucide/svelte/icons/house';
-	import { User } from '@lucide/svelte';
+	import { HamburgerIcon, User } from '@lucide/svelte';
 	import CircleUserIcon from '@lucide/svelte/icons/circle-user';
 	import HameburgerIcon from '@lucide/svelte/icons/hamburger';
 	import UserIcon from '$lib/components/UserIcon.svelte';
@@ -11,6 +11,8 @@
 	import { Dog } from '@lucide/svelte';
 	import { Bone } from '@lucide/svelte';
 	import { BadgeQuestionMark } from '@lucide/svelte';
+	import { Pencil } from '@lucide/svelte';
+	import { Newspaper } from '@lucide/svelte';
 
 	let { children, data } = $props();
 
@@ -55,6 +57,22 @@
 					icon: Dog
 				}
 			]
+		},
+		{
+			name: 'Posts',
+			icon: HamburgerIcon,
+			sItems: [
+				{
+					name: 'Create',
+					url: '/posts/create',
+					icon: Pencil
+				},
+				{
+					name: 'Feed',
+					url: '/posts',
+					icon: Newspaper
+				}
+			]
 		}
 	];
 </script>
@@ -62,13 +80,22 @@
 <!-- <Navbar /> -->
 
 <div class="fixed top-0 z-7 h-12 w-full bg-[#422701]"></div>
-<header class="fixed top-1.5 z-8 flex w-full flex-row justify-center gap-11 text-white">
-	<ul class=" hidden list-none flex-row gap-20 text-2xl font-light md:flex">
+<header class="fixed top-1.5 z-8 flex w-full flex-row justify-end gap-11 text-white">
+	<ul class=" hidden list-none gap-20 text-2xl font-light md:flex md:flex-row">
 		<li><a href="/">Home</a></li>
 		<li>
 			<a href={data.user ? `/account/profile/${data.user.id}` : '/account/connect'}>Account</a>
 		</li>
-		<li><a href="/posts">Posts</a></li>
+		<li class=" group relative cursor-pointer">
+			<span> Posts </span>
+			<ul
+				class=" absolute top-full left-0 hidden w-40 flex-col gap-1.5 bg-card p-2 shadow-md group-hover:flex"
+			>
+				<!-- <div class=" flex-col gap-1.5 group-hover:flex"></div> -->
+				<li class=" m-0.5 p-1 hover:underline"><a href="/posts/create">Create</a></li>
+				<li class=" m-0.5 p-1 hover:underline"><a href="/posts">Feed</a></li>
+			</ul>
+		</li>
 		<li class=" group relative cursor-pointer">
 			<span> Breeds </span>
 			<ul
@@ -84,7 +111,7 @@
 	<!-- {#if !data.user}
 		<a href="/account/connect" class=" mt-0.5 hidden p-1 md:block md:w-fit">Log In</a>
 	{/if} -->
-	<h1 class=" absolute right-1.5 self-end text-2xl">FacePaw</h1>
+	<h1 class=" mr-1 text-2xl md:absolute md:right-1.5">FacePaw</h1>
 </header>
 <nav class="m-5">
 	<Sidebar.Provider>

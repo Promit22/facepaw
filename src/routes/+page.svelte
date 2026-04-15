@@ -10,14 +10,14 @@
 	<section
 		class=" relative h-full w-full rounded-2xl bg-[linear-gradient(90deg,rgba(214,181,136,1)_0%,rgba(112,94,70,1)_50%,rgba(198,192,185,1)_100%)] p-8"
 	>
-		<div class=" flex flex-row justify-between">
+		<div class=" flex flex-col justify-between gap-3 md:flex-row">
 			<div class=" ">
 				<!-- <h1 class=" text-9xl">FacePaw</h1> -->
-				<h1 class=" text-8xl/30 font-medium">
+				<h1 class=" text-6xl/15 font-medium md:text-8xl/30">
 					<!-- Explore breeds. Share moments. Learn. Compete in quizes -->
 					Browse breeds. Post moments. Master the quiz.
 				</h1>
-				<p class=" text-2xl font-medium">
+				<p class=" mt-2.5 text-[16px] font-extralight md:font-medium">
 					A place to explore breeds, post moments and test knowledge
 				</p>
 			</div>
@@ -88,7 +88,7 @@
 			<PawPrint />
 			<PawPrint />
 			<PawPrint />
-			<PawPrint />
+			<PawPrint />P </sp
 			<PawPrint />
 			<PawPrint />
 			<PawPrint />
