@@ -7,9 +7,10 @@
 	console.log('puser from usericon', user);
 </script>
 
-<Avatar.Root class="cursor-pointer" onclick={() => sbar.toggle()}>
+<Avatar.Root class=" cursor-pointer" onclick={() => sbar.toggle()}>
 	<Avatar.Image src={user.image} alt="" />
 	<Avatar.Fallback>
 		<User />
 	</Avatar.Fallback>
+	<!-- <Menu class=" w-10 p-0.5 text-white" /> -->
 </Avatar.Root>

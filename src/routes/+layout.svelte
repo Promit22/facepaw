@@ -7,12 +7,14 @@
 	import CircleUserIcon from '@lucide/svelte/icons/circle-user';
 	import HameburgerIcon from '@lucide/svelte/icons/hamburger';
 	import UserIcon from '$lib/components/UserIcon.svelte';
+	// import { Menu } from '@lucide/svelte';
 	import { Cat } from '@lucide/svelte';
 	import { Dog } from '@lucide/svelte';
 	import { Bone } from '@lucide/svelte';
 	import { BadgeQuestionMark } from '@lucide/svelte';
 	import { Pencil } from '@lucide/svelte';
 	import { Newspaper } from '@lucide/svelte';
+	import { ChevronDown } from '@lucide/svelte';
 
 	let { children, data } = $props();
 
@@ -20,7 +22,7 @@
 
 	const items = [
 		{
-			name: 'Account',
+			name: data.user ? 'Account' : 'Sign in',
 			url: data.user ? `/account/profile/${data.user.id}` : '/account/connect',
 			icon: CircleUserIcon
 		},
@@ -80,14 +82,18 @@
 <!-- <Navbar /> -->
 
 <div class="fixed top-0 z-7 h-12 w-full bg-[#422701]"></div>
-<header class="fixed top-1.5 z-8 flex w-full flex-row justify-end gap-11 text-white">
+<header
+	class="fixed top-1.5 z-8 flex w-full flex-row justify-end gap-11 text-white md:justify-center"
+>
 	<ul class=" hidden list-none gap-20 text-2xl font-light md:flex md:flex-row">
 		<li><a href="/">Home</a></li>
 		<li>
-			<a href={data.user ? `/account/profile/${data.user.id}` : '/account/connect'}>Account</a>
+			<a href={data.user ? `/account/profile/${data.user.id}` : '/account/connect'}
+				>{data.user ? 'Account' : 'Sign in'}</a
+			>
 		</li>
 		<li class=" group relative cursor-pointer">
-			<span> Posts </span>
+			<span class=" flex flex-row items-center gap-1"> Posts <ChevronDown /></span>
 			<ul
 				class=" absolute top-full left-0 hidden w-40 flex-col gap-1.5 bg-card p-2 shadow-md group-hover:flex"
 			>
@@ -97,7 +103,7 @@
 			</ul>
 		</li>
 		<li class=" group relative cursor-pointer">
-			<span> Breeds </span>
+			<span class=" flex flex-row items-center gap-1"> Breeds <ChevronDown /> </span>
 			<ul
 				class=" absolute top-full left-0 hidden w-40 flex-col gap-1.5 bg-card p-2 shadow-md group-hover:flex"
 			>
@@ -119,10 +125,11 @@
 			<AppSidebar {items} {subItems} />
 		</div>
 		<main class="flex-1">
-			<div class="fixed top-2 z-10">
+			<div class="fixed top-2 z-10 md:hidden">
 				<UserIcon user={data.user ? data.user : {}} />
+				<!-- <Menu class=" cursor-pointer text-white" /> -->
 			</div>
-			<div class="mt-[10vh] flex flex-col items-center justify-center">
+			<div class=" mt-[5vh] flex flex-col items-center justify-center md:mt-[8vh]">
 				{@render children?.()}
 			</div>
 		</main>

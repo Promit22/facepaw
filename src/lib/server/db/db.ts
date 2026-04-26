@@ -2,86 +2,186 @@ import Database from 'better-sqlite3';
 
 export const db = new Database('facepaw.db');
 
+// db.exec(`
+// CREATE TABLE IF NOT EXISTS users (
+// 	id INTEGER PRIMARY KEY,
+// 	image TEXT,
+// 	name TEXT NOT NULL,
+// 	email TEXT NOT NULL UNIQUE,
+// 	password TEXT NOT NULL
+// );
+// `);
+
+// db.exec(`
+// CREATE TABLE IF NOT EXISTS sessions (
+// 	id TEXT PRIMARY KEY,
+// 	user_id INTEGER NOT NULL,
+// 	created_at TEXT DEFAULT CURRENT_TIMESTAMP,
+// 	FOREIGN KEY (user_id) REFERENCES users(id)
+// );
+// `);
+// db.exec(`
+// 	CREATE TABLE IF NOT EXISTS posts (
+// 		id INTEGER PRIMARY KEY,
+// 		created_At TEXT DEFAULT CURRENT_TIMESTAMP,
+// 		user_id INTEGER NOT NULL,
+// 		title TEXT,
+// 		content TEXT,
+// 		likes_count INTEGER DEFAULT 0,
+// 		FOREIGN KEY (user_id) REFERENCES users(id)
+// 	);
+// 	`);
+
+// db.exec(`
+// 	CREATE TABLE IF NOT EXISTS image (
+// 		id INTEGER PRIMARY KEY,
+// 		post_id INTEGER NOT NULL,
+// 		path TEXT,
+// 		FOREIGN KEY (post_id) REFERENCES posts(id)
+// 	);
+// 	`);
+
+// db.exec(`
+// 	CREATE TABLE  IF NOT EXISTS post_likes (
+// 		post_id INTEGER NOT NULL,
+// 		user_id	INTEGER NOT NULL,
+
+// 		PRIMARY KEY (post_id, user_id) ,
+
+// 		FOREIGN KEY(post_id)
+// 		REFERENCES posts(id) ON DELETE CASCADE,
+
+// 		FOREIGN KEY (user_id)
+// 		REFERENCES users(id) ON DELETE CASCADE
+// 	);
+// 	`);
+
+// db.exec(`
+// CREATE TABLE IF NOT EXISTS password_reset (
+// 	id INTEGER PRIMARY KEY,
+// 	user_id INTEGER,
+// 	token_hash TEXT,
+// 	expires_at TEXT,
+// 	created_at TEXT DEFAULT CURRENT_TIMESTAMP,
+// 	FOREIGN KEY(user_id) REFERENCES users(id)
+// );
+// `);
+
+// db.exec(`
+// CREATE TABLE IF NOT EXISTS quiz (
+// 	id TEXT PRIMARY KEY,
+// 	questions TEXT NOT NULL,
+// 	expiresAt INTEGER NOT NULL,
+// 	createdAt INTEGER NOT NULL
+// );
+// `);
+
+// db.exec(`
+// CREATE TABLE IF NOT EXISTS users_answer (
+// 	id TEXT NOT NULL,
+// 	qId TEXT NOT NULL,
+// 	answer TEXT NOT NULL,
+// 	createdAt INTEGER NOT NULL,
+// 	PRIMARY KEY (id, qId)
+// );
+// `);
+
 db.exec(`
 CREATE TABLE IF NOT EXISTS users (
-	id INTEGER PRIMARY KEY,
-	image TEXT,
-	name TEXT NOT NULL,
-	email TEXT NOT NULL UNIQUE,
-	password TEXT NOT NULL
+    id INTEGER PRIMARY KEY,
+    image TEXT,
+    name TEXT NOT NULL,
+    email TEXT NOT NULL UNIQUE,
+    password TEXT NOT NULL
 );
 `);
 
 db.exec(`
 CREATE TABLE IF NOT EXISTS sessions (
-	id TEXT PRIMARY KEY,
-	user_id INTEGER NOT NULL,
-	created_at TEXT DEFAULT CURRENT_TIMESTAMP,
-	FOREIGN KEY (user_id) REFERENCES users(id)
+    id TEXT PRIMARY KEY,
+    user_id INTEGER NOT NULL,
+    /* Updated default format */
+    created_at TEXT DEFAULT (strftime('%Y-%m-%dT%H:%M:%fZ', 'now')),
+    FOREIGN KEY (user_id) REFERENCES users(id)
 );
 `);
-db.exec(`
-	CREATE TABLE IF NOT EXISTS posts (
-		id INTEGER PRIMARY KEY,
-		created_At TEXT DEFAULT CURRENT_TIMESTAMP,
-		user_id INTEGER NOT NULL,
-		title TEXT,
-		content TEXT,
-		likes_count INTEGER DEFAULT 0,
-		FOREIGN KEY (user_id) REFERENCES users(id)
-	);
-	`);
 
 db.exec(`
-	CREATE TABLE IF NOT EXISTS image (
-		id INTEGER PRIMARY KEY,
-		post_id INTEGER NOT NULL,
-		path TEXT,
-		FOREIGN KEY (post_id) REFERENCES posts(id)
-	);	
-	`);
+    CREATE TABLE IF NOT EXISTS posts (
+        id INTEGER PRIMARY KEY,
+        /* Updated default format */
+        created_at TEXT DEFAULT (strftime('%Y-%m-%dT%H:%M:%fZ', 'now')),
+        user_id INTEGER NOT NULL,
+        title TEXT,
+        content TEXT,
+        likes_count INTEGER DEFAULT 0,
+        FOREIGN KEY (user_id) REFERENCES users(id)
+    );
+    `);
 
 db.exec(`
-	CREATE TABLE  IF NOT EXISTS post_likes (
-		post_id INTEGER NOT NULL,
-		user_id	INTEGER NOT NULL,
+    CREATE TABLE IF NOT EXISTS image (
+        id INTEGER PRIMARY KEY,
+        post_id INTEGER NOT NULL,
+        path TEXT,
+        FOREIGN KEY (post_id) REFERENCES posts(id)
+    );  
+    `);
 
-		PRIMARY KEY (post_id, user_id) ,
-
-		FOREIGN KEY(post_id)
-		REFERENCES posts(id) ON DELETE CASCADE,
-
-		FOREIGN KEY (user_id)
-		REFERENCES users(id) ON DELETE CASCADE
-	);
-	`);
+db.exec(`
+    CREATE TABLE IF NOT EXISTS post_likes (
+        post_id INTEGER NOT NULL,
+        user_id INTEGER NOT NULL,
+        PRIMARY KEY (post_id, user_id),
+        FOREIGN KEY(post_id) REFERENCES posts(id) ON DELETE CASCADE,
+        FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
+    );
+    `);
 
 db.exec(`
 CREATE TABLE IF NOT EXISTS password_reset (
-	id INTEGER PRIMARY KEY,
-	user_id INTEGER,
-	token_hash TEXT,
-	expires_at TEXT,
-	created_at TEXT DEFAULT CURRENT_TIMESTAMP,
-	FOREIGN KEY(user_id) REFERENCES users(id)
+    id INTEGER PRIMARY KEY,
+    user_id INTEGER,
+    token_hash TEXT,
+    expires_at TEXT,
+    /* Updated default format */
+    created_at TEXT DEFAULT (strftime('%Y-%m-%dT%H:%M:%fZ', 'now')),
+    FOREIGN KEY(user_id) REFERENCES users(id)
 );
 `);
 
 db.exec(`
 CREATE TABLE IF NOT EXISTS quiz (
-	id TEXT PRIMARY KEY,
-	questions TEXT NOT NULL,
-	expiresAt INTEGER NOT NULL,
-	createdAt INTEGER NOT NULL
+    id TEXT PRIMARY KEY,
+    questions TEXT NOT NULL,
+    expiresAt INTEGER NOT NULL,
+    /* Note: Changed to TEXT to support the ISO string default */
+    createdAt TEXT DEFAULT (strftime('%Y-%m-%dT%H:%M:%fZ', 'now'))
 );
 `);
 
 db.exec(`
 CREATE TABLE IF NOT EXISTS users_answer (
-	id TEXT NOT NULL,
-	qId TEXT NOT NULL,
-	answer TEXT NOT NULL,
-	createdAt INTEGER NOT NULL,
-	PRIMARY KEY (id, qId)
+    id TEXT NOT NULL,
+    qId TEXT NOT NULL,
+    answer TEXT NOT NULL,
+    /* Note: Changed to TEXT to support the ISO string default */
+    createdAt TEXT DEFAULT (strftime('%Y-%m-%dT%H:%M:%fZ', 'now')),
+    PRIMARY KEY (id, qId)
 );
 `);
+
+db.exec(`
+	CREATE TABLE IF NOT EXISTS comments (
+  id INTEGER PRIMARY KEY AUTOINCREMENT,
+  post_id INTEGER NOT NULL REFERENCES posts(id) ON DELETE CASCADE,
+  user_id INTEGER NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+  content TEXT NOT NULL,
+  created_at TEXT NOT NULL DEFAULT (strftime('%Y-%m-%dT%H:%M:%fZ', 'now')),
+  updated_at TEXT
+);
+`);
+
+// on comment update:
+
+// UPDATE comments SET content = ?, updated_at = strftime('%Y-%m-%dT%H:%M:%fZ', 'now') WHERE id = ? AND user_id = ?

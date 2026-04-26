@@ -40,7 +40,7 @@
 		       p-6 shadow-2xl md:h-screen md:w-2/5"
 	transition:fly={{ x: '50%', duration: 1000 }}
 >
-	<button class=" cursor-pointer bg-red-500 text-white" onclick={closePanel}>
+	<button class=" cursor-pointer text-black" onclick={closePanel}>
 		<X />
 	</button>
 	<div class="mb-5 flex flex-col items-center gap-1.5">
@@ -48,7 +48,11 @@
 		<img src={breed.image?.url ? breed.image.url : unavailable} alt="" class="w-11/12" />
 	</div>
 	{#if type === 'cat'}{/if}
-	{#each Object.entries(breed) as [key, value]}
+	{#each Object.entries(breed).sort(([a], [b]) => {
+		if (a === 'wikipedia_url') return 1;
+		if (b === 'wikipedia_url') return -1;
+		return 0;
+	}) as [key, value] (key)}
 		{#if !shouldNotInclude.includes(key)}
 			<div class=" mt-5 flex flex-wrap items-center gap-2.5 font-medium">
 				{#if key === 'temperament'}
@@ -57,7 +61,7 @@
 						<Badge class="text-[0.9rem]">{temp}</Badge>
 					{/each}
 				{:else if key === 'wikipedia_url'}
-					<a href={value} class=" self-end">Learn more</a>
+					<a href={value} target="_blank" class=" self-end">Learn more</a>
 				{:else}
 					<span>{key.toUpperCase().replace('_', ' ')}:</span>
 					<Badge class="text-[0.9rem]">{value}</Badge>

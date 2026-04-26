@@ -4,22 +4,30 @@
 	import { Button } from '$lib/components/ui/button/index.js';
 	import { PawPrint } from '@lucide/svelte';
 	import ctaOne from '$lib/assets/ctaImageOne.webp';
+	const { data } = $props();
 </script>
 
-<div class=" w-full max-w-7xl">
+<div class=" mt-9 w-full max-w-7xl">
 	<section
 		class=" relative h-full w-full rounded-2xl bg-[linear-gradient(90deg,rgba(214,181,136,1)_0%,rgba(112,94,70,1)_50%,rgba(198,192,185,1)_100%)] p-8"
 	>
 		<div class=" flex flex-col justify-between gap-3 md:flex-row">
-			<div class=" ">
+			<div class="">
 				<!-- <h1 class=" text-9xl">FacePaw</h1> -->
 				<h1 class=" text-6xl/15 font-medium md:text-8xl/30">
 					<!-- Explore breeds. Share moments. Learn. Compete in quizes -->
-					Browse breeds. Post moments. Master the quiz.
+					Home for every breed lover
 				</h1>
-				<p class=" mt-2.5 text-[16px] font-extralight md:font-medium">
-					A place to explore breeds, post moments and test knowledge
+				<p class=" mt-2.5 text-[20px] font-extralight md:font-medium">
+					A place to explore breeds, post moments and test knowledge of breeds
 				</p>
+				{#if !data.user}
+					<a
+						href="/account/connect"
+						class=" mt-10 hidden w-fit rounded-sm bg-card p-3 text-2xl text-white md:block"
+						>Sign in</a
+					>
+				{/if}
 			</div>
 			<div class=" flex w-full flex-2 flex-col gap-1.5">
 				<Card.Root>
@@ -110,7 +118,8 @@
 				Browse hundreds of cat and dog breeds. Tap any breed to open a detailed panel with traits,
 				lifespan, origin, and more.
 			</p>
-			<a href="/breeds" class="w-fit ...">Go to Breed Explorer →</a>
+			<a href="/breed/cat" class="w-fit ...">Go to Cat Explorer →</a>
+			<a href="breed/dog" class="w-fit ...">Go to Dog Explorer →</a>
 		</div>
 	</div>
 

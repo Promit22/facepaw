@@ -37,7 +37,7 @@
 	});
 </script>
 
-<div class=" w-full max-w-3xl">
+<div class="  w-full max-w-3xl">
 	{#if register}
 		<section>
 			<Card.Root class="">
@@ -103,7 +103,7 @@
 									oninput={() => (touched = true)}
 								/>
 								<button
-									class="absolute top-1.5 right-1 cursor-pointer"
+									class="absolute top-1.5 right-1 cursor-pointer text-black"
 									onclick={toggleVisibility}
 									type="button"
 								>
@@ -159,7 +159,7 @@
 								<label for="password" class=" relative">
 									<Input type={visible ? 'text' : 'password'} id="password" name="password" />
 									<button
-										class="absolute top-1.5 right-1 cursor-pointer"
+										class="absolute top-1.5 right-1 cursor-pointer text-black"
 										onclick={toggleVisibility}
 										type="button"
 									>
