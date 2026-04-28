@@ -202,7 +202,6 @@
 			</Card.Content>
 			<Card.Footer>
 				<form method="POST" action="?/startQuiz" class=" flex w-full justify-center" use:enhance>
-					<!-- <input type="hidden" name="sessionId" value={sessionId} /> -->
 					<Button type="submit" class=" w-[50%] cursor-pointer p-6 text-2xl md:w-[30%]"
 						>Start</Button
 					>

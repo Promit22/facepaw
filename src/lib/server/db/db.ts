@@ -173,23 +173,34 @@ CREATE TABLE IF NOT EXISTS password_reset (
 
 db.exec(`
    CREATE TABLE IF NOT EXISTS quiz_sessions (
-  id          TEXT PRIMARY KEY,              -- UUID
+  id          TEXT PRIMARY KEY,
   user_id     INTEGER NOT NULL REFERENCES users(id),
   mode        TEXT NOT NULL CHECK (mode IN ('cat', 'dog', 'hybrid')),
   status      TEXT NOT NULL DEFAULT 'active' CHECK (status IN ('active', 'completed', 'expired')),
   score       INTEGER NOT NULL DEFAULT 0,
   created_at  INTEGER NOT NULL DEFAULT (unixepoch()),
-  expires_at  INTEGER NOT NULL               -- unixepoch() + 360 (6 minutes)
+  expires_at  INTEGER NOT NULL              
 )
     `);
+
 db.exec(`
       CREATE TABLE IF NOT EXISTS quiz_questions (
-      id TEXT PRIMARY KEY,           -- UUID
+      id TEXT PRIMARY KEY, 
       session_id TEXT NOT NULL REFERENCES quiz_sessions(id) ON DELETE CASCADE,
-      position INTEGER NOT NULL,           -- 0–9
-      question TEXT NOT NULL,
-    )
+      position INTEGER NOT NULL,         
+      question TEXT NOT NULL
+    );
         `);
+
+db.exec(`
+        CREATE TABLE IF NOT EXISTS quiz_answers (
+  session_id    TEXT NOT NULL REFERENCES quiz_sessions(id) ON DELETE CASCADE,
+  question_id   TEXT NOT NULL,
+  given_answer  TEXT NOT NULL,
+  is_correct    INTEGER NOT NULL CHECK (is_correct IN (0, 1)),
+  PRIMARY KEY (session_id, question_id)
+);
+    `);
 
 db.exec(`
 	CREATE TABLE IF NOT EXISTS comments (
