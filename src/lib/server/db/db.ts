@@ -150,26 +150,46 @@ CREATE TABLE IF NOT EXISTS password_reset (
 );
 `);
 
-db.exec(`
-CREATE TABLE IF NOT EXISTS quiz (
-    id TEXT PRIMARY KEY,
-    questions TEXT NOT NULL,
-    expiresAt INTEGER NOT NULL,
-    /* Note: Changed to TEXT to support the ISO string default */
-    createdAt TEXT DEFAULT (strftime('%Y-%m-%dT%H:%M:%fZ', 'now'))
-);
-`);
+// db.exec(`
+// CREATE TABLE IF NOT EXISTS quiz (
+//     id TEXT PRIMARY KEY,
+//     questions TEXT NOT NULL,
+//     expiresAt INTEGER NOT NULL,
+//     /* Note: Changed to TEXT to support the ISO string default */
+//     createdAt TEXT DEFAULT (strftime('%Y-%m-%dT%H:%M:%fZ', 'now'))
+// );
+// `);
+
+// db.exec(`
+// CREATE TABLE IF NOT EXISTS users_answer (
+//     id TEXT NOT NULL,
+//     qId TEXT NOT NULL,
+//     answer TEXT NOT NULL,
+//     /* Note: Changed to TEXT to support the ISO string default */
+//     createdAt TEXT DEFAULT (strftime('%Y-%m-%dT%H:%M:%fZ', 'now')),
+//     PRIMARY KEY (id, qId)
+// );
+// `);
 
 db.exec(`
-CREATE TABLE IF NOT EXISTS users_answer (
-    id TEXT NOT NULL,
-    qId TEXT NOT NULL,
-    answer TEXT NOT NULL,
-    /* Note: Changed to TEXT to support the ISO string default */
-    createdAt TEXT DEFAULT (strftime('%Y-%m-%dT%H:%M:%fZ', 'now')),
-    PRIMARY KEY (id, qId)
-);
-`);
+   CREATE TABLE IF NOT EXISTS quiz_sessions (
+  id          TEXT PRIMARY KEY,              -- UUID
+  user_id     INTEGER NOT NULL REFERENCES users(id),
+  mode        TEXT NOT NULL CHECK (mode IN ('cat', 'dog', 'hybrid')),
+  status      TEXT NOT NULL DEFAULT 'active' CHECK (status IN ('active', 'completed', 'expired')),
+  score       INTEGER NOT NULL DEFAULT 0,
+  created_at  INTEGER NOT NULL DEFAULT (unixepoch()),
+  expires_at  INTEGER NOT NULL               -- unixepoch() + 360 (6 minutes)
+)
+    `);
+db.exec(`
+      CREATE TABLE IF NOT EXISTS quiz_questions (
+      id TEXT PRIMARY KEY,           -- UUID
+      session_id TEXT NOT NULL REFERENCES quiz_sessions(id) ON DELETE CASCADE,
+      position INTEGER NOT NULL,           -- 0–9
+      question TEXT NOT NULL,
+    )
+        `);
 
 db.exec(`
 	CREATE TABLE IF NOT EXISTS comments (
@@ -185,3 +205,9 @@ db.exec(`
 // on comment update:
 
 // UPDATE comments SET content = ?, updated_at = strftime('%Y-%m-%dT%H:%M:%fZ', 'now') WHERE id = ? AND user_id = ?
+
+/* 
+quiz_sessions   → id, user_id, mode, status, score, expires_at
+quiz_questions  → id, session_id, questions (JSON blob), position
+quiz_answers    → session_id, question_id, answer, is_correct
+*/
