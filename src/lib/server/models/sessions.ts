@@ -2,12 +2,15 @@ import type { User } from '$lib/types/user';
 import { db } from '../db/db';
 import crypto from 'node:crypto';
 import { quizStore } from '../quiz/quizStore';
-import type { QuizQuestion } from '$lib/types/quizQuestion';
+import type { Quiz, QuizQuestion } from '$lib/types/quizQuestion';
 
-export function createSession(user_id: number) {
-	const id = crypto.randomUUID();
-	db.prepare(`INSERT INTO sessions (id, user_id) VALUES(?, ?)`).run(id, user_id);
-	return id;
+export function createSession(session_id: string, user_id: number, expires_at: number) {
+	db.prepare(
+		`
+            INSERT INTO quiz_sessions (id, user_id, expires_at)
+            VALUES (?, ?, ?, ?)
+        `
+	).run(session_id, user_id, expires_at);
 }
 //this function is not production ready(credentials exposed)
 export function getUserFromSession(id: string): User | undefined {
@@ -25,24 +28,39 @@ export function deleteSessioin(id: string) {
 	db.prepare(`DELETE FROM sessions WHERE id = ?`).run(id);
 }
 
-export function insertQuiz(quiz: QuizQuestion) {
-	return db
-		.prepare(
-			`
-			INSERT INTO quiz (id, questions, createdAt, expiresAt) VALUES(?, ?, ?, ?)
+export function insertQuiz(
+	questions_row_id: string,
+	session_id: string,
+	position: number,
+	questions: Quiz[]
+) {
+	db.prepare(
 		`
-		)
-		.run(quiz.id, JSON.stringify(quiz.questions), quiz.createdAt, quiz.expiresAt);
+            INSERT INTO quiz_questions (id, session_id, position, question)
+            VALUES (?, ?, ?, ?)
+        `
+	).run(questions_row_id, session_id, position, JSON.stringify(questions));
 }
 
-export function getSession(id: string) {
+export function getSession(user_id: number, expires_at: number) {
 	return db
 		.prepare(
 			`
-			SELECT * from quiz where quiz.id = ?
+			SELECT * FROM quiz_sessions
+        WHERE user_id = ? AND status = 'active' AND expires_at > ?
 		`
 		)
-		.get(id) as QuizQuestion;
+		.get(user_id, expires_at) as QuizQuestion;
+}
+
+export function getQuestions(session_id: string) {
+	return db
+		.prepare(
+			`
+			SELECT questions FROM quiz_questions WHERE session_id = ?
+		`
+		)
+		.get(session_id);
 }
 
 export function updateSessionTime(expiresAt: number, id: string) {

@@ -174,8 +174,7 @@ CREATE TABLE IF NOT EXISTS password_reset (
 db.exec(`
    CREATE TABLE IF NOT EXISTS quiz_sessions (
   id          TEXT PRIMARY KEY,
-  user_id     INTEGER NOT NULL REFERENCES users(id),
-  mode        TEXT NOT NULL CHECK (mode IN ('cat', 'dog', 'hybrid')),
+  user_id     INTEGER REFERENCES users(id),
   status      TEXT NOT NULL DEFAULT 'active' CHECK (status IN ('active', 'completed', 'expired')),
   score       INTEGER NOT NULL DEFAULT 0,
   created_at  INTEGER NOT NULL DEFAULT (unixepoch()),
@@ -188,7 +187,7 @@ db.exec(`
       id TEXT PRIMARY KEY, 
       session_id TEXT NOT NULL REFERENCES quiz_sessions(id) ON DELETE CASCADE,
       position INTEGER NOT NULL,         
-      question TEXT NOT NULL
+      questions TEXT NOT NULL
     );
         `);
 
