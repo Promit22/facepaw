@@ -69,13 +69,13 @@
 										onchange={showPreview}
 										hidden
 									/>
-									<div class=" size-40">
+									<div class=" w-full">
 										{#if !imgSrc}
 											<div class="h-full w-full rounded-full border-2">
-												<User class="h-full w-full p-4 opacity-20" />
+												<User class="size-50 p-4 opacity-20" />
 											</div>
 										{:else}
-											<img src={imgSrc} alt="" class=" m-0 w-[300px] object-cover" />
+											<img src={imgSrc} alt="" class=" m-0 w-full max-w-[300px] object-cover" />
 										{/if}
 									</div>
 								</Label>

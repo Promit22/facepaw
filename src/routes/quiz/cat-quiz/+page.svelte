@@ -1,5 +1,6 @@
 <script lang="ts">
 	import { onMount } from 'svelte';
+	import { deserialize } from '$app/forms';
 	import type { PageProps } from './$types';
 	import { Hourglass } from '@lucide/svelte';
 	import * as Card from '$lib/components/ui/card';
@@ -7,27 +8,17 @@
 	import { Cat, Brain, Trophy, Clock } from '@lucide/svelte';
 	import { enhance } from '$app/forms';
 	let { form, data }: PageProps = $props();
-	// const { sessionId } = data;
-	// console.log('form', data);
-
-	let questions = $derived(form?.questions ?? []);
-	const expiresAt = $derived(form?.expiresAt ?? 0);
-	const dataSession = data.questions;
+	let sucs = $derived(form?.success);
+	const expiresAt = $derived(form?.expiresAt);
+	let dataSession = $state(data.questions);
 	const dataExpiresAt = data.expiresAt;
-	// const score = $derived(form?.score ?? 0);
-	// const accuracy = $derived(form?.accuracy ?? 0);
-	// const total = $derived(form?.total ?? 0);
-	// onMount(() => {
-	// 	if (data.session) {
-	// 		questions = data.session;
-	// 	}
-	// });
+	const questions = $derived(form?.questions);
+	const dataSessionId = data.sessionId;
+	const formSessoinId = $derived(form?.sessionId);
+
 	console.log('dataSession', dataSession);
-
 	const started = () => {
-		console.log('question', questions, 'dataSession', dataSession);
-
-		if (questions && questions.length > 0) {
+		if (sucs) {
 			return true;
 		} else {
 			if (dataSession && dataSession.length > 0) {
@@ -36,35 +27,35 @@
 		}
 		return false;
 	};
-	// let started = $state(false);
-	// console.log('questions after refresh', () => questions);
 
-	// let sessionId = $derived(form?.sessionId ?? '');
-	let sessionId = data.sessionId;
+	// let currentIndex = $state(0);
+	let currentIndex = $state(data.currentIndex ?? 0);
 
-	let currentIndex = $state(0);
 	let selectedAnswer: string | null = $state(null);
-	// let answers: Record<string, string>[] = [];
+
 	let remaining = $state(0);
-	// let countDownStarted = $state(false);
 	let countDownFinished = $state(false);
 	let result = $state();
 	let timer: number = $state(3);
 	let finished = $state(false);
-	// console.log(questions);
 
-	function getQuestion() {
-		if (questions && questions.length !== 0) {
-			return questions;
-		} else {
-			if (dataSession && dataSession.length !== 0) {
-				return dataSession;
-			}
-		}
+	// function getQuestion() {
+	// 	console.log('getQuestion called', questions, dataSession);
+	// 	// $state.snapshot('getQuestion called', questions, dataSession);
+	// 	if (questions && questions.length !== 0) {
+	// 		return questions;
+	// 	} else {
+	// 		if (dataSession && dataSession.length !== 0) {
+	// 			return dataSession;
+	// 		}
+	// 	}
 
-		return [];
-	}
+	// 	return [];
+	// }
 
+	// replace getQuestion() function and both dataSession/questions with this
+	let activeQuestions = $derived(form?.questions?.length ? form.questions : (data.questions ?? []));
+	let currentQuestion = $derived(activeQuestions[currentIndex]);
 	function getExpiration() {
 		if (expiresAt && expiresAt !== 0) {
 			return expiresAt;
@@ -75,81 +66,150 @@
 		}
 		return 0;
 	}
+	function getSessionId() {
+		if (dataSessionId && dataSessionId !== undefined) {
+			return dataSessionId;
+		} else {
+			if (formSessoinId && formSessoinId !== undefined) {
+				return formSessoinId;
+			}
+		}
+		return '0';
+	}
 
-	function next() {
-		if (!selectedAnswer) selectedAnswer = null;
-		const question = getQuestion();
-		const qId = question[currentIndex].id;
-		// const ansObj: Record<string, string> = {};
+	console.log('expiresAt raw', getExpiration());
 
-		// ansObj['questionId'] = q.id;
-		// ansObj['answer'] = selectedAnswer;
+	let submitting = $state(false);
 
-		// answers.push(ansObj);
+	// function next() {
+	// 	console.log('next called', currentIndex, selectedAnswer, submitting);
+	// 	console.log(
+	// 		'getQuestion()',
+	// 		activeQuestions,
+	// 		'questions',
+	// 		questions,
+	// 		'dataSession',
+	// 		dataSession
+	// 	);
+	// 	if (!selectedAnswer || submitting) return;
+	// 	submitting = true;
 
-		if (currentIndex < question.length - 1) {
+	// 	const question = activeQuestions;
+	// 	const qId = question[currentIndex].id;
+	// 	const ans = selectedAnswer;
+
+	// 	selectedAnswer = null;
+	// 	console.log('before', currentIndex);
+
+	// 	if (currentIndex < question.length - 1) {
+	// 		currentIndex++;
+	// 	}
+
+	// 	console.log('after', currentIndex);
+
+	// 	submit(qId, JSON.stringify(ans)).finally(() => {
+	// 		submitting = false;
+	// 	});
+	// }
+
+	async function next() {
+		if (!selectedAnswer || submitting) return;
+		submitting = true;
+
+		const qId = activeQuestions[currentIndex].id;
+		const ans = selectedAnswer;
+		const isLast = currentIndex === activeQuestions.length - 1;
+
+		selectedAnswer = null;
+
+		if (!isLast) {
 			currentIndex++;
 		}
-		submit(qId, JSON.stringify(selectedAnswer));
-		selectedAnswer = null;
-		// } else {
-		// 	console.log('answers from quiz page', answers);
 
-		// 	submit();
+		await submit(qId, JSON.stringify(ans));
+
+		if (isLast) {
+			const formData = new FormData();
+			const res = await fetch('/quiz/cat-quiz?/getResult', {
+				method: 'POST',
+				body: formData
+			});
+			console.log(res);
+
+			const json = await res.json();
+			const parsed = JSON.parse(json.data);
+			result = {
+				score: parsed[0],
+				total: parsed[1],
+				accuracy: parsed[2]
+			};
+			finished = true;
+		}
+
+		submitting = false;
+
+		// if (isLast) {
+		// 	const formData = new FormData();
+		// 	const res = await fetch('/quiz/cat-quiz?/getResult', {
+		// 		method: 'POST',
+		// 		body: formData
+		// 	});
+		// 	const text = await res.text();
+		// 	const action = deserialize(text);
+
+		// 	console.log('action', action);
+
+		// 	if (action.type === 'success' && action.data) {
+		// 		result = {
+		// 			score: action.data.score,
+		// 			total: action.data.total,
+		// 			accuracy: action.data.accuracy
+		// 		};
+		// 		finished = true;
+		// 	}
+		// 	submitting = false;
 		// }
 	}
 
+	// function next() {
+	// 	if (!selectedAnswer) selectedAnswer = null;
+	// 	const question = getQuestion();
+	// 	const qId = question[currentIndex].id;
+
+	// 	if (currentIndex < question.length - 1) {
+	// 		currentIndex++;
+	// 	}
+	// 	submit(qId, JSON.stringify(selectedAnswer));
+	// 	selectedAnswer = null;
+	// }
+
 	async function submit(qId: string, ans: string) {
-		const id = sessionId;
+		const id = getSessionId();
 		const formData = new FormData();
-		formData.append('sessionId', id);
-		formData.append('qId', qId);
-		formData.append('selectedAnswer', ans);
-		formData.append('index', JSON.stringify(currentIndex));
-		await fetch('/quiz/cat-quiz?/submitAnswer', {
+		formData.append('sessionId', id); // matches server
+		formData.append('questionId', qId); // matches server
+		formData.append('answer', ans); // matches server
+		await fetch('/quiz/cat-quiz?/answer', {
+			// action is named 'answer' not 'submitAnswer'
 			method: 'POST',
 			body: formData
 		});
+		// if(currentIndex === activeQuestions.length - 1) {
+		// 	await fetch('/quiz/cat-quiz?/getResult', {
+		// 	// action is named 'answer' not 'submitAnswer'
+		// 	method: 'GET',
+
+		// })
+		// finished = true;
+		// }
 	}
 
-	// async function submit() {
-	// 	console.log('answers from submit', answers);
-
-	// 	const formData = new FormData();
-	// 	formData.append('sessionId', sessionId);
-	// 	formData.append('answers', JSON.stringify(answers));
-	// 	// formData.append('sessionId', JSON.stringify(sessionId));
-	// 	const res = await fetch('/quiz/cat-quiz?/submitAns', {
-	// 		method: 'POST',
-	// 		body: formData
-	// 	});
-
-	// 	const response = await res.json();
-	// 	console.log('response', response);
-
-	// 	const parsed = JSON.parse(response.data);
-	// 	console.log('paresed response', parsed);
-
-	// 	result = {
-	// 		score: parsed[parsed[0]['score']],
-	// 		total: parsed[parsed[0]['total']],
-	// 		accuracy: parsed[parsed[0]['accuracy']]
-	// 	};
-	// 	finished = true;
-	// 	// console.log('result from quiz page', result);
-	// }
-
-	// function beginQuiz() {
-	// 	console.log('called begin function');
-	// 	countDownStarted = true;
-
-	// 	console.log('form from beginquiz:', form);
-	// }
-
 	function startCounting() {
-		const expiresAt = getExpiration();
+		const expiresAt = getExpiration() * 1000;
 		const timer = setInterval(() => {
 			remaining = Math.ceil((expiresAt - Date.now()) / 1000);
+			console.log(remaining);
+
 			if (Date.now() > expiresAt) {
 				clearInterval(timer);
 			}
@@ -158,18 +218,30 @@
 
 	$effect(() => {
 		if (started()) {
-			const count = setInterval(() => {
-				timer--;
-				if (timer < 1) {
-					clearInterval(count);
+			if (dataSession && dataSession.length > 0) {
+				countDownFinished = true;
+				// if (data.currentIndex && currentIndex < data.currentIndex) {
+				// 	currentIndex = data.currentIndex;
+				// }
+				if (dataSession && dataSession.length > 0) {
 					countDownFinished = true;
+					// console.log('currentIndex from data', data.currentIndex);
+					// currentIndex = data.currentIndex ?? 0;
 				}
-			}, 1000);
+				console.log('currentindex', currentIndex);
+			} else {
+				const count = setInterval(() => {
+					timer--;
+					if (timer < 1) {
+						clearInterval(count);
+						countDownFinished = true;
+					}
+				}, 1000);
+			}
 			startCounting();
 		}
 		$inspect(result);
 	});
-	// beginQuiz();
 </script>
 
 <div class=" flex h-full w-full max-w-3xl items-center justify-center">
@@ -201,7 +273,7 @@
 				</ul>
 			</Card.Content>
 			<Card.Footer>
-				<form method="POST" action="?/startQuiz" class=" flex w-full justify-center" use:enhance>
+				<form method="POST" action="?/start" class=" flex w-full justify-center" use:enhance>
 					<Button type="submit" class=" w-[50%] cursor-pointer p-6 text-2xl md:w-[30%]"
 						>Start</Button
 					>
@@ -210,11 +282,11 @@
 		</Card.Root>
 	{:else if !countDownFinished}
 		<div class=" my-auto h-full text-9xl">{timer}</div>
-	{:else if !finished}
-		<Card.Root class="mx-auto mt-10 p-6">
+	{:else if !finished && activeQuestions}
+		<Card.Root class="mx-auto mt-1.5  h-fit w-full max-w-3xl p-6">
 			<Card.Header>
 				<Card.Title class=" flex items-center justify-between">
-					Question {currentIndex + 1} / {questions.length}
+					Question {currentIndex + 1} / {activeQuestions.length}
 					<div class="flex items-center gap-1.5 text-[18px]">
 						<span class=" animate-spin"><Hourglass size={20} /></span><span>{remaining}s</span>
 					</div>
@@ -222,23 +294,24 @@
 			</Card.Header>
 
 			<Card.Content class="space-y-6">
-				{#if questions[currentIndex].image}
+				{#if currentQuestion.imageUrl}
 					<img
-						src={questions[currentIndex].image}
+						src={currentQuestion.imageUrl}
 						alt="Breed image"
-						class="h-60 w-full rounded-lg object-cover"
+						class="h-auto w-full rounded-lg object-cover"
 					/>
 				{/if}
-
+				{JSON.stringify(activeQuestions[currentIndex]?.id)}
+				{JSON.stringify(currentIndex)}
 				<p class="text-lg font-medium">
-					{questions[currentIndex].question}
+					{currentQuestion.question}
 				</p>
 
 				<div class="space-y-2">
-					{#each questions[currentIndex].options as option (option)}
+					{#each activeQuestions[currentIndex].options as option (option)}
 						<button
 							class="w-full rounded-lg border p-2 text-left
-					{selectedAnswer === option ? 'bg-muted' : ''}"
+					{selectedAnswer === option ? 'bg-muted text-black' : ''}"
 							onclick={() => (selectedAnswer = option)}
 							type="button"
 						>
@@ -248,7 +321,7 @@
 				</div>
 
 				<Button class="mt-4 w-full" disabled={!selectedAnswer} onclick={next}>
-					{currentIndex === questions.length - 1 ? 'Submit' : 'Next'}
+					{currentIndex === activeQuestions.length - 1 ? 'Submit' : 'Next'}
 				</Button>
 			</Card.Content>
 		</Card.Root>

@@ -10,14 +10,25 @@ function getRandomBreeds(randomNum: number[], breeds: Cats[] | Dogs[]) {
 	return randomNum.map((n) => breeds[n]);
 }
 
-function getRandomNumberOfBreeds(min: 0, max: number, limit: number, breeds: Cats[] | Dogs[]) {
+function getRandomNumberOfBreeds(min: 0, limit: number, breeds: Cats[] | Dogs[]) {
+	const filteredBreeds = breeds.filter((v) => v?.image?.url); // filter first
 	const ranDomSet: Set<number> = new Set();
 	while (ranDomSet.size < limit) {
-		ranDomSet.add(getRandomInt(min, max));
+		ranDomSet.add(getRandomInt(min, filteredBreeds.length)); // use filtered length
 	}
 	const randomArray = Array.from(ranDomSet);
-	return getRandomBreeds(randomArray, breeds);
+	return getRandomBreeds(randomArray, filteredBreeds); // index into filtered array
 }
+
+// function getRandomNumberOfBreeds(min: 0, max: number, limit: number, breeds: Cats[] | Dogs[]) {
+// 	const ranDomSet: Set<number> = new Set();
+// 	while (ranDomSet.size < limit) {
+// 		ranDomSet.add(getRandomInt(min, max));
+// 	}
+// 	const randomArray = Array.from(ranDomSet);
+// 	const filteredBreeds = breeds.filter((v) => v?.image?.url);
+// 	return getRandomBreeds(randomArray, filteredBreeds);
+// }
 
 export function getRandomType() {
 	const rnd = getRandomInt(0, ranDomtype.length);
@@ -29,7 +40,7 @@ export function pickUniqueRandomBreeds(breeds: Cats[] | Dogs[], count: number) {
 	if (length < count) {
 		throw new Error('count exeeds the total length of breed');
 	}
-	const selectedBreeds = getRandomNumberOfBreeds(0, length, count, breeds);
+	const selectedBreeds = getRandomNumberOfBreeds(0, count, breeds);
 	return selectedBreeds;
 }
 

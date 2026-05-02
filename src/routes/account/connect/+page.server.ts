@@ -1,6 +1,6 @@
 import { redirect } from '@sveltejs/kit';
 import { createUser, getUserByEmail, hashPassword, verifyPassword } from '$lib/server/models/users';
-import { createSession } from '$lib/server/models/sessions.js';
+import { createUserSession } from '$lib/server/models/sessions.js';
 import type { User } from '$lib/types/user.js';
 import path from 'node:path';
 import { getRandomId } from '$lib/helper/randomid.js';
@@ -45,7 +45,7 @@ export const actions = {
 		await processImage(buffer, filePath, 196, 196);
 		try {
 			const userId = createUser(filePath.replace('static', ''), name, email, hash).lastInsertRowid;
-			const id = createSession(userId as number);
+			const id = createUserSession(userId as number);
 			cookies.set('session', id.toString(), {
 				path: '/',
 				httpOnly: true,
@@ -81,7 +81,7 @@ export const actions = {
 			// return 'invalid user';
 		}
 
-		const id = createSession(user ? user.id : 0);
+		const id = createUserSession(user ? user.id : 0);
 
 		cookies.set('session', id.toString(), {
 			path: '/',

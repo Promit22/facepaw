@@ -4,6 +4,7 @@
 	import { Button } from '$lib/components/ui/button/index.js';
 	import { PawPrint } from '@lucide/svelte';
 	import ctaOne from '$lib/assets/ctaImageOne.webp';
+	import ctaTwo from '$lib/assets/ctaImageTwo.webp';
 	const { data } = $props();
 </script>
 
@@ -137,12 +138,12 @@
 
 	<!-- PawLand Quiz — normal -->
 	<div class="flex flex-col items-center gap-12 md:flex-row">
-		<div class="aspect-video w-full rounded-2xl bg-muted md:w-1/2"></div>
+		<div class="aspect-16/7 w-full rounded-2xl bg-muted md:w-1/2">
+			<img src={ctaTwo} alt="" class=" object-cover" />
+		</div>
 		<div class="flex w-full flex-col gap-4 md:w-1/2">
 			<h2 class="text-3xl font-bold">Test Your Breed Knowledge</h2>
-			<p class="text-muted-foreground">
-				Take the PawLand quiz, earn XP, and climb the leaderboard against other pet lovers.
-			</p>
+			<p class="text-card">Take the quiz and climb the leaderboard.</p>
 			<a href="/quiz" class="w-fit ...">Take the Quiz →</a>
 		</div>
 	</div>

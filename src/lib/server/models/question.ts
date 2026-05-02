@@ -18,7 +18,7 @@ export function generateQuizSession(breeds: Cats[] | Dogs[], count = 10) {
 
 		while (!question && attempts < 3) {
 			const type = getRandomType();
-			question = generateQuestionByType(type, breed, breeds);
+			question = generateQuestionByType(type, breed, selectedBreeds);
 			attempts++;
 		}
 
@@ -84,6 +84,8 @@ function generateLifespanQuestion(correctBreed: Cats | Dogs, allBreeds: Cats[] |
 }
 
 function generateImageQuestion(correctBreed: Cats | Dogs, allBreeds: Cats[] | Dogs[]) {
+	console.log('correct breed from questiongenerator', correctBreed);
+
 	const pool = allBreeds.filter((b) => b.id !== correctBreed.id && b.image?.url).map((b) => b.name);
 
 	const wrongOptions = pickRandom(pool, 3);
