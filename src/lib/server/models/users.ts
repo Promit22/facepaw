@@ -107,3 +107,30 @@ export function getRecord(tokenHash: string) {
 		)
 		.get(tokenHash) as { user_id: number; expires_at: string };
 }
+
+export function updateBestScore(
+	user_id: number,
+	score: number,
+	accuracy: number,
+	mode: 'cat' | 'dog' | 'hybrid'
+) {
+	db.prepare(
+		`
+        UPDATE users 
+        SET best_score_${mode} = ?, best_accuracy_${mode} = ?
+        WHERE id = ? AND (best_score_${mode} IS NULL OR ? > best_score_${mode})
+    `
+	).run(score, accuracy, user_id, score);
+}
+
+export function getBestScore() {
+	db.prepare(
+		`
+	SELECT username, best_score_cat 
+	FROM users 
+	WHERE best_score_cat IS NOT NULL 
+	ORDER BY best_score_cat DESC, best_accuracy_cat DESC
+	LIMIT 10
+		`
+	).get();
+}

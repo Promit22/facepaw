@@ -84,7 +84,7 @@ function generateLifespanQuestion(correctBreed: Cats | Dogs, allBreeds: Cats[] |
 }
 
 function generateImageQuestion(correctBreed: Cats | Dogs, allBreeds: Cats[] | Dogs[]) {
-	console.log('correct breed from questiongenerator', correctBreed);
+	// console.log('correct breed from questiongenerator', correctBreed);
 
 	const pool = allBreeds.filter((b) => b.id !== correctBreed.id && b.image?.url).map((b) => b.name);
 

@@ -92,7 +92,13 @@ CREATE TABLE IF NOT EXISTS users (
     image TEXT,
     name TEXT NOT NULL,
     email TEXT NOT NULL UNIQUE,
-    password TEXT NOT NULL
+    password TEXT NOT NULL,
+    best_score_cat INTEGER,
+    best_accuracy_cat INTEGER,
+    best_score_dog INTEGER,
+    best_accuracy_dog INTEGER,
+    best_score_hybrid INTEGER,
+    best_accuracy_hybrid INTEGER
 );
 `);
 

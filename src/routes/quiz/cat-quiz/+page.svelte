@@ -15,6 +15,7 @@
 	const questions = $derived(form?.questions);
 	const dataSessionId = data.sessionId;
 	const formSessoinId = $derived(form?.sessionId);
+	// const review = $derived(form?.review);
 
 	console.log('dataSession', dataSession);
 	const started = () => {
@@ -35,7 +36,18 @@
 
 	let remaining = $state(0);
 	let countDownFinished = $state(false);
-	let result = $state();
+	let result: {
+		score: number;
+		total: number;
+		accuracy: number;
+		review: {
+			id: string;
+			question: string;
+			yourAnswer: string;
+			correctAnswer: string;
+			isCorrect: boolean;
+		}[];
+	} = $state();
 	let timer: number = $state(3);
 	let finished = $state(false);
 
@@ -126,27 +138,7 @@
 			currentIndex++;
 		}
 
-		await submit(qId, JSON.stringify(ans));
-
-		if (isLast) {
-			const formData = new FormData();
-			const res = await fetch('/quiz/cat-quiz?/getResult', {
-				method: 'POST',
-				body: formData
-			});
-			console.log(res);
-
-			const json = await res.json();
-			const parsed = JSON.parse(json.data);
-			result = {
-				score: parsed[0],
-				total: parsed[1],
-				accuracy: parsed[2]
-			};
-			finished = true;
-		}
-
-		submitting = false;
+		await submit(qId, ans);
 
 		// if (isLast) {
 		// 	const formData = new FormData();
@@ -154,21 +146,48 @@
 		// 		method: 'POST',
 		// 		body: formData
 		// 	});
-		// 	const text = await res.text();
-		// 	const action = deserialize(text);
+		// 	console.log(res);
 
-		// 	console.log('action', action);
-
-		// 	if (action.type === 'success' && action.data) {
-		// 		result = {
-		// 			score: action.data.score,
-		// 			total: action.data.total,
-		// 			accuracy: action.data.accuracy
-		// 		};
-		// 		finished = true;
-		// 	}
-		// 	submitting = false;
+		// 	const json = await res.json();
+		// 	const parsed = JSON.parse(json.data);
+		// 	result = {
+		// 		score: parsed[0],
+		// 		total: parsed[1],
+		// 		accuracy: parsed[2]
+		// 	};
+		// 	finished = true;
 		// }
+
+		// submitting = false;
+
+		if (isLast) {
+			const formData = new FormData();
+			const res = await fetch('/quiz/cat-quiz?/getResult', {
+				method: 'POST',
+				body: formData
+			});
+			const text = await res.text();
+			const action = deserialize(text);
+
+			console.log('action', action);
+
+			if (action.type === 'success' && action.data) {
+				result = {
+					score: action.data.score as number,
+					total: action.data.total as number,
+					accuracy: action.data.accuracy as number,
+					review: action.data.review as {
+						id: string;
+						question: string;
+						yourAnswer: string;
+						correctAnswer: string;
+						isCorrect: boolean;
+					}[]
+				};
+				finished = true;
+			}
+		}
+		submitting = false;
 	}
 
 	// function next() {
@@ -212,8 +231,42 @@
 
 			if (Date.now() > expiresAt) {
 				clearInterval(timer);
+				handleTimeUp();
 			}
 		}, 1000);
+	}
+
+	async function handleTimeUp() {
+		if (finished) return;
+
+		// submit current question with whatever answer is selected (or empty)
+		const qId = activeQuestions[currentIndex].id;
+		await submit(qId, selectedAnswer ?? '');
+
+		// fetch result
+		const formData = new FormData();
+		const res = await fetch('/quiz/cat-quiz?/getResult', {
+			method: 'POST',
+			body: formData
+		});
+		const text = await res.text();
+		const action = deserialize(text);
+
+		if (action.type === 'success' && action.data) {
+			result = {
+				score: action.data.score as number,
+				total: action.data.total as number,
+				accuracy: action.data.accuracy as number,
+				review: action.data.review as {
+					id: string;
+					question: string;
+					yourAnswer: string;
+					correctAnswer: string;
+					isCorrect: boolean;
+				}[]
+			};
+		}
+		finished = true;
 	}
 
 	$effect(() => {
@@ -301,9 +354,8 @@
 						class="h-auto w-full rounded-lg object-cover"
 					/>
 				{/if}
-				{JSON.stringify(activeQuestions[currentIndex]?.id)}
-				{JSON.stringify(currentIndex)}
-				<p class="text-lg font-medium">
+
+				<p class="text-2xl font-medium">
 					{currentQuestion.question}
 				</p>
 
@@ -336,7 +388,23 @@
 					Score: {result.score} / {result.total}
 				</p>
 				<p>Accuracy: {result.accuracy}%</p>
-
+				<!-- {JSON.stringify(review)} -->
+				<div>
+					{#each result.review as r (r.id)}
+						<ol type="1">
+							<li class=" text-left">
+								{#if r.type === 'image'}
+									<div>
+										<img src={r.imageUrl} alt="breed image url" />
+									</div>
+								{/if}
+								<h2 class=" mt-5 text-[18px] font-medium">Question: {r.question}</h2>
+								<p>Correct answer: {r.correctAnswer}</p>
+								<p>Your answer: {r.yourAnswer}</p>
+							</li>
+						</ol>
+					{/each}
+				</div>
 				<Button onclick={() => location.reload()}>Play Again</Button>
 			</Card.Content>
 		</Card.Root>

@@ -23,35 +23,13 @@ import {
 	updateQuizSession,
 	updateQuizQuestion,
 	getSessionById,
-	getCompletedSession
+	getCompletedSession,
+	cleanupSessions
 } from '$lib/server/models/sessions.js';
-
-const pendingQuiz = new Map<string, PendingQuiz>();
-const userAnswers = new Map<
-	string,
-	{ answer: { id: string; ans: string }[]; createdAt: number; index: string }
->();
-
-function cleanExpiredPending() {
-	const MAX_AGE = 30 * 60 * 1000;
-	pendingQuiz.forEach((value, key) => {
-		// console.log('value', value);
-		if (Date.now() - value.createdAt > MAX_AGE) {
-			pendingQuiz.delete(key);
-		}
-	});
-}
-function cleanExpiredAnswers() {
-	const MAX_AGE = 30 * 60 * 1000;
-	userAnswers.forEach((value, key) => {
-		// console.log('value', value);
-		if (Date.now() - value.createdAt > MAX_AGE) {
-			userAnswers.delete(key);
-		}
-	});
-}
+import { updateBestScore } from '$lib/server/models/users.js';
 
 export const load = async ({ locals, cookies }) => {
+	cleanupSessions();
 	const user = locals.user;
 	const now = Math.floor(Date.now() / 1000);
 
@@ -83,81 +61,6 @@ export const load = async ({ locals, cookies }) => {
 	};
 };
 
-// export const load = async ({ locals, cookies }) => {
-// 	const user = locals.user;
-
-// 	const session = getSession(user?.id, Math.floor(Date.now() / 1000));
-// 	const guestQuizSession = cookies.get('guestQuizSession');
-
-// 	const sessionId = user ? session?.id : guestQuizSession;
-
-// 	if (!sessionId) {
-// 		return { started: false };
-// 	}
-
-// 	const raw = getQuestions(sessionId);
-// 	if (!raw) return { started: false };
-// 	const question = JSON.parse(raw);
-
-// 	const answers = getAns(sessionId);
-
-// 	const currentIndex = answers.length;
-// 	console.log('currentIndex from load', currentIndex, 'answers', answers);
-// 	const safeQuestions = question.map(({ correct_answer, ...rest }) => rest);
-
-// 	return {
-// 		started: true,
-// 		sessionId,
-// 		questions: safeQuestions,
-// 		currentIndex,
-// 		score: session?.score ?? 0,
-// 		expiresAt: session?.expires_at ?? 0
-// 	};
-// };
-
-function gradeQuizSession(
-	sessionId: string,
-	userAnswers: { questionId: string; answer: string }[]
-) {
-	const MAX_AGE = 5 * 60 * 1000;
-
-	for (const [id, session] of quizStore.entries()) {
-		if (Date.now() - session.createdAt > MAX_AGE) {
-			quizStore.delete(id);
-		}
-	}
-
-	// console.log('userAnswer', userAnswers);
-
-	const session = quizStore.get(sessionId);
-	// const sessionEntries = session.entries()
-	if (!session) {
-		throw new Error('Invalid session');
-	}
-
-	let score = 0;
-	if (session && typeof session.questions === 'string')
-		session.questions = JSON.parse(session.questions);
-	for (const userAnswer of userAnswers) {
-		const question = session.questions.find((q) => q.id === userAnswer.questionId);
-
-		if (!question) continue;
-
-		if (question.correctAnswer === userAnswer.answer) {
-			score++;
-		}
-	}
-
-	const total = session.questions.length;
-	const accuracy = Math.round((score / total) * 100);
-
-	return {
-		score,
-		total,
-		accuracy
-	};
-}
-
 export const actions = {
 	start: async ({ locals, cookies }) => {
 		console.log('clicked start');
@@ -167,7 +70,7 @@ export const actions = {
 		if (!userId) {
 			cookies.set('guestQuizSession', sessionId, {
 				path: '/',
-				maxAge: 360
+				maxAge: 363
 			});
 		}
 
@@ -182,7 +85,7 @@ export const actions = {
 		const questions = generateQuizSession(breed);
 
 		const questionsRowId = randomUUID();
-		const expiresAt = now + 360;
+		const expiresAt = now + 10;
 
 		createSession(sessionId, userId, expiresAt);
 
@@ -227,9 +130,18 @@ export const actions = {
 		const question = questions.find((q) => q.id === questionId);
 		if (!question) return { message: 'Question not found' };
 
-		const isCorrect = givenAnswer === question.correct_answer ? 1 : 0;
+		const isCorrect = givenAnswer === question.correctAnswer ? 1 : 0;
 		insertAnswer(sessionId, questionId, givenAnswer, isCorrect);
+		// console.log(question);
 
+		console.log(
+			'givenAnswer',
+			givenAnswer,
+			'correct',
+			question.correctAnswer,
+			'isCorrect',
+			isCorrect
+		);
 		if (isCorrect) {
 			incrementScore(sessionId);
 		}
@@ -248,6 +160,25 @@ export const actions = {
 			correctAnswer: question.correct_answer
 		};
 	},
+	// getResult: async ({ locals, cookies }) => {
+	// 	const user = locals.user;
+	// 	const guestQuizSession = cookies.get('guestQuizSession');
+	// 	const now = Math.floor(Date.now() / 1000);
+
+	// 	const session = getSession(user?.id, now);
+	// 	const sessionId = user ? session?.id : guestQuizSession;
+	// 	if (!sessionId) return { message: 'No session found' };
+
+	// 	const completedSession = getCompletedSession(sessionId);
+	// 	if (!completedSession) return { message: 'Session not completed yet' };
+
+	// 	const answers = getAns(sessionId);
+	// 	const score = completedSession.score ?? 0;
+	// 	const total = answers.length;
+	// 	const accuracy = Math.round((score / total) * 100);
+
+	// 	return { score, total, accuracy };
+	// }
 	getResult: async ({ locals, cookies }) => {
 		const user = locals.user;
 		const guestQuizSession = cookies.get('guestQuizSession');
@@ -257,14 +188,41 @@ export const actions = {
 		const sessionId = user ? session?.id : guestQuizSession;
 		if (!sessionId) return { message: 'No session found' };
 
-		const completedSession = getCompletedSession(sessionId);
-		if (!completedSession) return { message: 'Session not completed yet' };
+		// try completed first, then force-complete if expired
+		let resolvedSession = getCompletedSession(sessionId);
+
+		if (!resolvedSession) {
+			// session expired or still active — force complete it
+			updateQuizSession(sessionId);
+			resolvedSession = getCompletedSession(sessionId);
+		}
+
+		if (!resolvedSession) return { message: 'Session not found' };
 
 		const answers = getAns(sessionId);
-		const score = completedSession.score ?? 0;
-		const total = answers.length;
-		const accuracy = Math.round((score / total) * 100);
+		const score = resolvedSession.score ?? 0;
+		const raw = getQuestions(sessionId);
+		const allQuestions = JSON.parse(raw ? raw : '');
+		const total = allQuestions.length;
+		const accuracy = total > 0 ? Math.round((score / total) * 100) : 0;
+		if (user) {
+			updateBestScore(user.id, score, accuracy, 'cat');
+		}
+		// in getResult, add:
 
-		return { score, total, accuracy };
+		const review = answers.map((ans) => {
+			const q = allQuestions.find((q) => q.id === ans.question_id);
+			return {
+				id: q.id,
+				question: q.question,
+				yourAnswer: ans.given_answer,
+				correctAnswer: q.correctAnswer,
+				type: q.type,
+				imageUrl: q.imageUrl ? q.imageUrl : undefined
+			};
+		});
+
+		return { score, total, accuracy, review };
+		// return { score, total, accuracy };
 	}
 };

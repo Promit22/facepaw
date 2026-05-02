@@ -114,26 +114,6 @@ export function getQuestions(session_id: string | undefined) {
 	return row?.questions;
 }
 
-// export function getQuestions(session_id: string | undefined) {
-// 	return db
-// 		.prepare(
-// 			`
-// 			SELECT questions FROM quiz_questions WHERE session_id = ?
-// 		`
-// 		)
-// 		.get(session_id) as string;
-// }
-
-export function updateSessionTime(expiresAt: number, id: string) {
-	return db
-		.prepare(
-			`
-			UPDATE quiz SET expiresAt = ? WHERE id = ?
-		`
-		)
-		.run(expiresAt, id);
-}
-
 export function insertAnswer(
 	session_id: string,
 	question_id: string,
@@ -147,19 +127,6 @@ export function insertAnswer(
     `
 	).run(session_id, question_id, given_answer, is_correct);
 }
-
-// export function insertAnswer(
-// 	session_id: string,
-// 	question_id: string,
-// 	given_answer: string,
-// 	is_correct: 1 | 0
-// ) {
-// 	db.prepare(
-// 		`
-// 			INSERT INTO quiz_answers (session_id, question_id, given_answer, is_correct) values(?, ?, ?, ?)
-// 		`
-// 	).run(session_id, question_id, given_answer, is_correct);
-// }
 
 export function getAns(sessionId: string | undefined) {
 	return db
@@ -197,6 +164,16 @@ export function updateQuizSession(session_id: string) {
 	).run(session_id);
 }
 
+export function cleanupSessions() {
+	db.prepare(
+		`
+        DELETE FROM quiz_sessions 
+        WHERE status IN ('completed', 'expired') 
+        OR expires_at < ?
+    `
+	).run(Math.floor(Date.now() / 1000));
+}
+
 export function updateQuizQuestion(answer_count: number, session_id: string) {
 	db.prepare(
 		`
@@ -205,23 +182,23 @@ export function updateQuizQuestion(answer_count: number, session_id: string) {
 	).run(answer_count, session_id);
 }
 
-export function checkIfQuizSessionValid(sessionId: string) {
-	console.log('sessionid from check', sessionId);
-	console.log('quizstore from check', quizStore);
+// export function checkIfQuizSessionValid(sessionId: string) {
+// 	console.log('sessionid from check', sessionId);
+// 	console.log('quizstore from check', quizStore);
 
-	const session = getSession(sessionId);
-	// console.log('/');
-	console.log('session expiresAt', session.expiresAt);
+// 	const session = getSession(sessionId);
+// 	// console.log('/');
+// 	console.log('session expiresAt', session.expiresAt);
 
-	console.log('session from check', session);
+// 	console.log('session from check', session);
 
-	if (!session) {
-		return { valid: false, session: null };
-	} else {
-		if (session.expiresAt - Date.now() > 10000) {
-			return { valid: true, session };
-		} else {
-			return { valid: false, session: null };
-		}
-	}
-}
+// 	if (!session) {
+// 		return { valid: false, session: null };
+// 	} else {
+// 		if (session.expiresAt - Date.now() > 10000) {
+// 			return { valid: true, session };
+// 		} else {
+// 			return { valid: false, session: null };
+// 		}
+// 	}
+// }
