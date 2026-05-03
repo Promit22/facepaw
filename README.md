@@ -11,11 +11,36 @@ FacePaw is a pet-focused web application where users can explore cat and dog bre
 
 ## Tech Stack
 
+-**Packege Manager** pnpm
+
 - **Framework:** SvelteKit
 - **Styling:** Tailwind CSS + shadcn-svelte
 - **Database:** SQLite via better-sqlite3
 - **Image Processing:** Sharp
 - **Data:** Powered by The Cat API and the Dog API
+
+## How to Run
+
+Make sure you have [pnpm](https://pnpm.io) installed on your system, then:
+
+1. Clone the repository
+
+```bash
+   git https://github.com/Promit22/facepaw.git
+   cd facepaw
+```
+
+2. Install dependencies
+
+```bash
+   pnpm install
+```
+
+3. Start the dev server
+
+```bash
+   pnpm dev --open
+```
 
 ## File Structure
 
