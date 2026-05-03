@@ -75,7 +75,7 @@ export const actions = {
 		const questions = generateQuizSession(breed);
 
 		const questionsRowId = randomUUID();
-		const expiresAt = now + 10;
+		const expiresAt = now + 363;
 
 		createSession(sessionId, userId, expiresAt);
 
@@ -122,14 +122,14 @@ export const actions = {
 		const isCorrect = givenAnswer === question.correctAnswer ? 1 : 0;
 		insertAnswer(sessionId, questionId, givenAnswer, isCorrect);
 
-		console.log(
-			'givenAnswer',
-			givenAnswer,
-			'correct',
-			question.correctAnswer,
-			'isCorrect',
-			isCorrect
-		);
+		// console.log(
+		// 	'givenAnswer',
+		// 	givenAnswer,
+		// 	'correct',
+		// 	question.correctAnswer,
+		// 	'isCorrect',
+		// 	isCorrect
+		// );
 		if (isCorrect) {
 			incrementScore(sessionId);
 		}
@@ -145,19 +145,23 @@ export const actions = {
 
 		return {
 			isCorrect: !!isCorrect,
-			correctAnswer: question.correct_answer
+			correctAnswer: question.correctAnswer
 		};
 	},
 
 	getResult: async ({ locals, cookies }) => {
+		console.log('called getResule');
+
 		const user = locals.user;
 		const guestQuizSession = cookies.get('guestQuizSession');
 
 		const session = getLatestSessionId(user?.id);
 		const sessionId = user ? session : guestQuizSession;
+		console.log('user:', user?.id);
+		console.log('sessionId:', sessionId);
 		if (!sessionId) return { message: 'No session found' };
-
 		let resolvedSession = getCompletedSession(sessionId);
+		console.log('resolvedSession:', resolvedSession);
 
 		if (!resolvedSession) {
 			updateQuizSession(sessionId);
@@ -173,7 +177,7 @@ export const actions = {
 		const total = allQuestions.length;
 		const accuracy = total > 0 ? Math.round((score / total) * 100) : 0;
 		if (user) {
-			updateBestScore(user.id, score, accuracy, 'cat');
+			updateBestScore(user.id, score, accuracy, 'dog');
 		}
 
 		const review = answers.map((ans) => {

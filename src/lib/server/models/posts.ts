@@ -115,3 +115,25 @@ export function toggleLike(post_id: number, user_id: number) {
 		return { message: 'failed to like' };
 	}
 }
+
+export function getUserIdFromPosts(postId: number) {
+	return db.prepare('SELECT user_id FROM posts WHERE id = ?').get(postId) as
+		| { user_id: number }
+		| undefined;
+}
+
+export function deletePost(postId: number) {
+	db.prepare('DELETE FROM posts WHERE id = ?').run(postId);
+}
+
+export function getOldPost(postId: number) {
+	return db
+		.prepare(
+			`
+    SELECT i.path FROM posts p
+    LEFT JOIN image i ON i.post_id = p.id
+    WHERE p.id = ?
+`
+		)
+		.get(postId) as { path: string | null } | undefined;
+}

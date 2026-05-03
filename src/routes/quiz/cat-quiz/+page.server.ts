@@ -145,7 +145,7 @@ export const actions = {
 
 		return {
 			isCorrect: !!isCorrect,
-			correctAnswer: question.correct_answer
+			correctAnswer: question.correctAnswer
 		};
 	},
 

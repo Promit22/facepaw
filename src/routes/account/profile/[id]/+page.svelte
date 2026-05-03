@@ -54,7 +54,7 @@
 			</div>
 		</Card.Header>
 		<Card.Content>
-			<PostPreview {posts} />
+			<PostPreview {posts} canDelete={user.id === puser.id} />
 		</Card.Content>
 		<Card.Footer>
 			{#if user.id === puser.id}

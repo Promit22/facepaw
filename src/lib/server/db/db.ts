@@ -130,7 +130,7 @@ db.exec(`
         id INTEGER PRIMARY KEY,
         post_id INTEGER NOT NULL,
         path TEXT,
-        FOREIGN KEY (post_id) REFERENCES posts(id)
+        FOREIGN KEY (post_id) REFERENCES posts(id) ON DELETE CASCADE
     );  
     `);
 

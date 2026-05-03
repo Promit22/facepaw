@@ -78,7 +78,7 @@ export const actions = {
 		const questions = generateQuizSession(breed);
 
 		const questionsRowId = randomUUID();
-		const expiresAt = now + 10;
+		const expiresAt = now + 363;
 
 		createSession(sessionId, userId, expiresAt);
 
@@ -148,7 +148,7 @@ export const actions = {
 
 		return {
 			isCorrect: !!isCorrect,
-			correctAnswer: question.correct_answer
+			correctAnswer: question.correctAnswer
 		};
 	},
 
@@ -176,7 +176,7 @@ export const actions = {
 		const total = allQuestions.length;
 		const accuracy = total > 0 ? Math.round((score / total) * 100) : 0;
 		if (user) {
-			updateBestScore(user.id, score, accuracy, 'cat');
+			updateBestScore(user.id, score, accuracy, 'hybrid');
 		}
 
 		const review = answers.map((ans) => {

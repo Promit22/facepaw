@@ -7,10 +7,12 @@ import {
 	hashPassword,
 	updateUser,
 	checkIfEmailExists,
-	verifyPassword
+	verifyPassword,
+	getOldImage
 } from '$lib/server/models/users';
 import { getRandomId } from '$lib/helper/randomid';
 import { processImage } from '$lib/server/models/imageService';
+import { deleteUploadedFile } from '$lib/server/models/cleaner';
 import path from 'node:path';
 
 export const load = (async ({ locals }) => {
@@ -59,6 +61,8 @@ export const actions = {
 		const confirmPassword = formData.get('confirm')?.toString();
 		const fileName = `${getRandomId()}.webp`;
 		const filePath = path.join('static', 'images', 'profile', fileName);
+		const existing = getOldImage(user.id);
+		await deleteUploadedFile(existing.image);
 		if (pimage.size > 0) {
 			const buffer = await pimage.arrayBuffer();
 			await processImage(buffer, filePath, 196, 196);

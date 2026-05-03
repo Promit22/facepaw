@@ -158,3 +158,7 @@ export function getBestScore(mode: string) {
 		)
 		.all() as LeaderboardEntry[];
 }
+
+export function getOldImage(userId: number) {
+	return db.prepare(`SELECT image FROM users WHERE id = ?`).get(userId) as { image: string | null };
+}

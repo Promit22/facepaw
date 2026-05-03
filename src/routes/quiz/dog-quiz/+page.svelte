@@ -93,7 +93,7 @@
 
 		if (isLast) {
 			const formData = new FormData();
-			const res = await fetch('/quiz/cat-quiz?/getResult', {
+			const res = await fetch('/quiz/dog-quiz?/getResult', {
 				method: 'POST',
 				body: formData
 			});
@@ -127,7 +127,7 @@
 		formData.append('sessionId', id); // matches server
 		formData.append('questionId', qId); // matches server
 		formData.append('answer', ans); // matches server
-		await fetch('/quiz/cat-quiz?/answer', {
+		await fetch('/quiz/dog-quiz?/answer', {
 			// action is named 'answer' not 'submitAnswer'
 			method: 'POST',
 			body: formData
@@ -155,7 +155,7 @@
 
 		// fetch result
 		const formData = new FormData();
-		const res = await fetch('/quiz/cat-quiz?/getResult', {
+		const res = await fetch('/quiz/dog-quiz?/getResult', {
 			method: 'POST',
 			body: formData
 		});
