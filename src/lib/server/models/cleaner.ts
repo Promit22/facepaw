@@ -8,7 +8,11 @@ import path from 'path';
 export async function deleteUploadedFile(relativePath: string | null | undefined) {
 	if (!relativePath) return;
 	try {
-		const absolute = path.join(process.cwd(), 'static', relativePath);
+		// const absolute = path.join(process.cwd(), 'static', relativePath);
+		const baseDir = process.env.UPLOAD_DIR_PROFILE
+			? path.join(process.env.UPLOAD_DIR_PROFILE, '..') // points to /app/data/images
+			: path.join(process.cwd(), 'static');
+		const absolute = path.join(baseDir, relativePath);
 		await fs.unlink(absolute);
 	} catch (err: any) {
 		if (err.code !== 'ENOENT') console.error('[cleanup] Failed to delete file:', err);

@@ -60,7 +60,9 @@ export const actions = {
 		const newPassword = formData.get('new')?.toString();
 		const confirmPassword = formData.get('confirm')?.toString();
 		const fileName = `${getRandomId()}.webp`;
-		const filePath = path.join('static', 'images', 'profile', fileName);
+		// const filePath = path.join('static', 'images', 'profile', fileName);
+		const uploadDir = process.env.UPLOAD_DIR_PROFILE ?? path.join('static', 'images', 'profile');
+		const filePath = path.join(uploadDir, fileName);
 		const existing = getOldImage(user.id);
 		await deleteUploadedFile(existing.image);
 		if (pimage.size > 0) {
@@ -69,7 +71,8 @@ export const actions = {
 		}
 		console.log('pimage from edir profile', pimage);
 
-		const resolvedFilePath = pimage.size > 0 ? filePath.replace('static', '') : null;
+		// const resolvedFilePath = pimage.size > 0 ? filePath.replace('static', '') : null;
+		const resolvedFilePath = pimage.size > 0 ? `/images/profile/${fileName}` : null;
 		console.log('resolvedFilePath from edit', resolvedFilePath);
 
 		if (newPassword) {

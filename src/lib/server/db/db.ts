@@ -1,7 +1,9 @@
 import Database from 'better-sqlite3';
-
+import fs from 'fs';
 // export const db = new Database('facepaw.db');
 export const db = new Database(process.env.DATABASE_URL ?? 'facepaw.db');
+fs.mkdirSync(process.env.UPLOAD_DIR_PROFILE ?? 'static/images/profile', { recursive: true });
+fs.mkdirSync(process.env.UPLOAD_DIR_POSTS ?? 'static/images/posts', { recursive: true });
 
 db.exec(`
 CREATE TABLE IF NOT EXISTS users (

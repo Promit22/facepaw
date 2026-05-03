@@ -1,4 +1,4 @@
-import sharp from 'sharp';
+// import sharp from 'sharp';
 import { createPost } from '$lib/server/models/posts.js';
 import { getString } from '$lib/helper/string.js';
 import { getRandomId } from '$lib/helper/randomid.js';
@@ -14,7 +14,9 @@ export const actions = {
 		const description = getString(data.get('description'));
 		const user = locals.user;
 		const fileName = `${getRandomId()}.webp`;
-		const currentPath = path.join('static', 'images', 'posts', fileName);
+		// const currentPath = path.join('static', 'images', 'posts', fileName);
+		const uploadDir = process.env.UPLOAD_DIR_POSTS ?? path.join('static', 'images', 'posts');
+		const currentPath = path.join(uploadDir, fileName);
 		// const currentPath = `${dir}/${getRandomId()}.webp`;
 		const buffer = await image.arrayBuffer();
 		processImage(buffer, currentPath, 1200, 630);
@@ -29,7 +31,8 @@ export const actions = {
 			// const postId = getNumber(createPost(user.id, title, description).lastInsertRowid);
 			const postId = createPost(user.id, title, description).lastInsertRowid;
 
-			if (postId) storeImagePath(postId as number, currentPath.replace('static', ''));
+			// if (postId) storeImagePath(postId as number, currentPath.replace('static', ''));
+			if (postId) storeImagePath(postId as number, `/images/posts/${fileName}`);
 		}
 	}
 };

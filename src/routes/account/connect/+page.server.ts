@@ -20,7 +20,10 @@ export const actions = {
 		// console.log('bffer', buffer);
 
 		const fileName = `${getRandomId()}.webp`;
-		const filePath = path.join('static', 'images', 'profile', fileName);
+
+		// const filePath = path.join('static', 'images', 'profile', fileName);
+		const uploadDir = process.env.UPLOAD_DIR_PROFILE ?? path.join('static', 'images', 'profile');
+		const filePath = path.join(uploadDir, fileName);
 		if (!name || !email || !password) {
 			return fail(400, {
 				missing: true,
@@ -46,7 +49,8 @@ export const actions = {
 			await processImage(buffer, filePath, 196, 196);
 		}
 
-		const resolvedFilePath = pimage.size > 0 ? filePath.replace('static', '') : null;
+		// const resolvedFilePath = pimage.size > 0 ? filePath.replace('static', '') : null;
+		const resolvedFilePath = pimage.size > 0 ? `/images/profile/${fileName}` : null;
 		try {
 			const userId = createUser(resolvedFilePath, name, email, hash).lastInsertRowid;
 			const id = createUserSession(userId as number);
