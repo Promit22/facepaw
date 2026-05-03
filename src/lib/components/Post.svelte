@@ -56,15 +56,13 @@
 							class="flex w-2.5 flex-1 cursor-pointer justify-center rounded-lg p-2 duration-300 ease-in-out hover:bg-gray-200"
 							onclick={() => console.log('form', form, 'user', user)}
 						>
-							<ThumbsUp class="font-bold text-green-600" /><span
-								>{form?.likes_count ?? likes_count}</span
-							>
+							<ThumbsUp class="font-bold " /><span>{form?.likes_count ?? likes_count}</span>
 						</button>
 						<!-- <button
-						class="flex flex-1 justify-center rounded-lg p-2 duration-300 ease-in-out hover:bg-background hover:text-black"
-					>
-						<MessageCircleMore />
-					</button> -->
+							class="flex flex-1 justify-center rounded-lg p-2 duration-300 ease-in-out hover:bg-background hover:text-black"
+						>
+							<MessageCircleMore />
+						</button> -->
 					</form>
 					<div
 						class="flex flex-1 justify-center rounded-lg p-2 duration-300 ease-in-out hover:bg-background hover:text-black"

@@ -5,6 +5,7 @@
 	import { PawPrint } from '@lucide/svelte';
 	import ctaOne from '$lib/assets/ctaImageOne.webp';
 	import ctaTwo from '$lib/assets/ctaImageTwo.webp';
+	import ctaThree from '$lib/assets/ctaImageThree.webp';
 	const { data } = $props();
 </script>
 
@@ -59,50 +60,7 @@
 					</Card.Content>
 				</Card.Root>
 			</div>
-			<!-- <div class=" w-full opacity-50">
-				<img src={hero} alt="An static image with cat dog footprints on it" /> 
-			</div> -->
 		</div>
-		<!-- <div class=" paws absolute top-2.5 grid h-full grid-cols-6 gap-7 opacity-50">
-			<PawPrint />
-			<PawPrint />
-			<PawPrint />
-			<PawPrint />
-			<PawPrint />
-			<PawPrint />
-			<PawPrint />
-			<PawPrint />
-			<PawPrint />
-			<PawPrint />
-			<PawPrint />
-			<PawPrint />
-			<PawPrint />
-			<PawPrint />
-			<PawPrint />
-			<PawPrint />
-			<PawPrint />
-			<PawPrint />
-			<PawPrint />
-			<PawPrint />
-			<PawPrint />
-			<PawPrint />
-			<PawPrint />
-			<PawPrint />
-			<PawPrint />
-			<PawPrint />
-			<PawPrint />
-			<PawPrint />
-			<PawPrint />
-			<PawPrint />
-			<PawPrint />
-			<PawPrint />
-			<PawPrint />
-			<PawPrint />P </sp
-			<PawPrint />
-			<PawPrint />
-			<PawPrint />
-			<PawPrint />
-		</div> -->
 	</section>
 </div>
 
@@ -126,7 +84,9 @@
 
 	<!-- Posts — reversed -->
 	<div class="flex flex-col items-center gap-12 md:flex-row-reverse">
-		<div class="aspect-video w-full rounded-2xl bg-muted md:w-1/2"></div>
+		<div class="aspect-16/7 w-full rounded-2xl bg-muted md:w-1/2">
+			<img src={ctaThree} alt="" class=" object-cover" />
+		</div>
 		<div class="flex w-full flex-col gap-4 md:w-1/2">
 			<h2 class="text-3xl font-bold">Share Your Pet Moments</h2>
 			<p class="text-muted-foreground">
