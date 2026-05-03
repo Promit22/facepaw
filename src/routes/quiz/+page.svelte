@@ -115,7 +115,7 @@
 			</Card.Root>
 		</div>
 	</section>
-	{#if user}
+	{#if !user}
 		<div class="  w-full md:max-w-[50%]">
 			<Alert.Root variant="destructive" class=" p-5">
 				<Alert.Title class=" text-[1.2rem]"

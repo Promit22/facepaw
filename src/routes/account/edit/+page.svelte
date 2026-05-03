@@ -6,6 +6,7 @@
 	import Button from '$lib/components/ui/button/button.svelte';
 	import { Label } from '$lib/components/ui/label';
 	import { enhance } from '$app/forms';
+	import { onDestroy } from 'svelte';
 
 	let visible = $state(false);
 	let { data, form }: PageProps = $props();
@@ -13,11 +14,32 @@
 	function toggleVisibility() {
 		return visible ? (visible = false) : (visible = true);
 	}
+
+	const accountPath = `/account/profile/${user.id}`;
+	let imgSrc: string = $state('');
+	function showPreview(e: Event) {
+		const elm = e.target as HTMLInputElement;
+		if (!elm.files) return '';
+		const image = elm.files[0];
+		if (imgSrc) URL.revokeObjectURL(imgSrc);
+		imgSrc = URL.createObjectURL(image);
+	}
+
+	onDestroy(() => {
+		URL.revokeObjectURL(imgSrc);
+	});
 </script>
 
 <div class=" w-full max-w-3xl">
 	<Card.Root>
 		<Card.Header>
+			<div class="relative">
+				<a
+					href={accountPath}
+					class=" absolute right-1.5 w-fit rounded-2xl bg-primary p-2 text-center text-black"
+					>Cancel</a
+				>
+			</div>
 			<Card.Title>Edit your profile</Card.Title>
 			<Card.Description></Card.Description>
 		</Card.Header>
@@ -31,13 +53,24 @@
 					use:enhance
 				>
 					<div class=" flex w-full justify-center">
-						{#if !user?.image}
-							<div class="rounded-full border-2">
-								<User class="h-full w-full p-4 opacity-20" />
-							</div>
-						{:else}
-							<img src={user?.image} alt="" class=" m-5 w-full" />
-						{/if}
+						<Label for="pimage">
+							{#if !user?.image}
+								<div class="rounded-full border-2">
+									<User class="h-full w-full p-4 opacity-20" />
+								</div>
+							{:else}
+								<img src={imgSrc ? imgSrc : user?.image} alt="" class=" m-5 w-full" />
+							{/if}
+						</Label>
+						<Input
+							type="file"
+							accept="image/*"
+							id="pimage"
+							name="pimage"
+							class=" w-20"
+							onchange={showPreview}
+							hidden
+						/>
 					</div>
 					<Label for="name">Name</Label>
 					<Input type="text" id="name" name="name" value={user?.name} />

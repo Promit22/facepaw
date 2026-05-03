@@ -55,14 +55,31 @@ export function updatePassword(hashedPassword: string, userId: number) {
 	).run(hashedPassword, userId);
 }
 
-export function updateUser(name: string, email: string, password: string, id: number) {
-	db.prepare(
-		`
-		  UPDATE users
-      SET name = ?, email = ?, password = ?
-      WHERE id = ?
-		`
-	).run(name, email, password, id);
+export function updateUser(
+	name: string,
+	email: string,
+	password: string,
+	id: number,
+	imagePath: string | null
+) {
+	if (!imagePath) {
+		db.prepare(
+			`
+			  UPDATE users
+		  SET name = ?, email = ?, password = ?
+		  WHERE id = ?
+			`
+		).run(name, email, password, id);
+	} else {
+		db.prepare(
+			`
+			  UPDATE users
+		  SET name = ?, email = ?, password = ?, image = ?
+		  WHERE id = ?
+			`
+		).run(name, email, password, imagePath, id);
+		console.log('did image update');
+	}
 }
 
 export function checkIfEmailExists(email: string) {

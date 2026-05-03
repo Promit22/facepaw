@@ -59,7 +59,9 @@
 		<Card.Footer>
 			{#if user.id === puser.id}
 				<div class="flex w-full justify-between">
-					<a href="/account/edit" class=" w-[13ch] bg-amber-500 p-0.5 text-center">Edit Profile</a>
+					<a href="/account/edit" class=" w-fit rounded-2xl bg-primary p-1 text-center text-black"
+						>Edit Profile</a
+					>
 					<!-- <Button variant="link">Edit Profile</Button> -->
 					<form action="?/logout" method="POST">
 						<Button type="submit">Log Out</Button>

@@ -11,7 +11,7 @@ export async function processImage(
 		.resize(width, height, { fit: 'cover' })
 		.sharpen({ sigma: 0.8 })
 		.webp({
-			quality: 65
+			quality: 80
 		})
 		.toFile(outputDir);
 }

@@ -28,7 +28,11 @@
 		<Card.Root>
 			<Card.Header>
 				<div class="relative">
-					<Button variant="destructive" class="absolute right-0 w-[10ch] p-1.5">Cancel</Button>
+					<a
+						href="/posts"
+						class=" absolute right-1.5 w-fit rounded-2xl bg-primary p-2 text-center text-black"
+						>Cancel</a
+					>
 				</div>
 				<Card.Title>Create your post</Card.Title>
 			</Card.Header>
@@ -62,7 +66,7 @@
 					</div>
 					<div class="mt-5">
 						<label for="description">Share your story</label>
-						<Textarea class="h-60" id="description" name="description" required />
+						<Textarea class="h-60" id="description text-2xl" name="description" required />
 					</div>
 					<div class="my-5">
 						<Button class="w-full" type="submit">Publish post</Button>

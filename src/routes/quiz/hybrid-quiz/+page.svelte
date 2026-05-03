@@ -309,7 +309,7 @@
 								{/if}
 								<h2 class=" mt-5 text-[18px] font-medium">{i + 1}.Question: {r.question}</h2>
 								<p>Correct answer: {r.correctAnswer}</p>
-								<p>Your answer: {r.yourAnswer}</p>
+								<p class=" mb-5">Your answer: {r.yourAnswer}</p>
 							</li>
 						</ol>
 					{/each}

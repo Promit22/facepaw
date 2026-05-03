@@ -44,8 +44,7 @@
 				<Card.Header>
 					<div class="relative">
 						<Button
-							variant="destructive"
-							class="absolute right-0 w-[10ch] p-1.5 text-[10px]"
+							class="absolute right-0 w-fit p-1.5 text-[14px]"
 							onclick={() => (register = false)}>Cancel</Button
 						>
 					</div>
@@ -127,7 +126,6 @@
 						</div>
 						<div class="mt-6 flex flex-col gap-2">
 							<Button class="w-full" type="submit">Register</Button>
-							<Button class="w-full">Log in with google</Button>
 						</div>
 					</form>
 				</Card.Content>
@@ -184,7 +182,6 @@
 					</form>
 				</Card.Content>
 				<Card.Footer class="flex flex-col gap-2">
-					<Button class="w-full">Log in with google</Button>
 					<p>
 						Don't have an account? <Button
 							variant="link"

@@ -9,6 +9,9 @@ import {
 	checkIfEmailExists,
 	verifyPassword
 } from '$lib/server/models/users';
+import { getRandomId } from '$lib/helper/randomid';
+import { processImage } from '$lib/server/models/imageService';
+import path from 'node:path';
 
 export const load = (async ({ locals }) => {
 	const user = locals.user;
@@ -28,6 +31,7 @@ export const actions = {
 		const name = formData.get('name')?.toString();
 		const email = formData.get('email')?.toString();
 		const password = formData.get('password')?.toString();
+		const pimage = formData.get('pimage') as File;
 		if (!name || !email || !password) {
 			return fail(400, {
 				error: !name
@@ -53,6 +57,17 @@ export const actions = {
 		let passwordHash = fullUser.password;
 		const newPassword = formData.get('new')?.toString();
 		const confirmPassword = formData.get('confirm')?.toString();
+		const fileName = `${getRandomId()}.webp`;
+		const filePath = path.join('static', 'images', 'profile', fileName);
+		if (pimage.size > 0) {
+			const buffer = await pimage.arrayBuffer();
+			await processImage(buffer, filePath, 196, 196);
+		}
+		console.log('pimage from edir profile', pimage);
+
+		const resolvedFilePath = pimage.size > 0 ? filePath.replace('static', '') : null;
+		console.log('resolvedFilePath from edit', resolvedFilePath);
+
 		if (newPassword) {
 			if (newPassword !== confirmPassword) {
 				return fail(400, { error: 'Passwords do not match' });
@@ -60,9 +75,17 @@ export const actions = {
 			passwordHash = await hashPassword(newPassword);
 		}
 		try {
-			updateUser(name, email, passwordHash, user.id);
+			if (pimage.size > 0) {
+				console.log('doing image update');
+
+				updateUser(name, email, passwordHash, user.id, resolvedFilePath);
+			} else {
+				updateUser(name, email, passwordHash, user.id, null);
+			}
 			return { success: true };
 		} catch (error) {
+			console.log(error);
+
 			return fail(500, { error: 'server faced an unknown problem' });
 		}
 	}

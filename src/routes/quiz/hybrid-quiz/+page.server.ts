@@ -16,7 +16,8 @@ import {
 	updateQuizQuestion,
 	getSessionById,
 	getCompletedSession,
-	cleanupSessions
+	cleanupSessions,
+	getLatestSessionId
 } from '$lib/server/models/sessions.js';
 import { updateBestScore } from '$lib/server/models/users.js';
 import type { Cats, Dogs } from '$lib/types/breed.js';
@@ -154,10 +155,9 @@ export const actions = {
 	getResult: async ({ locals, cookies }) => {
 		const user = locals.user;
 		const guestQuizSession = cookies.get('guestQuizSession');
-		const now = Math.floor(Date.now() / 1000);
 
-		const session = getSession(user?.id, now);
-		const sessionId = user ? session?.id : guestQuizSession;
+		const session = getLatestSessionId(user?.id);
+		const sessionId = user ? session : guestQuizSession;
 		if (!sessionId) return { message: 'No session found' };
 
 		let resolvedSession = getCompletedSession(sessionId);

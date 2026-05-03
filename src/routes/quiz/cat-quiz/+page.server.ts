@@ -152,7 +152,6 @@ export const actions = {
 	getResult: async ({ locals, cookies }) => {
 		const user = locals.user;
 		const guestQuizSession = cookies.get('guestQuizSession');
-		// const now = Math.floor(Date.now() / 1000);
 
 		const session = getLatestSessionId(user?.id);
 		const sessionId = user ? session : guestQuizSession;

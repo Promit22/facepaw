@@ -54,7 +54,7 @@
 			icon: BadgeQuestionMark
 		},
 		{
-			name: 'Leader-Board',
+			name: 'Leaderboard',
 			url: '/quiz/leaderboard',
 			icon: ChartNoAxesColumnIncreasing
 		}
