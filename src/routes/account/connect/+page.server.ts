@@ -17,8 +17,7 @@ export const actions = {
 
 		console.log(pimage);
 
-		const buffer = await pimage.arrayBuffer();
-		console.log('bffer', buffer);
+		// console.log('bffer', buffer);
 
 		const fileName = `${getRandomId()}.webp`;
 		const filePath = path.join('static', 'images', 'profile', fileName);
@@ -42,9 +41,14 @@ export const actions = {
 		}
 
 		const hash = await hashPassword(password);
-		await processImage(buffer, filePath, 196, 196);
+		if (pimage.size > 0) {
+			const buffer = await pimage.arrayBuffer();
+			await processImage(buffer, filePath, 196, 196);
+		}
+
+		const resolvedFilePath = pimage.size > 0 ? filePath.replace('static', '') : null;
 		try {
-			const userId = createUser(filePath.replace('static', ''), name, email, hash).lastInsertRowid;
+			const userId = createUser(resolvedFilePath, name, email, hash).lastInsertRowid;
 			const id = createUserSession(userId as number);
 			cookies.set('session', id.toString(), {
 				path: '/',
@@ -79,6 +83,9 @@ export const actions = {
 			return fail(401, { message: 'Invalid credentials', missing: true });
 
 			// return 'invalid user';
+		}
+		if (!user) {
+			return fail(401, { missing: true, message: 'User not found' });
 		}
 
 		const id = createUserSession(user ? user.id : 0);

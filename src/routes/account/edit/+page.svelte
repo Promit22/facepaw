@@ -22,7 +22,7 @@
 			<Card.Description></Card.Description>
 		</Card.Header>
 		<Card.Content>
-			<div>
+			<div class="">
 				<form
 					action="?/update"
 					method="POST"

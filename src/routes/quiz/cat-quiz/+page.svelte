@@ -1,5 +1,4 @@
 <script lang="ts">
-	import { onMount } from 'svelte';
 	import { deserialize } from '$app/forms';
 	import type { PageProps } from './$types';
 	import { Hourglass } from '@lucide/svelte';
@@ -12,10 +11,8 @@
 	const expiresAt = $derived(form?.expiresAt);
 	let dataSession = $state(data.questions);
 	const dataExpiresAt = data.expiresAt;
-	const questions = $derived(form?.questions);
 	const dataSessionId = data.sessionId;
 	const formSessoinId = $derived(form?.sessionId);
-	// const review = $derived(form?.review);
 
 	console.log('dataSession', dataSession);
 	const started = () => {
@@ -29,7 +26,6 @@
 		return false;
 	};
 
-	// let currentIndex = $state(0);
 	let currentIndex = $state(data.currentIndex ?? 0);
 
 	let selectedAnswer: string | null = $state(null);
@@ -45,27 +41,12 @@
 			question: string;
 			yourAnswer: string;
 			correctAnswer: string;
-			isCorrect: boolean;
+			// isCorrect: boolean;
 		}[];
 	} = $state();
 	let timer: number = $state(3);
 	let finished = $state(false);
 
-	// function getQuestion() {
-	// 	console.log('getQuestion called', questions, dataSession);
-	// 	// $state.snapshot('getQuestion called', questions, dataSession);
-	// 	if (questions && questions.length !== 0) {
-	// 		return questions;
-	// 	} else {
-	// 		if (dataSession && dataSession.length !== 0) {
-	// 			return dataSession;
-	// 		}
-	// 	}
-
-	// 	return [];
-	// }
-
-	// replace getQuestion() function and both dataSession/questions with this
 	let activeQuestions = $derived(form?.questions?.length ? form.questions : (data.questions ?? []));
 	let currentQuestion = $derived(activeQuestions[currentIndex]);
 	function getExpiration() {
@@ -93,37 +74,6 @@
 
 	let submitting = $state(false);
 
-	// function next() {
-	// 	console.log('next called', currentIndex, selectedAnswer, submitting);
-	// 	console.log(
-	// 		'getQuestion()',
-	// 		activeQuestions,
-	// 		'questions',
-	// 		questions,
-	// 		'dataSession',
-	// 		dataSession
-	// 	);
-	// 	if (!selectedAnswer || submitting) return;
-	// 	submitting = true;
-
-	// 	const question = activeQuestions;
-	// 	const qId = question[currentIndex].id;
-	// 	const ans = selectedAnswer;
-
-	// 	selectedAnswer = null;
-	// 	console.log('before', currentIndex);
-
-	// 	if (currentIndex < question.length - 1) {
-	// 		currentIndex++;
-	// 	}
-
-	// 	console.log('after', currentIndex);
-
-	// 	submit(qId, JSON.stringify(ans)).finally(() => {
-	// 		submitting = false;
-	// 	});
-	// }
-
 	async function next() {
 		if (!selectedAnswer || submitting) return;
 		submitting = true;
@@ -139,26 +89,6 @@
 		}
 
 		await submit(qId, ans);
-
-		// if (isLast) {
-		// 	const formData = new FormData();
-		// 	const res = await fetch('/quiz/cat-quiz?/getResult', {
-		// 		method: 'POST',
-		// 		body: formData
-		// 	});
-		// 	console.log(res);
-
-		// 	const json = await res.json();
-		// 	const parsed = JSON.parse(json.data);
-		// 	result = {
-		// 		score: parsed[0],
-		// 		total: parsed[1],
-		// 		accuracy: parsed[2]
-		// 	};
-		// 	finished = true;
-		// }
-
-		// submitting = false;
 
 		if (isLast) {
 			const formData = new FormData();
@@ -190,18 +120,6 @@
 		submitting = false;
 	}
 
-	// function next() {
-	// 	if (!selectedAnswer) selectedAnswer = null;
-	// 	const question = getQuestion();
-	// 	const qId = question[currentIndex].id;
-
-	// 	if (currentIndex < question.length - 1) {
-	// 		currentIndex++;
-	// 	}
-	// 	submit(qId, JSON.stringify(selectedAnswer));
-	// 	selectedAnswer = null;
-	// }
-
 	async function submit(qId: string, ans: string) {
 		const id = getSessionId();
 		const formData = new FormData();
@@ -213,14 +131,6 @@
 			method: 'POST',
 			body: formData
 		});
-		// if(currentIndex === activeQuestions.length - 1) {
-		// 	await fetch('/quiz/cat-quiz?/getResult', {
-		// 	// action is named 'answer' not 'submitAnswer'
-		// 	method: 'GET',
-
-		// })
-		// finished = true;
-		// }
 	}
 
 	function startCounting() {
@@ -239,7 +149,6 @@
 	async function handleTimeUp() {
 		if (finished) return;
 
-		// submit current question with whatever answer is selected (or empty)
 		const qId = activeQuestions[currentIndex].id;
 		await submit(qId, selectedAnswer ?? '');
 
@@ -273,13 +182,9 @@
 		if (started()) {
 			if (dataSession && dataSession.length > 0) {
 				countDownFinished = true;
-				// if (data.currentIndex && currentIndex < data.currentIndex) {
-				// 	currentIndex = data.currentIndex;
-				// }
+
 				if (dataSession && dataSession.length > 0) {
 					countDownFinished = true;
-					// console.log('currentIndex from data', data.currentIndex);
-					// currentIndex = data.currentIndex ?? 0;
 				}
 				console.log('currentindex', currentIndex);
 			} else {
@@ -293,7 +198,7 @@
 			}
 			startCounting();
 		}
-		$inspect(result);
+		// $inspect(result);
 	});
 </script>
 
@@ -388,9 +293,10 @@
 					Score: {result.score} / {result.total}
 				</p>
 				<p>Accuracy: {result.accuracy}%</p>
-				<!-- {JSON.stringify(review)} -->
+
 				<div>
-					{#each result.review as r (r.id)}
+					<!-- {JSON.stringify(result.review)} -->
+					{#each result.review as r, i (r.id)}
 						<ol type="1">
 							<li class=" text-left">
 								{#if r.type === 'image'}
@@ -398,7 +304,7 @@
 										<img src={r.imageUrl} alt="breed image url" />
 									</div>
 								{/if}
-								<h2 class=" mt-5 text-[18px] font-medium">Question: {r.question}</h2>
+								<h2 class=" mt-5 text-[18px] font-medium">{i + 1}.Question: {r.question}</h2>
 								<p>Correct answer: {r.correctAnswer}</p>
 								<p>Your answer: {r.yourAnswer}</p>
 							</li>
@@ -406,6 +312,9 @@
 					{/each}
 				</div>
 				<Button onclick={() => location.reload()}>Play Again</Button>
+				{#if form?.missing}
+					<p>{form.message}</p>
+				{/if}
 			</Card.Content>
 		</Card.Root>
 	{/if}

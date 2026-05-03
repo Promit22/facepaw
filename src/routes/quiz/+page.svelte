@@ -92,7 +92,8 @@
 				<Card.Header class=" ">
 					<PawPrint class=" mx-auto" size={50} />
 					<Card.Title class=" text-3xl/snug font-bold">Hybrid</Card.Title>
-					<Card.Description class=" font-medium">Identify both cat and dog breeds.</Card.Description
+					<Card.Description class=" font-medium"
+						>Identify both cat and dog breeds from images and facts.</Card.Description
 					>
 				</Card.Header>
 				<Card.Content>
@@ -114,7 +115,7 @@
 			</Card.Root>
 		</div>
 	</section>
-	{#if true}
+	{#if user}
 		<div class="  w-full md:max-w-[50%]">
 			<Alert.Root variant="destructive" class=" p-5">
 				<Alert.Title class=" text-[1.2rem]"

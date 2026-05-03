@@ -21,13 +21,6 @@ export type PendingQuiz = {
 	createdAt: number;
 };
 
-export interface QuizSessionQuestion {
-	id: string;
-	session_id: string;
-	position: number;
-	questions: Quiz[]; // Defined below based on your needs
-}
-
 export interface QuizAnswerRow {
 	session_id: string;
 	question_id: string;

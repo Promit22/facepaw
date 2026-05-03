@@ -72,6 +72,6 @@
 		</Card.Root>
 	</section>
 {:else}
-	<p class=" text-2xl">You are logged in. Sign in/Register to publish post or</p>
+	<p class=" text-2xl">You are not logged in. Sign in/Register to publish post or</p>
 	<a href="/posts" class=" text-[20px] hover:underline">View others post instead</a>
 {/if}

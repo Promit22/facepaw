@@ -1,17 +1,9 @@
 import { randomUUID } from 'node:crypto';
-import type { PageServerLoad } from './$types';
 import { generateQuizSession } from '$lib/server/models/question';
 import { readBreed } from '$lib/server/models/breedCache';
-import { quizStore } from '$lib/server/quiz/quizStore';
-import type { PendingQuiz } from '$lib/types/quizQuestion';
-// import type { QuizQuestion } from '$lib/types/quizQuestion';
-import type { Quiz } from '$lib/types/quizQuestion';
 import {
-	checkIfQuizSessionValid,
 	insertQuiz,
 	getSession,
-	updateSessionTime,
-	getPreAns,
 	insertAnswer,
 	getQuestions,
 	createSession,
@@ -24,7 +16,8 @@ import {
 	updateQuizQuestion,
 	getSessionById,
 	getCompletedSession,
-	cleanupSessions
+	cleanupSessions,
+	getLatestSessionId
 } from '$lib/server/models/sessions.js';
 import { updateBestScore } from '$lib/server/models/users.js';
 
@@ -39,7 +32,6 @@ export const load = async ({ locals, cookies }) => {
 	const sessionId = user ? session?.id : guestQuizSession;
 	if (!sessionId) return { started: false };
 
-	// resolve the actual session row for both user and guest
 	const resolvedSession = session ?? getSessionById(sessionId, now);
 	if (!resolvedSession) return { started: false };
 
@@ -57,7 +49,7 @@ export const load = async ({ locals, cookies }) => {
 		questions: safeQuestions,
 		currentIndex,
 		score: resolvedSession.score ?? 0,
-		expiresAt: resolvedSession.expires_at ?? 0 // now correct for guests too
+		expiresAt: resolvedSession.expires_at ?? 0
 	};
 };
 
@@ -76,8 +68,6 @@ export const actions = {
 
 		// const mode = params.mode;
 		const now = Math.floor(Date.now() / 1000);
-
-		// Expire any leftover active sessions for this user+mode
 		expireSession(userId);
 		deleteSession();
 
@@ -85,7 +75,7 @@ export const actions = {
 		const questions = generateQuizSession(breed);
 
 		const questionsRowId = randomUUID();
-		const expiresAt = now + 10;
+		const expiresAt = now + 363;
 
 		createSession(sessionId, userId, expiresAt);
 
@@ -122,7 +112,6 @@ export const actions = {
 			return { message: 'Invalid session' };
 		}
 
-		// Get correct answer from DB — never trust the client
 		const raw = getQuestions(sessionId);
 		if (!raw) return { message: 'Questions not found' };
 
@@ -132,7 +121,6 @@ export const actions = {
 
 		const isCorrect = givenAnswer === question.correctAnswer ? 1 : 0;
 		insertAnswer(sessionId, questionId, givenAnswer, isCorrect);
-		// console.log(question);
 
 		console.log(
 			'givenAnswer',
@@ -160,39 +148,23 @@ export const actions = {
 			correctAnswer: question.correct_answer
 		};
 	},
-	// getResult: async ({ locals, cookies }) => {
-	// 	const user = locals.user;
-	// 	const guestQuizSession = cookies.get('guestQuizSession');
-	// 	const now = Math.floor(Date.now() / 1000);
 
-	// 	const session = getSession(user?.id, now);
-	// 	const sessionId = user ? session?.id : guestQuizSession;
-	// 	if (!sessionId) return { message: 'No session found' };
-
-	// 	const completedSession = getCompletedSession(sessionId);
-	// 	if (!completedSession) return { message: 'Session not completed yet' };
-
-	// 	const answers = getAns(sessionId);
-	// 	const score = completedSession.score ?? 0;
-	// 	const total = answers.length;
-	// 	const accuracy = Math.round((score / total) * 100);
-
-	// 	return { score, total, accuracy };
-	// }
 	getResult: async ({ locals, cookies }) => {
 		const user = locals.user;
 		const guestQuizSession = cookies.get('guestQuizSession');
-		const now = Math.floor(Date.now() / 1000);
+		// const now = Math.floor(Date.now() / 1000);
 
-		const session = getSession(user?.id, now);
-		const sessionId = user ? session?.id : guestQuizSession;
-		if (!sessionId) return { message: 'No session found' };
+		const session = getLatestSessionId(user?.id);
+		const sessionId = user ? session : guestQuizSession;
+		if (!sessionId) {
+			console.log('session missing');
 
-		// try completed first, then force-complete if expired
+			return { missing: true, message: 'No session found' };
+		}
+
 		let resolvedSession = getCompletedSession(sessionId);
 
 		if (!resolvedSession) {
-			// session expired or still active — force complete it
 			updateQuizSession(sessionId);
 			resolvedSession = getCompletedSession(sessionId);
 		}
@@ -208,7 +180,6 @@ export const actions = {
 		if (user) {
 			updateBestScore(user.id, score, accuracy, 'cat');
 		}
-		// in getResult, add:
 
 		const review = answers.map((ans) => {
 			const q = allQuestions.find((q) => q.id === ans.question_id);
@@ -221,8 +192,8 @@ export const actions = {
 				imageUrl: q.imageUrl ? q.imageUrl : undefined
 			};
 		});
+		console.log('review', score, total, accuracy, review);
 
 		return { score, total, accuracy, review };
-		// return { score, total, accuracy };
 	}
 };

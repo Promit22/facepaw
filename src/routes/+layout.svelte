@@ -2,19 +2,31 @@
 	import * as Sidebar from '$lib/components/ui/sidebar/index.js';
 	import AppSidebar from '$lib/components/AppSidebar.svelte';
 	import '../app.css';
-	import HouseIcon from '@lucide/svelte/icons/house';
-	import { HamburgerIcon, User } from '@lucide/svelte';
-	import CircleUserIcon from '@lucide/svelte/icons/circle-user';
-	import HameburgerIcon from '@lucide/svelte/icons/hamburger';
+	// import HouseIcon from '@lucide/svelte/icons/house';
+	// import { HamburgerIcon, User } from '@lucide/svelte';
+	// import CircleUserIcon from '@lucide/svelte/icons/circle-user';
+	// import HameburgerIcon from '@lucide/svelte/icons/hamburger';
 	import UserIcon from '$lib/components/UserIcon.svelte';
 	// import { Menu } from '@lucide/svelte';
-	import { Cat } from '@lucide/svelte';
-	import { Dog } from '@lucide/svelte';
-	import { Bone } from '@lucide/svelte';
-	import { BadgeQuestionMark } from '@lucide/svelte';
-	import { Pencil } from '@lucide/svelte';
-	import { Newspaper } from '@lucide/svelte';
-	import { ChevronDown } from '@lucide/svelte';
+	import {
+		Cat,
+		Dog,
+		Bone,
+		BadgeQuestionMark,
+		Pencil,
+		Newspaper,
+		ChevronDown,
+		HamburgerIcon,
+		CircleUserIcon,
+		HouseIcon,
+		ChartNoAxesColumnIncreasing
+	} from '@lucide/svelte';
+	// import { Dog } from '@lucide/svelte';
+	// import { Bone } from '@lucide/svelte';
+	// import { BadgeQuestionMark } from '@lucide/svelte';
+	// import { Pencil } from '@lucide/svelte';
+	// import { Newspaper } from '@lucide/svelte';
+	// import { ChevronDown } from '@lucide/svelte';
 
 	let { children, data } = $props();
 
@@ -34,12 +46,17 @@
 		{
 			name: 'Posts',
 			url: '/posts',
-			icon: HameburgerIcon
+			icon: HamburgerIcon
 		},
 		{
 			name: 'Quiz',
 			url: '/quiz',
 			icon: BadgeQuestionMark
+		},
+		{
+			name: 'Leader-Board',
+			url: '/quiz/leaderboard',
+			icon: ChartNoAxesColumnIncreasing
 		}
 	];
 
@@ -113,6 +130,7 @@
 			</ul>
 		</li>
 		<li><a href="/quiz">Quiz</a></li>
+		<li><a href="/quiz/leaderboard">Leaderboard</a></li>
 	</ul>
 	<!-- {#if !data.user}
 		<a href="/account/connect" class=" mt-0.5 hidden p-1 md:block md:w-fit">Log In</a>

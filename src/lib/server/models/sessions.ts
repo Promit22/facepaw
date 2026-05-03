@@ -1,13 +1,7 @@
 import type { User } from '$lib/types/user';
 import { db } from '../db/db';
 import crypto from 'node:crypto';
-import { quizStore } from '../quiz/quizStore';
-import type {
-	Quiz,
-	QuizAnswerRow,
-	QuizQuestion,
-	QuizSessionQuestion
-} from '$lib/types/quizQuestion';
+import type { Quiz, QuizAnswerRow, QuizQuestion } from '$lib/types/quizQuestion';
 
 export function createSession(session_id: string, user_id: number | null, expires_at: number) {
 	db.prepare(
@@ -106,6 +100,21 @@ export function getCompletedSession(id: string) {
 		.get(id) as QuizQuestion;
 }
 
+export function getLatestSessionId(userId: number | undefined) {
+	return (
+		db
+			.prepare(
+				`
+        SELECT id FROM quiz_sessions
+        WHERE user_id = ?
+        ORDER BY created_at DESC
+        LIMIT 1
+    `
+			)
+			.get(userId) as { id: string } | undefined
+	)?.id;
+}
+
 export function getQuestions(session_id: string | undefined) {
 	const row = db
 		.prepare(`SELECT questions FROM quiz_questions WHERE session_id = ?`)
@@ -181,24 +190,3 @@ export function updateQuizQuestion(answer_count: number, session_id: string) {
             `
 	).run(answer_count, session_id);
 }
-
-// export function checkIfQuizSessionValid(sessionId: string) {
-// 	console.log('sessionid from check', sessionId);
-// 	console.log('quizstore from check', quizStore);
-
-// 	const session = getSession(sessionId);
-// 	// console.log('/');
-// 	console.log('session expiresAt', session.expiresAt);
-
-// 	console.log('session from check', session);
-
-// 	if (!session) {
-// 		return { valid: false, session: null };
-// 	} else {
-// 		if (session.expiresAt - Date.now() > 10000) {
-// 			return { valid: true, session };
-// 		} else {
-// 			return { valid: false, session: null };
-// 		}
-// 	}
-// }

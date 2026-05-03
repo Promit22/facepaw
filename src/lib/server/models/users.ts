@@ -1,9 +1,14 @@
-import type { User } from '$lib/types/user';
+import type { LeaderboardEntry, User } from '$lib/types/user';
 import { db } from '../db/db';
 import bcrypt from 'bcrypt';
 import { randomBytes, createHash } from 'node:crypto';
 
-export function createUser(imagePath: string, name: string, email: string, password: string) {
+export function createUser(
+	imagePath: string | null,
+	name: string,
+	email: string,
+	password: string
+) {
 	return db
 		.prepare(`INSERT INTO users (image, name, email, password) VALUES(?, ?, ?, ?)`)
 		.run(imagePath, name, email, password);
@@ -123,14 +128,16 @@ export function updateBestScore(
 	).run(score, accuracy, user_id, score);
 }
 
-export function getBestScore() {
-	db.prepare(
-		`
-	SELECT username, best_score_cat 
+export function getBestScore(mode: string) {
+	return db
+		.prepare(
+			`
+	SELECT name, best_score_${mode} AS best_score
 	FROM users 
-	WHERE best_score_cat IS NOT NULL 
-	ORDER BY best_score_cat DESC, best_accuracy_cat DESC
+	WHERE best_score_${mode} IS NOT NULL 
+	ORDER BY best_score_${mode} DESC, best_accuracy_${mode} DESC
 	LIMIT 10
 		`
-	).get();
+		)
+		.all() as LeaderboardEntry[];
 }
