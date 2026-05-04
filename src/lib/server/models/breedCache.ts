@@ -55,7 +55,7 @@ async function refreshBreeds(type: 'cat' | 'dog', filePath: string) {
 
 	const data = await res.json();
 
-	await data.forEach((v: Cats | Dogs) => {
+	data.forEach((v: Cats | Dogs) => {
 		const normalLife = normalizeLifespan(v.life_span ? v.life_span : 'unavailable');
 		v.minLifeSpan = normalLife.min;
 		v.maxLifeSpan = normalLife.max;
