@@ -73,7 +73,7 @@ export const actions = {
 		deleteSession();
 
 		const breed = await readBreed('cat');
-		const questions = generateQuizSession(breed);
+		const questions = generateQuizSession(breed, 'cat');
 
 		const questionsRowId = randomUUID();
 		const expiresAt = now + 363;

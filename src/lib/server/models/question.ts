@@ -5,8 +5,11 @@ import { pickRandom } from '$lib/helper/questionHelper';
 import { shuffle } from '$lib/helper/questionHelper';
 // import unavailable from '$lib/assets/unavailable.webp'
 
-export function generateQuizSession(breeds: Cats[] | Dogs[], count = 10) {
-	const selectedBreeds = pickUniqueRandomBreeds(breeds, count);
+export function generateQuizSession(breeds: Cats[] | Dogs[], breedType: string, count = 10) {
+	console.log('called quizsesiongen');
+
+	const selectedBreeds = pickUniqueRandomBreeds(breeds, count, breedType);
+	console.log('uniques breeds from genertor', selectedBreeds);
 
 	// return selectedBreeds.map((breed, index) => {
 	// 	const type = getRandomType();
@@ -17,7 +20,7 @@ export function generateQuizSession(breeds: Cats[] | Dogs[], count = 10) {
 		let attempts = 0;
 
 		while (!question && attempts < 3) {
-			const type = getRandomType();
+			const type = getRandomType(breedType);
 			question = generateQuestionByType(type, breed, selectedBreeds);
 			attempts++;
 		}

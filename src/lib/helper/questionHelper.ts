@@ -3,6 +3,8 @@ import type { Cats, Dogs } from '$lib/types/breed';
 const ranDomtype = ['origin', 'lifespan', 'image'];
 
 function getRandomInt(min: number, max: number) {
+	console.log('called randomint');
+
 	return Math.floor(Math.random() * (max - min) + min);
 }
 
@@ -10,8 +12,15 @@ function getRandomBreeds(randomNum: number[], breeds: Cats[] | Dogs[]) {
 	return randomNum.map((n) => breeds[n]);
 }
 
-function getRandomNumberOfBreeds(min: 0, limit: number, breeds: Cats[] | Dogs[]) {
-	const filteredBreeds = breeds.filter((v) => v?.image?.url); // filter first
+function getRandomNumberOfBreeds(
+	min: 0,
+	limit: number,
+	breeds: Cats[] | Dogs[],
+	breedType: string
+) {
+	console.log('called randomnumbree');
+
+	const filteredBreeds = breedType === 'dog' ? breeds : breeds.filter((v) => v?.image?.url); // filter first
 	const ranDomSet: Set<number> = new Set();
 	while (ranDomSet.size < limit) {
 		ranDomSet.add(getRandomInt(min, filteredBreeds.length)); // use filtered length
@@ -30,17 +39,29 @@ function getRandomNumberOfBreeds(min: 0, limit: number, breeds: Cats[] | Dogs[])
 // 	return getRandomBreeds(randomArray, filteredBreeds);
 // }
 
-export function getRandomType() {
+export function getRandomType(breedType: string) {
+	if (breedType === 'dog') {
+		console.log('in random type gen');
+
+		const rnd = getRandomInt(0, ranDomtype.length - 1);
+		console.log('random tpes', ranDomtype[rnd]);
+
+		return ranDomtype[rnd];
+	}
+	console.log('outside the type check');
+
 	const rnd = getRandomInt(0, ranDomtype.length);
 	return ranDomtype[rnd];
 }
 
-export function pickUniqueRandomBreeds(breeds: Cats[] | Dogs[], count: number) {
+export function pickUniqueRandomBreeds(breeds: Cats[] | Dogs[], count: number, breedType: string) {
+	console.log('called pickunick');
+
 	const length = breeds.length;
 	if (length < count) {
 		throw new Error('count exeeds the total length of breed');
 	}
-	const selectedBreeds = getRandomNumberOfBreeds(0, count, breeds);
+	const selectedBreeds = getRandomNumberOfBreeds(0, count, breeds, breedType);
 	return selectedBreeds;
 }
 

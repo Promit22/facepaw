@@ -61,6 +61,40 @@ async function refreshBreeds(type: 'cat' | 'dog', filePath: string) {
 		v.maxLifeSpan = normalLife.max;
 	});
 
+	// if (type === 'dog') {
+	// 	const allImages: any[] = [];
+	// 	let page = 0;
+	// 	const maxPage = 6;
+	// 	const limit = 100;
+
+	// 	while (page < maxPage) {
+	// 		const imgRes = await fetch(
+	// 			`https://api.thedogapi.com/v1/images/search?limit=${limit}&has_breeds=1&page=${page}`,
+	// 			{ headers }
+	// 		);
+	// 		const images = await imgRes.json();
+	// 		if (!images.length) break;
+	// 		allImages.push(...images);
+	// 		if (images.length < limit) break;
+	// 		page++;
+	// 	}
+
+	// 	console.log(allImages);
+
+	// 	const imageMap = new Map(
+	// 		allImages
+	// 			.filter((img: any) => img.breeds?.length > 0)
+	// 			.map((img: any) => [img.breeds[0].id, img.url])
+	// 	);
+
+	// 	data.forEach((breed: Dogs) => {
+	// 		const url = imageMap.get(breed.id);
+	// 		if (url) {
+	// 			breed.image = { url };
+	// 		}
+	// 	});
+	// }
+
 	await fs.writeFile(filePath, JSON.stringify(data, null, 2));
 }
 

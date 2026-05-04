@@ -73,9 +73,11 @@ export const actions = {
 		deleteSession();
 
 		const breed = await readBreed('dog');
-		const sampled = breed.sort(() => Math.random() - 0.5).slice(0, 50);
-		console.log('sampled', sampled.length);
-		const questions = generateQuizSession(sampled); //to make it lightweight for railway free tier
+		// const sampled = breed.sort(() => Math.random() - 0.5).slice(0, 50);
+		console.log('sampled', breed.length);
+		// console.log('data', breed);
+
+		const questions = generateQuizSession(breed, 'dog'); //to make it lightweight for railway free tier
 		console.log('questions generated', questions.length);
 		const questionsRowId = randomUUID();
 		const expiresAt = now + 363;
