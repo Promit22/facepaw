@@ -74,7 +74,7 @@ export const actions = {
 
 		const breed = await readBreed('dog');
 		const sampled = breed.sort(() => Math.random() - 0.5).slice(0, 50);
-		console.log('breed loaded', breed.length);
+		console.log('sampled', sampled.length);
 		const questions = generateQuizSession(sampled); //to make it lightweight for railway free tier
 		console.log('questions generated', questions.length);
 		const questionsRowId = randomUUID();
