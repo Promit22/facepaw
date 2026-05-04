@@ -42,6 +42,8 @@ Make sure you have [pnpm](https://pnpm.io) installed on your system, then:
    pnpm dev --open
 ```
 
+also don't forget to provide env as CAT_API_KEY, DOG_API_KEY, GAP(GOOGLE APP PASSWORD), EU(EMAIL USER FOR NODE MAILER)
+
 ## File Structure
 
 ```

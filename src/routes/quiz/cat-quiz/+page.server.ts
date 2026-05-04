@@ -1,6 +1,7 @@
 import { randomUUID } from 'node:crypto';
 import { generateQuizSession } from '$lib/server/models/question';
 import { readBreed } from '$lib/server/models/breedCache';
+import { error } from '@sveltejs/kit';
 import {
 	insertQuiz,
 	getSession,
