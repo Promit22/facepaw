@@ -91,7 +91,7 @@ function generateImageQuestion(correctBreed: Cats | Dogs, allBreeds: Cats[] | Do
 	const wrongOptions = pickRandom(pool, 3);
 	// console.log('correctbreed from image generator', correctBreed);
 
-	if (!wrongOptions || !correctBreed.name) return;
+	if (!correctBreed.image?.url || !wrongOptions || !correctBreed.name) return;
 
 	const options = shuffle([correctBreed.name, ...wrongOptions]);
 
