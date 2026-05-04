@@ -26,7 +26,7 @@ Make sure you have [pnpm](https://pnpm.io) installed on your system, then:
 1. Clone the repository
 
 ```bash
-   git https://github.com/Promit22/facepaw.git
+   git clone https://github.com/Promit22/facepaw.git
    cd facepaw
 ```
 

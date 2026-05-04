@@ -14,7 +14,7 @@
 		class=" relative h-full w-full rounded-2xl bg-[linear-gradient(90deg,rgba(214,181,136,1)_0%,rgba(112,94,70,1)_50%,rgba(198,192,185,1)_100%)] p-8"
 	>
 		<div class=" flex flex-col justify-between gap-3 md:flex-row">
-			<div class="">
+			<div class=" flex-4">
 				<!-- <h1 class=" text-9xl">FacePaw</h1> -->
 				<h1 class=" text-6xl/15 font-medium md:text-8xl/30">
 					<!-- Explore breeds. Share moments. Learn. Compete in quizes -->
@@ -31,32 +31,49 @@
 					>
 				{/if}
 			</div>
-			<div class=" flex w-full flex-2 flex-col gap-1.5">
-				<Card.Root>
-					<Card.Header>
+			<div class=" flex grow flex-col gap-1.5">
+				<Card.Root class=" text-center">
+					<Card.Header class="">
 						<Card.Title>Breed Quiz</Card.Title>
 						<Card.Description>Test you knowledge about breeds</Card.Description>
 					</Card.Header>
-					<Card.Content>
-						<Button>Go to Quiz</Button>
+					<Card.Content class=" ">
+						<!-- <Button>Go to Quiz</Button> -->
+						<a
+							href="/quiz"
+							class=" inline-block rounded-[5px] bg-primary px-6 py-2 text-center text-black no-underline"
+							>Go to Quiz</a
+						>
 					</Card.Content>
 				</Card.Root>
-				<Card.Root>
+				<Card.Root class=" text-center">
 					<Card.Header>
 						<Card.Title>Share your moments</Card.Title>
 					</Card.Header>
 					<Card.Content>
-						<Button>Publish post</Button>
+						<a
+							href="/posts/create"
+							class=" inline-block rounded-[5px] bg-primary px-6 py-2 text-center text-black no-underline"
+							>Publish Post</a
+						>
 					</Card.Content>
 				</Card.Root>
-				<Card.Root>
+				<Card.Root class=" text-center">
 					<Card.Header>
 						<Card.Title>Explore breeds</Card.Title>
 						<Card.Description>Learn about different kinds of breeds</Card.Description>
 					</Card.Header>
-					<Card.Content class=" flex flex-col gap-2">
-						<Button>Explore Dogs</Button>
-						<Button>Explore Cats</Button>
+					<Card.Content class=" flex flex-col items-center gap-2">
+						<a
+							href="/breed/cat"
+							class=" inline-block rounded-[5px] bg-primary px-6 py-2 text-center text-black no-underline"
+							>View Cats</a
+						>
+						<a
+							href="/breed/dog"
+							class=" inline-block rounded-[5px] bg-primary px-6 py-2 text-center text-black no-underline"
+							>View Dogs</a
+						>
 					</Card.Content>
 				</Card.Root>
 			</div>
@@ -73,7 +90,7 @@
 		</div>
 		<div class="flex w-full flex-col gap-4 md:w-1/2">
 			<h2 class="text-3xl font-bold">Explore Every Breed</h2>
-			<p class="text-muted-foreground">
+			<p class="text-card">
 				Browse hundreds of cat and dog breeds. Tap any breed to open a detailed panel with traits,
 				lifespan, origin, and more.
 			</p>
@@ -89,9 +106,7 @@
 		</div>
 		<div class="flex w-full flex-col gap-4 md:w-1/2">
 			<h2 class="text-3xl font-bold">Share Your Pet Moments</h2>
-			<p class="text-muted-foreground">
-				Post photos of your pets and discover what the community is sharing.
-			</p>
+			<p class="text-card">Post photos of your pets and discover what the community is sharing.</p>
 			<a href="/posts" class="w-fit ...">Browse Posts →</a>
 		</div>
 	</div>

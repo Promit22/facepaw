@@ -1,12 +1,10 @@
 <script lang="ts">
 	import * as Card from '$lib/components/ui/card/index.js';
 	import { ThumbsUp } from '@lucide/svelte';
-	import { MessageCircleMore } from '@lucide/svelte';
 	import { enhance } from '$app/forms';
 	import UserIcon from './UserIcon.svelte';
 	import CommentDrawer from './CommentDrawer.svelte';
 	let { postsAndUsers, form, user } = $props();
-	// console.log(postsAndUsers[0].user.id);
 
 	console.log('postsAndUsers from post component', postsAndUsers);
 </script>
@@ -53,7 +51,7 @@
 						<button
 							type="submit"
 							formaction="?/like"
-							class="flex w-2.5 flex-1 cursor-pointer justify-center rounded-lg p-2 duration-300 ease-in-out hover:bg-gray-200"
+							class="flex w-2.5 flex-1 cursor-pointer justify-center rounded-lg p-2 duration-300 ease-in-out hover:bg-background hover:text-black"
 							onclick={() => console.log('form', form, 'user', user)}
 						>
 							<ThumbsUp class="font-bold " /><span>{form?.likes_count ?? likes_count}</span>

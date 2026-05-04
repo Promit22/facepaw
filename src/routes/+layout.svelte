@@ -30,8 +30,6 @@
 
 	let { children, data } = $props();
 
-	console.log('user from layout svelte', data.user);
-
 	const items = [
 		{
 			name: data.user ? 'Account' : 'Sign in',
@@ -132,9 +130,7 @@
 		<li><a href="/quiz">Quiz</a></li>
 		<li><a href="/quiz/leaderboard">Leaderboard</a></li>
 	</ul>
-	<!-- {#if !data.user}
-		<a href="/account/connect" class=" mt-0.5 hidden p-1 md:block md:w-fit">Log In</a>
-	{/if} -->
+
 	<h1 class=" mr-1 text-2xl md:absolute md:right-1.5">FacePaw</h1>
 </header>
 <nav class="m-5">
