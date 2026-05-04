@@ -76,7 +76,8 @@ export const actions = {
 		const catBreed: Cats[] = await readBreed('cat');
 		const dogBreed: Dogs[] = await readBreed('dog');
 		const breed = await catBreed.concat(dogBreed);
-		const questions = generateQuizSession(breed);
+		const sampled = breed.sort(() => Math.random() - 0.5).slice(0, 50);
+		const questions = generateQuizSession(sampled);
 
 		const questionsRowId = randomUUID();
 		const expiresAt = now + 363;
